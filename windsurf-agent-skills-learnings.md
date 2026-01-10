@@ -37,10 +37,10 @@ description: A brief description, shown to the model to help it understand when 
 - [x] Does Windsurf support `references/` subdirectories for progressive disclosure? **YES** - via read_file with base directory
 - [ ] Does Windsurf support `scripts/` for executable code?
 - [ ] Does Windsurf support `assets/` for templates/resources?
-- [ ] How does auto-triggering work based on description?
+- [ ] How does auto-triggering work based on description? (see task 0d2)
 - [ ] Is there a character/token limit for skill content?
 - [ ] Can skills reference other skills?
-- [ ] Why does skill tool return cached/stale instructions after edits?
+- [x] Why does skill tool return cached/stale instructions after edits? **Tool cache lags behind UI discovery**
 
 ## Tests Performed
 
@@ -153,8 +153,39 @@ Run `uv run scripts/port-skills.py --dry-run` to see what would be ported.
 - Commands (slash commands) are Claude Code specific
 - Focus on skill content, reference agents/commands in upstream docs
 
+## Future Exploration
+
+### Windsurf Workflows
+
+Convert Axiom commands to `.windsurf/workflows/*.md` format. Windsurf workflows are similar to slash commands.
+
+**Status:** 3 workflows created (`axiom-status`, `axiom-screenshot`, `axiom-fix-build`). See [PR #4](https://github.com/detailobsessed/Axiom-Windsurf/pull/4).
+
+### Windsurf Hooks
+
+Port Axiom hooks to Windsurf's `hooks.json` format.
+
+**Config locations (Windsurf Next):**
+
+- User-level: `~/.codeium/windsurf-next/hooks.json`
+- Workspace-level: `.windsurf/hooks.json`
+
+**Available events:** `pre_write_code`, `post_write_code`, `pre_run_command`, `post_run_command`, `pre_user_prompt`, `post_cascade_response`, etc.
+
+**Limitation:** Windsurf hooks can only block actions (exit code 2) or log output. They cannot inject context into the conversation like Axiom hooks can. See [GitHub issue #3](https://github.com/detailobsessed/Axiom-Windsurf/issues/3).
+
+**Docs:** <https://docs.windsurf.com/windsurf/cascade/hooks>
+
+### Curl-installable Script
+
+**Status:** TODO - Will be published when the installer is finalized.
+
+Goal: Create one-liner install like uv/bun for easy skill installation.
+
 ## Resources
 
 - [Agent Skills Spec](https://agentskills.io/specification) - Anthropic's open format
 - [Claude Code Skills Docs](https://github.com/anthropics/claude-code) - Reference implementation
-- [Windsurf Docs](https://docs.windsurf.com/) - Official documentation (skills not yet documented)
+- [Windsurf Docs](https://docs.windsurf.com/) - Official documentation
+- [Windsurf Hooks](https://docs.windsurf.com/windsurf/cascade/hooks) - Cascade hooks documentation
+- [Windsurf Workflows](https://docs.windsurf.com/windsurf/cascade/workflows) - Workflow documentation
