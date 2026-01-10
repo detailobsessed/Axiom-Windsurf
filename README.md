@@ -44,7 +44,7 @@ Skills are **automatically triggered** based on your questions. Examples:
 
 ## Workflows
 
-Axiom includes workflows for common tasks. If you run the installer from your project directory (where `.git` or `.windsurf` exists), workflows are copied automatically. Otherwise, copy `.windsurf/workflows/` manually:
+Axiom includes workflows for common tasks, installed globally alongside skills:
 
 | Workflow | Description |
 |----------|-------------|
