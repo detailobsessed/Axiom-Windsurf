@@ -13,8 +13,10 @@ set -eu
 REPO="detailobsessed/Axiom-Windsurf"
 BRANCH="main"
 SKILLS_DIR="${HOME}/.codeium/windsurf-next/skills"
+WORKFLOWS_DIR="${HOME}/.codeium/windsurf-next/global_workflows"
 TEMP_DIR=""
-WORKFLOWS_COPIED=0
+WORKFLOWS_NEW=0
+WORKFLOWS_UPDATED=0
 
 # Colors (only if terminal supports it)
 if [ -t 1 ]; then
@@ -165,7 +167,8 @@ fi
 # Count skills
 skill_count=$(find "$SOURCE_SKILLS" -mindepth 1 -maxdepth 1 -type d | wc -l | tr -d ' ')
 
-info "Installing $skill_count skills to: $SKILLS_DIR"
+info "Skills:    $SKILLS_DIR"
+info "Workflows: $WORKFLOWS_DIR"
 info ""
 
 # Install skills
@@ -194,16 +197,26 @@ for skill_dir in "$SOURCE_SKILLS"/*/; do
     fi
 done
 
-# Copy workflows to current directory if in a git repo or has .windsurf
+# Copy workflows to global workflows directory
 if [ -d "$SOURCE_WORKFLOWS" ]; then
-    if [ -d ".git" ] || [ -d ".windsurf" ]; then
-        mkdir -p ".windsurf/workflows"
-        for workflow in "$SOURCE_WORKFLOWS"/*.md; do
-            [ -f "$workflow" ] || continue
-            cp "$workflow" ".windsurf/workflows/"
-            WORKFLOWS_COPIED=$((WORKFLOWS_COPIED + 1))
-        done
-    fi
+    mkdir -p "$WORKFLOWS_DIR"
+    for workflow in "$SOURCE_WORKFLOWS"/*.md; do
+        [ -f "$workflow" ] || continue
+        workflow_name=$(basename "$workflow")
+        if [ -f "$WORKFLOWS_DIR/$workflow_name" ]; then
+            if cp "$workflow" "$WORKFLOWS_DIR/"; then
+                WORKFLOWS_UPDATED=$((WORKFLOWS_UPDATED + 1))
+            else
+                warn "Failed to update workflow $workflow_name"
+            fi
+        else
+            if cp "$workflow" "$WORKFLOWS_DIR/"; then
+                WORKFLOWS_NEW=$((WORKFLOWS_NEW + 1))
+            else
+                warn "Failed to install workflow $workflow_name"
+            fi
+        fi
+    done
 fi
 
 # Validate installation
@@ -216,15 +229,11 @@ fi
 info ""
 success "Done!"
 info ""
-info "  Skills new:     $installed"
-info "  Skills updated: $updated"
-if [ "$WORKFLOWS_COPIED" -gt 0 ]; then
-    info "  Workflows:      $WORKFLOWS_COPIED (copied to .windsurf/workflows/)"
-fi
+info "  Skills new:       $installed"
+info "  Skills updated:   $updated"
+info "  Workflows new:    $WORKFLOWS_NEW"
+info "  Workflows updated: $WORKFLOWS_UPDATED"
 info ""
 info "Skills are now available in Windsurf Next."
-if [ "$WORKFLOWS_COPIED" -eq 0 ] && [ -d "$SOURCE_WORKFLOWS" ]; then
-    info "Tip: Run from a git repo to also install workflows to .windsurf/workflows/"
-fi
 info "You may need to restart Windsurf for changes to take effect."
 info ""

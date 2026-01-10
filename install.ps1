@@ -21,7 +21,9 @@ $ErrorActionPreference = "Stop"
 $Repo = "detailobsessed/Axiom-Windsurf"
 $Branch = "main"
 $SkillsDir = Join-Path $env:USERPROFILE ".codeium\windsurf-next\skills"
-$WorkflowsCopied = 0
+$WorkflowsDir = Join-Path $env:USERPROFILE ".codeium\windsurf-next\global_workflows"
+$WorkflowsNew = 0
+$WorkflowsUpdated = 0
 
 function Write-ColorOutput($ForegroundColor, $Message) {
     Write-Host -ForegroundColor $ForegroundColor -Object $Message
@@ -92,7 +94,8 @@ try {
     $SkillDirs = Get-ChildItem -Path $SourceSkills -Directory
     $SkillCount = $SkillDirs.Count
 
-    Write-Output "Installing $SkillCount skills to: $SkillsDir"
+    Write-Output "Skills:    $SkillsDir"
+    Write-Output "Workflows: $WorkflowsDir"
     Write-Output ""
 
     # Install skills
@@ -120,14 +123,26 @@ try {
         }
     }
 
-    # Copy workflows to current directory if in a git repo or has .windsurf
+    # Copy workflows to global workflows directory
     if (Test-Path $SourceWorkflows) {
-        if ((Test-Path ".git") -or (Test-Path ".windsurf")) {
-            New-Item -ItemType Directory -Path ".windsurf\workflows" -Force | Out-Null
-            $WorkflowFiles = Get-ChildItem -Path $SourceWorkflows -Filter "*.md"
-            foreach ($Workflow in $WorkflowFiles) {
-                Copy-Item -Path $Workflow.FullName -Destination ".windsurf\workflows\" -Force
-                $WorkflowsCopied++
+        New-Item -ItemType Directory -Path $WorkflowsDir -Force | Out-Null
+        $WorkflowFiles = Get-ChildItem -Path $SourceWorkflows -Filter "*.md"
+        foreach ($Workflow in $WorkflowFiles) {
+            $TargetWorkflow = Join-Path $WorkflowsDir $Workflow.Name
+            if (Test-Path $TargetWorkflow) {
+                try {
+                    Copy-Item -Path $Workflow.FullName -Destination $WorkflowsDir -Force
+                    $WorkflowsUpdated++
+                } catch {
+                    Write-ColorOutput Yellow "Failed to update workflow $($Workflow.Name)"
+                }
+            } else {
+                try {
+                    Copy-Item -Path $Workflow.FullName -Destination $WorkflowsDir -Force
+                    $WorkflowsNew++
+                } catch {
+                    Write-ColorOutput Yellow "Failed to install workflow $($Workflow.Name)"
+                }
             }
         }
     }
@@ -142,16 +157,12 @@ try {
     Write-Output ""
     Write-ColorOutput Green "Done!"
     Write-Output ""
-    Write-Output "  Skills new:     $Installed"
-    Write-Output "  Skills updated: $Updated"
-    if ($WorkflowsCopied -gt 0) {
-        Write-Output "  Workflows:      $WorkflowsCopied (copied to .windsurf/workflows/)"
-    }
+    Write-Output "  Skills new:       $Installed"
+    Write-Output "  Skills updated:   $Updated"
+    Write-Output "  Workflows new:    $WorkflowsNew"
+    Write-Output "  Workflows updated: $WorkflowsUpdated"
     Write-Output ""
     Write-Output "Skills are now available in Windsurf Next."
-    if (($WorkflowsCopied -eq 0) -and (Test-Path $SourceWorkflows)) {
-        Write-Output "Tip: Run from a git repo to also install workflows to .windsurf/workflows/"
-    }
     Write-Output "You may need to restart Windsurf for changes to take effect."
     Write-Output ""
 

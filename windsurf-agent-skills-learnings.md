@@ -157,9 +157,14 @@ Run `uv run scripts/port-skills.py --dry-run` to see what would be ported.
 
 ### Windsurf Workflows
 
-Convert Axiom commands to `.windsurf/workflows/*.md` format. Windsurf workflows are similar to slash commands.
+Windsurf workflows support both global and workspace locations:
 
-**Status:** 3 workflows created (`axiom-status`, `axiom-screenshot`, `axiom-fix-build`). See [PR #4](https://github.com/detailobsessed/Axiom-Windsurf/pull/4).
+| Type | Path |
+|------|------|
+| Global | `~/.codeium/windsurf-next/global_workflows/*.md` |
+| Workspace | `.windsurf/workflows/*.md` |
+
+**Status:** 3 workflows created (`axiom-status`, `axiom-screenshot`, `axiom-fix-build`). Installed globally via `install.sh`.
 
 ### Windsurf Hooks
 
