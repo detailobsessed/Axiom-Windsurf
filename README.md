@@ -8,11 +8,17 @@ iOS development skills for [Windsurf Next](https://windsurf.com/), ported from [
 
 See [`skills/`](skills/) for currently available skills, ready to use with Windsurf Next.
 
+**Documentation**: [GitHub Wiki](https://github.com/detailobsessed/Axiom-Windsurf/wiki)
+
 ## Installation
 
-### Manual Installation
+Run the install script:
 
-Copy the skills to Windsurf's global skills directory:
+```bash
+./scripts/install-skills.sh
+```
+
+Or manually copy:
 
 ```bash
 cp -r skills/* ~/.codeium/windsurf-next/skills/
@@ -35,9 +41,8 @@ Skills are **automatically triggered** based on your questions. Examples:
 ## Project Structure
 
 ```text
-skills/              # Windsurf-compatible SKILL.md files (use these)
-.claude-plugin/      # Upstream skills source (for porting)
-docs/                # Upstream documentation (reference)
+skills/              # Windsurf-compatible SKILL.md files
+scripts/             # Install and porting scripts
 ```
 
 ## Upstream
@@ -59,7 +64,7 @@ Skills work fully. Agents and commands are referenced in skill content but link 
 
 ## Contributing
 
-- **Issues**: [GitHub Issues](https://github.com/ichoosetoaccept/Axiom-Windsurf/issues)
+- **Issues**: [GitHub Issues](https://github.com/detailobsessed/Axiom-Windsurf/issues)
 - **Skill content**: Contribute upstream at [CharlesWiltgen/Axiom](https://github.com/CharlesWiltgen/Axiom)
 
 ## License
