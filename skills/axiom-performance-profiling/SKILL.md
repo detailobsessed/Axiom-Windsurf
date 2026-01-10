@@ -48,7 +48,7 @@ App performance problem?
 │  └─ → Energy Impact
 └─ Scrolling stutters
    └─ → Time Profiler + SwiftUI Instrument
-``````text
+```
 
 ### Time Profiler Deep Dive
 
@@ -86,7 +86,7 @@ App performance problem?
 
 ### Self Time vs Total Time
 
-``````text
+```text
 Self Time: Time spent IN this function (not callees)
 Total Time: Time spent in this function AND all callees
 
@@ -100,7 +100,7 @@ Example reading:
 
 ✅ Look at Self Time to find actual bottleneck
 ❌ Don't optimize processData() based on Total Time alone
-``````
+```
 
 ### Quick Profiling Workflow
 

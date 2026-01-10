@@ -85,11 +85,11 @@ for try await event in connection.events {
         break
     }
 }
-```text
+```
 
 ### Legacy TCP Connection (iOS 12-25)
 
-``````swift
+```swift
 // iOS 12-25: Completion-based with NWConnection
 let connection = NWConnection(
     host: "example.com",
@@ -115,14 +115,14 @@ connection.start(queue: .main)
 
 This page documents the `axiom-networking` skill—Network.framework patterns Claude uses when helping you implement UDP/TCP connections. The skill contains complete connection patterns, TLS configuration, and migration guides from deprecated APIs.
 
-**For diagnostics:** See [networking-diag](/diagnostic/networking-diag) for troubleshooting connection failures.
+**For diagnostics:** See `networking-diag` (see upstream Axiom docs) for troubleshooting connection failures.
 
-**For API reference:** See [network-framework-ref](/reference/network-framework-ref) for comprehensive API coverage.
+**For API reference:** See `network-framework-ref` (see upstream Axiom docs) for comprehensive API coverage.
 
 ## Related
 
-- [networking-diag](/diagnostic/networking-diag) — Connection failure diagnosis and debugging
-- [network-framework-ref](/reference/network-framework-ref) — Complete API reference
+- `networking-diag` (see upstream Axiom docs) — Connection failure diagnosis and debugging
+- `network-framework-ref` (see upstream Axiom docs) — Complete API reference
 - `networking-auditor` agent (see upstream Axiom docs) — Autonomous agent scanning for deprecated APIs
 - `swift-concurrency` skill — Async/await patterns for iOS 26+
 

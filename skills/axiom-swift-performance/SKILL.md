@@ -50,11 +50,11 @@ func process(_ data: ImageData) { ... }
 
 // ✅ Zero-cost borrowing
 func process(borrowing data: ImageData) { ... }
-```text
+```
 
 ### Actor Batching
 
-``````swift
+```swift
 // ❌ 10,000 actor hops (~1 second)
 for _ in 0..<10000 {
     await counter.increment()
@@ -62,11 +62,11 @@ for _ in 0..<10000 {
 
 // ✅ Single hop (~0.1ms)
 await counter.incrementBatch(10000)
-```text
+```
 
 ### Generic Specialization
 
-``````swift
+```swift
 // ❌ Dynamic dispatch
 func render(shapes: [any Shape]) { ... }
 

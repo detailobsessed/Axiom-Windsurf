@@ -1,11 +1,11 @@
 ---
 name: axiom-memory-debugging
-description: Use when debugging retain cycles, memory leaks, crashes after 10+ minutes, or progressive memory growth from 50MB to 200MB+ — provides systematic diagnosis, Instruments patterns, and production-ready fixes for iOS/macOS apps
+description: Use when debugging retain cycles, memory leaks, crashes after 10+ minutes, or progressive memory growth from 50MB → 200MB — provides systematic diagnosis, Instruments patterns, and production-ready fixes for iOS/macOS apps under time pressure
 ---
 
 # Memory Debugging
 
-Systematic memory leak diagnosis using Instruments. Covers the 5 leak patterns responsible for 90% of real-world iOS memory issues.
+Systematic memory leak diagnosis using Instruments. This skill covers the 5 leak patterns responsible for 90% of real-world iOS memory issues.
 
 ## When to Use This Skill
 
@@ -21,18 +21,48 @@ Use this skill when you're:
 
 ## Example Prompts
 
-Questions that should trigger this skill:
+Questions you can ask Claude that will draw from this skill:
 
-- "My app crashes after 10-15 minutes of use with no error messages"
-- "Memory jumps from 50MB to 200MB+ on a specific action"
-- "View controllers don't deallocate after dismiss"
-- "I have timers and observers that might be leaking"
-- "My app uses 200MB. Is that normal or do I have leaks?"
+- "My app crashes after 10-15 minutes of use with no error messages. How do I find the leak?"
+- "Memory jumps from 50MB to 200MB+ on a specific action. Is this a leak or normal caching?"
+- "View controllers don't deallocate after dismiss. How do I find the retain cycle?"
+- "I have timers and observers that might be leaking. How do I verify and fix?"
+- "My app uses 200MB. Is that normal or do I have multiple leaks?"
 - "How do I set up Instruments to track memory leaks?"
+- "How do I verify my fix actually worked?"
 
-## The 5 Leak Patterns (90% of Real Issues)
+## What's Covered
 
-### 🔴 Pattern 1: Closure Capture Leaks
+### The 5 Leak Patterns (90% of Real Issues)
+
+1. **Closure Capture Leaks** — `self` captured strongly in escaping closures
+2. **Delegate Cycles** — Strong delegate references creating mutual retention
+3. **Timer Leaks** — Repeating timers holding strong references
+4. **NotificationCenter Leaks** — Observers not removed in deinit
+5. **Parent-Child Cycles** — Navigation or container relationships
+
+### Instruments Workflows
+
+- Allocations instrument setup and heap snapshots
+- Reference count tracking and retain cycle visualization
+- Mark Generation technique for isolating leaks
+- Memory Graph Debugger for finding retainers
+
+### Diagnostic Decision Tree
+
+- Progressive growth vs temporary spikes
+- Leak vs expected cache behavior
+- Normal memory use vs problematic patterns
+
+### Verification Patterns
+
+- `deinit` logging to confirm deallocation
+- Heap snapshot comparison before/after
+- Regression testing for leaks
+
+## Key Pattern
+
+### Closure Capture Fix
 
 ```swift
 // ❌ LEAKS: Strong capture of self
@@ -44,140 +74,35 @@ viewModel.onUpdate = {
 viewModel.onUpdate = { [weak self] in
     self?.updateUI()
 }
-```
 
-### 🔴 Pattern 2: Delegate Cycles
-
-```swift
-// ❌ LEAKS: Strong delegate creates cycle
-class Child {
-    var delegate: Parent?  // Strong reference!
-}
-
-// ✅ SAFE: Weak delegate
-class Child {
-    weak var delegate: Parent?
-}
-```
-
-### 🔴 Pattern 3: Timer Leaks
-
-```swift
-// ❌ LEAKS: Timer never invalidated
-var timer: Timer?
-timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
-    self.tick()
-}
-
-// ✅ SAFE: Invalidate in deinit
+// ✅ Verify fix worked
 deinit {
-    timer?.invalidate()
+    print("ViewController deallocated")  // Should print on dismiss
 }
 ```
 
-### 🟡 Pattern 4: NotificationCenter Leaks
+### Quick Diagnosis Checklist
 
-```swift
-// ❌ LEAKS: Observer never removed
-NotificationCenter.default.addObserver(
-    self,
-    selector: #selector(handleNotification),
-    name: .someNotification,
-    object: nil
-)
+1. Does the class have `deinit`? Add one with a print statement
+2. Does `deinit` fire when expected? If not, leak exists
+3. Check: closures, delegates, timers, observers
+4. Use Memory Graph Debugger to find the retainer
 
-// ✅ SAFE: Remove in deinit
-deinit {
-    NotificationCenter.default.removeObserver(self)
-}
-```
+## Documentation Scope
 
-### 🟡 Pattern 5: Parent-Child Cycles
+This page documents the `axiom-memory-debugging` skill—systematic leak diagnosis workflows Claude uses when helping you debug memory issues. The skill contains complete Instruments setup, pattern recognition, heap analysis techniques, and production crisis handling.
 
-```swift
-// ❌ LEAKS: Navigation creates cycle
-class ParentVC: UIViewController {
-    var childVC: ChildVC?
-}
-class ChildVC: UIViewController {
-    var parentVC: ParentVC?  // Strong back-reference!
-}
+**For quick scanning:** Use `/axiom:audit-memory` command (Claude Code only) to scan your codebase for the 5 most common leak patterns automatically.
 
-// ✅ SAFE: Weak back-reference
-class ChildVC: UIViewController {
-    weak var parentVC: ParentVC?
-}
-```
+## Related
 
-## Quick Diagnosis Checklist
-
-1. **Add deinit logging:**
-
-```swift
-deinit {
-    print("\(type(of: self)) deallocated")
-}
-```
-
-1. **Does deinit fire when expected?** If not, leak exists
-
-2. **Check in order:** closures → delegates → timers → observers
-
-3. **Use Memory Graph Debugger** (Debug > Debug Memory Graph) to find retainer
-
-## Instruments Workflow
-
-### Setup for Leak Detection
-
-1. **Product > Profile** (Cmd-I)
-2. Select **Allocations** template
-3. Record while reproducing the issue
-4. Use **Mark Generation** before/after action to isolate
-
-### Finding the Retainer
-
-1. **Debug > Debug Memory Graph** in Xcode
-2. Find the leaked object in left sidebar
-3. Follow arrows to see what's retaining it
-4. Purple "!" indicates strong reference cycle
-
-## Quick Diagnostic Table
-
-| Symptom | Likely Pattern | Fix Time |
-|---------|----------------|----------|
-| VC doesn't deallocate | Closure or delegate | 5 min |
-| Memory grows 10MB/min | Timer leak | 2 min |
-| Crash after 10-15 min | Multiple leaks | 30 min |
-| Multiple VC instances | Navigation cycle | 10 min |
-
-## Verification
-
-After fixing, verify the leak is gone:
-
-```swift
-// 1. Add deinit print
-deinit {
-    print("✅ \(type(of: self)) deallocated")
-}
-
-// 2. Reproduce the action that caused the leak
-// 3. Verify deinit prints
-// 4. Check Instruments shows flat memory graph
-```
-
-## Time Cost Transparency
-
-- 5-10 minutes: Fix single leak with known pattern
-- 15-30 minutes: Find and fix unknown leak with Instruments
-- 2-3 hours: Debugging without systematic approach
-
-## Related Skills
-
-- `axiom-swift-concurrency` — When leaks are from Task captures
-- `axiom-xcode-debugging` — Environment issues, not actual leaks
+- `/axiom:audit-memory` command (Claude Code only) — Quick automated scan for leak patterns in code
+- `memory-auditor` agent (see upstream Axiom docs) — Autonomous agent for codebase-wide leak detection
+- `performance-profiling` skill — Broader profiling including CPU and energy
+- `swift-concurrency` skill — Actor patterns that prevent some leak types
 
 ## Resources
 
 **WWDC**: 2021-10180, 2022-10106, 2024-10173
 
-**Docs**: /instruments, /xcode/debugging-and-testing
+**Docs**: [Instruments](https://developer.apple.com/documentation/instruments), [Debugging and Testing](https://developer.apple.com/documentation/xcode/debugging-and-testing)

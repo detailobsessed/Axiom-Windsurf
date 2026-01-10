@@ -1,6 +1,6 @@
 ---
 name: axiom-swift-testing
-description: Swift Testing framework — @Test, #expect, fast tests without simulator, async testing
+description: "Swift Testing framework — @Test, #expect, fast tests without simulator, async testing"
 ---
 
 # Swift Testing
@@ -36,7 +36,7 @@ import Testing
     let video = Video(named: "example.mp4")
     #expect(video.duration == 120)
 }
-```text
+```
 
 ### The Speed Hierarchy
 
@@ -50,7 +50,7 @@ import Testing
 
 ### Async Testing
 
-``````swift
+```swift
 @Test func notificationReceived() async {
     await confirmation(expectedCount: 1) { confirm in
         NotificationCenter.default.addObserver(...) {
@@ -59,7 +59,7 @@ import Testing
         triggerNotification()
     }
 }
-```swift
+```
 
 ### XCTest Migration
 
@@ -74,7 +74,7 @@ import Testing
 
 ### Parameterized Tests
 
-``````swift
+```swift
 @Test(arguments: [IceCream.vanilla, .chocolate, .strawberry])
 func flavorWithoutNuts(_ flavor: IceCream) {
     #expect(!flavor.containsNuts)

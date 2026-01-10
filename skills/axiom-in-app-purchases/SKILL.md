@@ -111,11 +111,11 @@ class StoreManager: ObservableObject {
         }
     }
 }
-```text
+```
 
 ### Transaction Listener (Required)
 
-``````swift
+```swift
 // Start at app launch — catches purchases made on other devices
 func listenForTransactions() -> Task<Void, Never> {
     Task.detached {
@@ -133,13 +133,13 @@ func listenForTransactions() -> Task<Void, Never> {
 
 This page documents the `axiom-in-app-purchases` skill—StoreKit 2 implementation patterns Claude uses when you're adding purchase functionality to your app.
 
-**For comprehensive API reference:** See [storekit-ref](/reference/storekit-ref) for complete API coverage, edge cases, and server-side patterns.
+**For comprehensive API reference:** See `storekit-ref` (see upstream Axiom docs) for complete API coverage, edge cases, and server-side patterns.
 
-**For subscription-specific patterns:** See [storekit-ref](/reference/storekit-ref) subscription section for renewal, upgrades, and family sharing.
+**For subscription-specific patterns:** See `storekit-ref` (see upstream Axiom docs) subscription section for renewal, upgrades, and family sharing.
 
 ## Related
 
-- [storekit-ref](/reference/storekit-ref) — Complete StoreKit 2 API reference
+- `storekit-ref` (see upstream Axiom docs) — Complete StoreKit 2 API reference
 - `iap-auditor` agent (see upstream Axiom docs) — Automated scanning for IAP issues
 - `swift-concurrency` skill — Async patterns for purchase flows
 

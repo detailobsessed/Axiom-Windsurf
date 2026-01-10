@@ -109,11 +109,11 @@ try database.write { db in
 try database.write { db in
     try Item.find(id).delete().execute(db)
 }
-```text
+```
 
 ### Common Queries
 
-``````swift
+```swift
 // Filter
 Item.where(\.isActive)                     // Keypath (simple)
 Item.where { $0.title.contains("phone") }  // Closure (complex)

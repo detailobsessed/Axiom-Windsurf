@@ -1,6 +1,6 @@
 ---
 name: axiom-database-migration
-description: Use when adding/modifying database columns, encountering "FOREIGN KEY constraint failed", "no such column", "cannot add NOT NULL column" errors, or creating schema migrations for SQLite/GRDB/SQLiteData — prevents data loss with safe migration patterns and testing workflows for iOS/macOS apps
+description: "Use when adding/modifying database columns, encountering \"FOREIGN KEY constraint failed\", \"no such column\", \"cannot add NOT NULL column\" errors, or creating schema migrations for SQLite/GRDB/SQLiteData — prevents data loss with safe migration patterns and testing workflows for iOS/macOS apps"
 ---
 
 # Database Migration
@@ -37,7 +37,7 @@ Questions you can ask Claude that will draw from this skill:
 
 ### Critical Rules (Data Loss Prevention)
 
-#### NEVER do these with user data
+**NEVER do these with user data:**
 
 - ❌ DROP TABLE
 - ❌ Modify shipped migrations (create new one)
@@ -89,11 +89,11 @@ try db.execute(sql: """
     ALTER TABLE users ADD COLUMN required_field TEXT NOT NULL
     -- Error: cannot add NOT NULL column with default value NULL
 """)
-```text
+```
 
 ### Changing Column Type Safely
 
-``````swift
+```swift
 // ✅ SAFE: Add new → migrate → keep old (never delete)
 migrator.registerMigration("v4_migrate_age_to_int") { db in
     // 1. Add new column

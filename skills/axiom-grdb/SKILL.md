@@ -98,11 +98,11 @@ try dbQueue.write { db in
     try db.execute(sql: "INSERT INTO tracks (id, title, artist) VALUES (?, ?, ?)",
                    arguments: [UUID().uuidString, "Get Lucky", "Daft Punk"])
 }
-```text
+```
 
 ### ValueObservation (Reactive)
 
-``````swift
+```swift
 let observation = ValueObservation.tracking { db in
     try Track.filter(Column("artist") == "Daft Punk").fetchAll(db)
 }
@@ -113,11 +113,11 @@ let cancellable = observation.start(in: dbQueue, onError: { error in
     // Called on every database change affecting this query
     self.tracks = tracks
 })
-```text
+```
 
 ### DatabaseMigrator (2)
 
-``````swift
+```swift
 var migrator = DatabaseMigrator()
 
 migrator.registerMigration("v1") { db in

@@ -97,9 +97,9 @@ Exception Codes: KERN_INVALID_ADDRESS at 0x0000000000000010
 Thread 0 Crashed:
 0   MyApp    UserManager.currentUser.getter + 45
 1   MyApp    ProfileViewController.viewDidLoad() + 123
-``````
+```
 
-#### Translation
+**Translation:**
 
 - `EXC_BAD_ACCESS` with low address (0x10) = nil dereference
 - Crashed accessing `currentUser` property

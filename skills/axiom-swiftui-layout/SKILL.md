@@ -48,7 +48,7 @@ Covers tool selection (ViewThatFits vs AnyLayout vs onGeometryChange), size clas
 
 ## Related Resources
 
-- [swiftui-layout-ref](/reference/swiftui-layout-ref) — Complete API reference
+- `swiftui-layout-ref` (see upstream Axiom docs) — Complete API reference
 - `swiftui-debugging` skill — View update diagnostics
 - [WWDC 2025: Elevate the design of your iPad app](https://developer.apple.com/videos/play/wwdc2025/208/)
 - [WWDC 2024: Get started with Dynamic Type](https://developer.apple.com/videos/play/wwdc2024/10074/)

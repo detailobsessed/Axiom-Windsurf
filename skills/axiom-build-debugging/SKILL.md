@@ -1,175 +1,116 @@
 ---
 name: axiom-build-debugging
-description: Use when Xcode build fails with dependency errors, CocoaPods/SPM conflicts, "No such module" after package updates, or version resolution failures — systematic diagnosis for iOS/macOS dependency issues
+description: Dependency and build configuration debugging for CocoaPods, SPM, and framework conflicts
 ---
 
 # Build Debugging
 
-Systematic diagnosis for Xcode build failures related to dependencies, package managers, and project configuration.
+Dependency resolution and build configuration debugging for iOS projects. Covers CocoaPods, Swift Package Manager, and framework version conflicts.
 
 ## When to Use This Skill
 
 Use this skill when you're:
 
-- Getting "No such module" errors after SPM updates
-- CocoaPods or SPM version conflicts
-- Build fails after switching branches
-- Dependency resolution taking forever or failing
-- Xcode can't find frameworks that should exist
-- Linker errors with third-party libraries
+- Getting "No such module" after adding a Swift Package
+- Seeing "Multiple commands produce" the same output file
+- Build works on one machine but fails on another
+- CocoaPods install succeeds but build still fails
+- SPM resolution hangs or times out
+- Framework version conflicts in error logs
 
-**Core principle:** Most dependency issues are cache/state problems, not actual conflicts. Clean state first, debug second.
+**Core principle:** Check dependencies BEFORE blaming code. Most persistent build failures are dependency resolution issues, not code bugs.
 
 ## Example Prompts
 
-Questions that should trigger this skill:
+Questions you can ask Claude that will draw from this skill:
 
-- "Build fails with 'No such module' after updating packages"
-- "CocoaPods says there's a version conflict"
-- "SPM is stuck resolving dependencies"
-- "Linker error: framework not found"
-- "Build works on my machine but fails on CI"
-- "Xcode can't find a module I just added"
+- "I added a Swift Package but I'm getting 'No such module' errors."
+- "The build is failing with 'Multiple commands produce' the same output file."
+- "CocoaPods installed dependencies but the build still fails."
+- "My build works on my Mac but fails on CI."
+- "I'm getting framework version conflicts."
 
-## Diagnostic Workflow
+## What's Covered
 
-### Step 1: Environment Check (Always First)
+### Swift Package Manager Issues
 
-```bash
-# Check for zombie processes
-ps aux | grep -E "xcodebuild|swift" | grep -v grep
+- "No such module" after adding package
+- SPM resolution hangs or times out
+- Package cache clearing (DerivedData + SPM cache)
+- FRAMEWORK_SEARCH_PATHS diagnostics
 
-# Kill if found
-killall xcodebuild 2>/dev/null
+### CocoaPods Issues
 
-# Check Derived Data size (>10GB = problem)
-du -sh ~/Library/Developer/Xcode/DerivedData
-```
+- Podfile.lock conflicts
+- Post-install build failures
+- Linking errors
+- Version constraint debugging
 
-### Step 2: Identify Package Manager
+### Build Configuration Issues
 
-| Manager | Config File | Cache Location |
-|---------|-------------|----------------|
-| SPM | Package.swift, Package.resolved | ~/Library/Caches/org.swift.swiftpm |
-| CocoaPods | Podfile, Podfile.lock | Pods/, ~/Library/Caches/CocoaPods |
-| Carthage | Cartfile, Cartfile.resolved | Carthage/ |
+- "Multiple commands produce" (duplicate target membership)
+- Framework search path issues
+- Environment-specific paths
+- CI vs local differences
 
-### Step 3: Clean and Reset
+### Resolution Strategies
 
-#### For SPM Issues
+- Dependency graph analysis
+- Version constraint resolution
+- Reproducible build strategies
 
-```bash
-# Nuclear option - full SPM reset
-rm -rf ~/Library/Caches/org.swift.swiftpm
-rm -rf ~/Library/Developer/Xcode/DerivedData
-rm -rf .build
-rm Package.resolved  # Only if you want fresh resolution
+## Key Pattern
 
-# Then in Xcode: File > Packages > Reset Package Caches
-```
-
-#### For CocoaPods Issues
-
-```bash
-# Full CocoaPods reset
-rm -rf Pods
-rm Podfile.lock  # Only if you want fresh resolution
-pod cache clean --all
-pod deintegrate
-pod install
-```
-
-## Common Issues and Fixes
-
-### 🔴 "No such module" After SPM Update
-
-```bash
-# 1. Clean Derived Data
-rm -rf ~/Library/Developer/Xcode/DerivedData
-
-# 2. Reset SPM cache
-rm -rf ~/Library/Caches/org.swift.swiftpm
-
-# 3. Close and reopen Xcode
-
-# 4. File > Packages > Resolve Package Versions
-```
-
-**Time:** 3-5 minutes
-
-### 🔴 SPM Version Conflict
+### Decision Tree
 
 ```text
-Package 'X' requires 'Y' 2.0.0, but 'Z' requires 'Y' 1.0.0
+Build failing?
+├─ "No such module XYZ"?
+│  ├─ After adding SPM package?
+│  │  └─ Clean build folder + reset package caches
+│  ├─ After pod install?
+│  │  └─ Check Podfile.lock conflicts
+│  └─ Framework not found?
+│     └─ Check FRAMEWORK_SEARCH_PATHS
+├─ "Multiple commands produce"?
+│  └─ Duplicate files in target membership
+├─ SPM resolution hangs?
+│  └─ Clear package caches + derived data
+└─ Version conflicts?
+   └─ Use dependency resolution strategies
 ```
 
-**Fix options:**
-
-1. Check if packages have compatible version ranges
-2. Fork and update the outdated package
-3. Use `.upToNextMajor(from:)` instead of exact versions
-
-### 🟡 CocoaPods Spec Repo Out of Date
+### SPM Package Not Found Fix
 
 ```bash
-# Update spec repo
-pod repo update
+# Reset package caches
+rm -rf ~/Library/Developer/Xcode/DerivedData
+rm -rf ~/Library/Caches/org.swift.swiftpm
 
-# Then reinstall
-pod install
+# Then in Xcode: File → Packages → Reset Package Caches
+# Build again
 ```
 
-### 🟡 Linker Error: Framework Not Found
+### "Multiple Commands Produce" Fix
 
-```bash
-# Check framework search paths in Build Settings
-# Verify framework is in:
-# - Embedded Binaries (for dynamic frameworks)
-# - Link Binary With Libraries (for all frameworks)
+1. Find the file mentioned in error
+2. Select file in Xcode project navigator
+3. Open File Inspector (right panel)
+4. Under "Target Membership", uncheck duplicate targets
 
-# For SPM packages, ensure target is linked:
-# Target > General > Frameworks, Libraries, and Embedded Content
-```
+## Documentation Scope
 
-### 🟢 Build Works Locally, Fails on CI
+This page documents the `axiom-build-debugging` skill—dependency and build configuration debugging patterns Claude uses when you encounter persistent build failures.
 
-Common causes:
+**For environment issues:** See `xcode-debugging` skill for Derived Data, simulator, and zombie process diagnostics.
 
-1. **Different Xcode version** — Check CI Xcode version
-2. **Missing Package.resolved** — Commit it to git
-3. **Cache corruption** — Add cache clear step to CI
-4. **Keychain issues** — Ensure certificates are installed
+## Related
 
-## Quick Diagnostic Table
-
-| Symptom | First Action | Time |
-|---------|--------------|------|
-| "No such module" | Clean Derived Data + SPM cache | 3 min |
-| Version conflict | Check Package.resolved | 5 min |
-| Stuck resolving | Kill xcodebuild, reset cache | 2 min |
-| Framework not found | Check link settings | 5 min |
-| CI-only failure | Compare Xcode versions | 10 min |
-
-## Prevention Tips
-
-1. **Commit Package.resolved/Podfile.lock** — Ensures reproducible builds
-2. **Pin major versions** — Use `.upToNextMinor` for stability
-3. **Clean before branch switch** — Prevents stale cache issues
-4. **CI cache strategy** — Cache SPM/Pods but invalidate on lockfile change
-
-## Time Cost Transparency
-
-- 2-5 minutes: Cache reset fixes most issues
-- 10-30 minutes: Actual version conflict resolution
-- 1-2 hours: Debugging without systematic approach
-
-## Related Skills
-
-- `axiom-xcode-debugging` — Environment issues (zombies, simulators)
-- `axiom-swift-concurrency` — When build fails due to concurrency errors
+- `xcode-debugging` skill — Environment-first diagnostics for Xcode issues
+- `swift-concurrency` skill — Swift 6 build settings that can cause failures
 
 ## Resources
 
-**WWDC**: 2022-110359 (SPM), 2023-10164 (Xcode)
+**WWDC**: 2022-110371 (Swift Package Manager), 2023-10164 (Xcode debugging)
 
-**Docs**: /xcode/swift-packages, /xcode/build-system
+**Docs**: [Swift Packages](https://developer.apple.com/documentation/xcode/swift-packages), [Build System](https://developer.apple.com/documentation/xcode/build-system)

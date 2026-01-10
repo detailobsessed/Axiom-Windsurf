@@ -18,7 +18,7 @@ Use this skill when you're:
 - Defending design decisions to stakeholders
 - Quick lookups for common design questions
 
-**For comprehensive details:** See [hig-ref](/reference/hig-ref) for complete API coverage and code examples.
+**For comprehensive details:** See `hig-ref` (see upstream Axiom docs) for complete API coverage and code examples.
 
 **For Liquid Glass:** See `liquid-glass` skill for iOS 26 material design.
 
@@ -72,11 +72,11 @@ Is your app media-focused (photos, videos, music)?
 └─ No → Use system backgrounds (respects user preference)
          systemBackground (adapts automatically)
          systemGroupedBackground (iOS Settings-style lists)
-``````text
+```
 
 ### Color Selection Decision Tree
 
-``````text
+```text
 Do you need a specific color value?
 ├─ No → Use semantic colors
 │        label, secondaryLabel, tertiaryLabel
@@ -87,11 +87,11 @@ Do you need a specific color value?
          1. Open Assets.xcassets
          2. Add Color Set
          3. Configure light/dark/high contrast variants
-``````text
+```
 
 ### Font Weight Decision
 
-``````swift
+```swift
 // ❌ AVOID — Legibility issues
 .font(.system(.body, weight: .ultraLight))
 .font(.system(.body, weight: .thin))
@@ -107,11 +107,11 @@ Do you need a specific color value?
 
 This page documents the `axiom-hig` skill—quick HIG decision frameworks Claude uses when you're making design decisions or reviewing UI for compliance.
 
-**For comprehensive reference:** See [hig-ref](/reference/hig-ref) for complete API coverage, code examples, and detailed guidelines.
+**For comprehensive reference:** See `hig-ref` (see upstream Axiom docs) for complete API coverage, code examples, and detailed guidelines.
 
 ## Related
 
-- [hig-ref](/reference/hig-ref) — Comprehensive HIG API reference
+- `hig-ref` (see upstream Axiom docs) — Comprehensive HIG API reference
 - `liquid-glass` skill — iOS 26 Liquid Glass material design
 - `swiftui-layout` skill — Adaptive layout patterns
 

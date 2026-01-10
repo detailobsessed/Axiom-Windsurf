@@ -17,7 +17,7 @@ Use this skill when you're:
 - Setting up background location updates
 - Reviewing location code for anti-patterns
 
-**Note:** For API details and code examples, see [core-location-ref](/reference/core-location-ref). For troubleshooting, see [core-location-diag](/diagnostic/core-location-diag).
+**Note:** For API details and code examples, see `core-location-ref` (see upstream Axiom docs). For troubleshooting, see `core-location-diag` (see upstream Axiom docs).
 
 ## Example Prompts
 
@@ -84,14 +84,14 @@ let navSession = CLServiceSession(
 
 This page documents the `axiom-core-location` skill—implementation patterns and decision frameworks Claude uses when helping you design location features.
 
-**For API reference:** See [core-location-ref](/reference/core-location-ref) for CLLocationUpdate, CLMonitor, CLServiceSession APIs.
+**For API reference:** See `core-location-ref` (see upstream Axiom docs) for CLLocationUpdate, CLMonitor, CLServiceSession APIs.
 
-**For troubleshooting:** See [core-location-diag](/diagnostic/core-location-diag) for debugging location issues.
+**For troubleshooting:** See `core-location-diag` (see upstream Axiom docs) for debugging location issues.
 
 ## Related
 
-- [core-location-ref](/reference/core-location-ref) — Complete API reference for modern Core Location
-- [core-location-diag](/diagnostic/core-location-diag) — Symptom-based troubleshooting
+- `core-location-ref` (see upstream Axiom docs) — Complete API reference for modern Core Location
+- `core-location-diag` (see upstream Axiom docs) — Symptom-based troubleshooting
 - `energy` skill — Location as battery subsystem
 
 ## Resources

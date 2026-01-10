@@ -86,11 +86,11 @@ static let migrateV1toV2 = MigrationStage.custom(
         // ❌ CANNOT access: SchemaV1 models (gone)
     }
 )
-```text
+```
 
 ### Two-Stage Migration for Type Changes
 
-``````swift
+```swift
 // Stage 1: Save old data to temporary storage (willMigrate)
 willMigrate: { context in
     let oldNotes = try context.fetch(FetchDescriptor<SchemaV1.Note>())
@@ -119,12 +119,12 @@ This page documents the `axiom-swiftdata-migration` skill—custom SwiftData mig
 
 **For SwiftData basics:** See `swiftdata` skill for @Model, @Query, and ModelContext patterns.
 
-**For migration diagnostics:** See [swiftdata-migration-diag](/diagnostic/swiftdata-migration-diag) for troubleshooting migration failures.
+**For migration diagnostics:** See `swiftdata-migration-diag` (see upstream Axiom docs) for troubleshooting migration failures.
 
 ## Related
 
 - `swiftdata` skill — Core SwiftData patterns
-- [swiftdata-migration-diag](/diagnostic/swiftdata-migration-diag) — Migration failure diagnosis
+- `swiftdata-migration-diag` (see upstream Axiom docs) — Migration failure diagnosis
 - `database-migration` skill — General SQLite migration patterns
 
 ## Resources

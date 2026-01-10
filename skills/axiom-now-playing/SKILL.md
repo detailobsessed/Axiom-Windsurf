@@ -103,11 +103,11 @@ MPNowPlayingInfoCenter.default().nowPlayingInfo = [
     MPMediaItemPropertyTitle: "Track Name",
     MPNowPlayingInfoPropertyPlaybackRate: 1.0  // iOS uses rate, not playbackState
 ]
-```text
+```
 
 ### Decision Tree
 
-``````text
+```text
 Now Playing not working?
 ├─ Info never appears?
 │  ├─ Category .ambient or .mixWithOthers? → Remove .mixWithOthers
@@ -119,19 +119,19 @@ Now Playing not working?
 │  └─ MPMediaItemArtwork block issues → Single source + cancellation
 └─ State out of sync?
    └─ Using playbackState? → Use playbackRate (iOS ignores playbackState)
-``````
+```
 
 ## Documentation Scope
 
 This page documents the `axiom-now-playing` skill—MediaPlayer framework patterns Claude uses when you're implementing or debugging Lock Screen and Control Center integration for audio/video apps.
 
-**For AVAudioSession details:** See [avfoundation-ref](/reference/avfoundation-ref) for audio session configuration beyond Now Playing.
+**For AVAudioSession details:** See `avfoundation-ref` (see upstream Axiom docs) for audio session configuration beyond Now Playing.
 
 **For memory issues with handlers:** See `memory-debugging` skill for retain cycle diagnosis in command closures.
 
 ## Related
 
-- [avfoundation-ref](/reference/avfoundation-ref) — AVAudioSession configuration, spatial audio, ASAF/APAC
+- `avfoundation-ref` (see upstream Axiom docs) — AVAudioSession configuration, spatial audio, ASAF/APAC
 - `memory-debugging` skill — Retain cycle diagnosis in closure-based command handlers
 - `swift-concurrency` skill — @MainActor patterns for async artwork loading
 
