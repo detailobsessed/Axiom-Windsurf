@@ -16,6 +16,7 @@ apple_platforms: iOS 4.0+, iPadOS 4.0+, macOS 10.0+
 ## When to Use This Skill
 
 Use this skill when you need to:
+
 - Protect sensitive user data at rest
 - Choose appropriate FileProtectionType for files
 - Understand when files are accessible/encrypted
@@ -29,6 +30,7 @@ Use this skill when you need to:
 iOS Data Protection provides **hardware-accelerated file encryption** tied to the device passcode. When a user sets a passcode, every file can be encrypted with keys protected by that passcode.
 
 **Key concepts**:
+
 - Files are encrypted **automatically** when protection is enabled
 - Encryption keys are derived from device hardware + user passcode
 - Files become **inaccessible** when device is locked (depending on protection level)
@@ -53,6 +55,7 @@ iOS Data Protection provides **hardware-accelerated file encryption** tied to th
 > "The file is stored in an encrypted format on disk and cannot be read from or written to while the device is locked or booting."
 
 **Use For**:
+
 - User health data
 - Financial information
 - Password vaults
@@ -60,6 +63,7 @@ iOS Data Protection provides **hardware-accelerated file encryption** tied to th
 - Personal photos (if app requires maximum security)
 
 **Behavior**:
+
 - Encrypted: ✅ Always
 - Accessible: Only when device unlocked
 - Background access: ❌ No (app can't read while locked)
@@ -81,6 +85,7 @@ try FileManager.default.setAttributes(
 ```
 
 **Tradeoffs**:
+
 - ✅ Maximum security
 - ❌ Can't access in background
 - ❌ User sees errors if app tries to access while locked
@@ -91,12 +96,14 @@ try FileManager.default.setAttributes(
 > "The file is stored in an encrypted format on disk after it is closed."
 
 **Use For**:
+
 - Large file downloads (continue in background)
 - Video files being played
 - Documents being edited
 - Any file that needs background access while open
 
 **Behavior**:
+
 - Encrypted: ✅ When closed
 - Accessible: After first unlock, remains accessible while open
 - Background access: ✅ Yes (if file was already open)
@@ -122,6 +129,7 @@ func startBackgroundDownload(url: URL, destination: URL) throws {
 ```
 
 **Tradeoffs**:
+
 - ✅ Good security (encrypted when not in use)
 - ✅ Background access (if already open)
 - ⚠️ Vulnerable while open
@@ -132,6 +140,7 @@ func startBackgroundDownload(url: URL, destination: URL) throws {
 > "The file is stored in an encrypted format on disk and cannot be accessed until after the device has booted."
 
 **Use For**:
+
 - Most application data
 - User preferences
 - Downloaded content
@@ -139,6 +148,7 @@ func startBackgroundDownload(url: URL, destination: URL) throws {
 - Anything that needs background access
 
 **Behavior**:
+
 - Encrypted: ✅ Always
 - Accessible: After first unlock following boot
 - Background access: ✅ Yes (after first unlock)
@@ -165,6 +175,7 @@ func backgroundTaskCanAccessFile() {
 ```
 
 **Tradeoffs**:
+
 - ✅ Protected during boot (device stolen while off)
 - ✅ Background access (normal operation)
 - ⚠️ Accessible while locked (less protection than .complete)
@@ -175,6 +186,7 @@ func backgroundTaskCanAccessFile() {
 > "The file has no special protections associated with it."
 
 **Use For**:
+
 - Public cache data
 - Temporary files
 - Non-sensitive downloads
@@ -182,6 +194,7 @@ func backgroundTaskCanAccessFile() {
 - Only when absolutely necessary
 
 **Behavior**:
+
 - Encrypted: ❌ Never
 - Accessible: ✅ Always
 - Background access: ✅ Always
@@ -197,6 +210,7 @@ func cachePublicThumbnail(_ data: Data, to url: URL) throws {
 ```
 
 **Tradeoffs**:
+
 - ✅ Always accessible
 - ❌ No encryption
 - ❌ Vulnerable if device is stolen
@@ -292,11 +306,13 @@ try userData.write(to: fileURL, options: .completeFileProtection)
 ```
 
 **Keychain advantages**:
+
 - More granular access control (Face ID/Touch ID)
 - Separate encryption (not tied to file system)
 - Survives app deletion (if configured)
 
 **File protection advantages**:
+
 - Works with existing file operations
 - Handles large data efficiently
 - Automatic with minimal code
@@ -351,11 +367,13 @@ func readFile(at url: URL) -> Data? {
 ### How Protection Works with iCloud
 
 **Local file protection**:
+
 - Applied to local cached copies
 - Does NOT affect iCloud-stored versions
 - iCloud has its own encryption (in transit and at rest)
 
 **iCloud encryption**:
+
 - All iCloud data encrypted at rest (Apple-managed keys)
 - End-to-end encryption available for some data types (Advanced Data Protection)
 - File protection only affects local device
@@ -482,6 +500,7 @@ if let protection = try? FileManager.default.attributesOfItem(
 **Cause**: Using `.complete` or `.completeUntilFirstUserAuthentication` (works as designed)
 
 **Solution**: This is expected behavior. Either:
+
 1. Wait for user to unlock device
 2. Handle gracefully with appropriate UI
 3. Use `.none` for files that must be accessible (security tradeoff)
@@ -501,10 +520,12 @@ File protection generally works without special entitlements, but some features 
 ```
 
 **When needed**:
+
 - Using `.complete` protection
 - Some iOS versions for any protection (check documentation)
 
 **How to add**:
+
 1. Xcode → Target → Signing & Capabilities
 2. "+ Capability" → Data Protection
 3. Select protection level

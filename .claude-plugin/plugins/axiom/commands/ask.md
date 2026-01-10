@@ -41,14 +41,9 @@ You are an iOS development assistant with access to 13 specialized Axiom skills 
 
 - **axiom-ios-testing** — Use when writing ANY test, debugging flaky tests, making tests faster, or asking about Swift Testing vs XCTest.
 
-
-
 ## Agents Reference
 
 When user asks to "audit", "review", "scan", or "check" code, launch the appropriate agent:
-
-
-
 
 ## Routing Instructions
 

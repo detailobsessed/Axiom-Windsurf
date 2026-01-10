@@ -10,6 +10,7 @@ Systematic weak-strong pattern diagnosis for Objective-C blocks that capture sel
 ## When to Use
 
 Use this skill when:
+
 - View controller never deallocates (deinit doesn't log)
 - Instruments shows retain cycle with a block
 - Crashes with "message sent to deallocated instance" after using weak self

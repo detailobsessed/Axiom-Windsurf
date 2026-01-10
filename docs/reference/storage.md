@@ -16,18 +16,21 @@ Comprehensive decision framework integrating SwiftData (WWDC 2023), CKSyncEngine
 ### Storage Decision Framework
 
 #### Structured Data Path
+
 - Modern apps (iOS 17+) → SwiftData
 - Advanced control → SQLiteData/GRDB
 - Legacy apps → Core Data
 - Cloud sync → SwiftData + CloudKit or CKSyncEngine
 
 #### File Storage Path
+
 - User-created content → Documents/
 - App data (not visible) → Application Support/
 - Re-downloadable → Caches/
 - Temporary → tmp/
 
 #### Cloud Storage Path
+
 - Structured data → CloudKit (via SwiftData or CKSyncEngine)
 - Files → iCloud Drive (ubiquitous containers)
 - Small preferences → NSUbiquitousKeyValueStore
@@ -35,16 +38,19 @@ Comprehensive decision framework integrating SwiftData (WWDC 2023), CKSyncEngine
 ### Cross-References
 
 **Database Skills**:
+
 - `axiom-swiftdata` — Modern persistence (iOS 17+)
 - `axiom-sqlitedata` — Advanced SQLite control
 - `axiom-grdb` — Reactive queries, migrations
 
 **File Skills**:
+
 - `axiom-file-protection-ref` — Encryption, security
 - `axiom-storage-management-ref` — Purging, disk space
 - `axiom-storage-diag` — Debug file issues
 
 **Cloud Skills**:
+
 - `axiom-cloudkit-ref` — Database sync
 - `axiom-icloud-drive-ref` — File sync
 - `axiom-cloud-sync-diag` — Debug sync issues

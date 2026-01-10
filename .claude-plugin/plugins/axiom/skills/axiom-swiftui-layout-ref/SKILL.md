@@ -600,6 +600,7 @@ content
 ### Related APIs
 
 **`.safeAreaInset(edge:)`** - Adds persistent content that shrinks the safe area:
+
 ```swift
 ScrollView {
     content
@@ -613,6 +614,7 @@ ScrollView {
 ```
 
 **`.ignoresSafeArea()`** - Opts out of safe area completely:
+
 ```swift
 Color.blue
     .ignoresSafeArea()  // Extends to absolute screen edges
@@ -621,17 +623,20 @@ Color.blue
 ### Why It Matters
 
 **Before iOS 17**: Developers had to manually calculate safe area insets with GeometryReader, leading to:
+
 - Verbose code
 - Performance overhead (GeometryReader forces extra layout pass)
 - Easy mistakes (forgetting to check all edges)
 
 **iOS 17+**: `.safeAreaPadding()` provides:
+
 - Declarative API (matches SwiftUI philosophy)
 - Automatic safe area awareness
 - Better performance (no extra layout passes)
 - Type-safe edge specification
 
 **Real-world impact**: Using `.padding()` instead of `.safeAreaPadding()` on iPhone 15 Pro causes content to:
+
 - Hit the Dynamic Island (top)
 - Overlap the home indicator (bottom)
 - Get cut off by screen corners (rounded edges)
@@ -671,6 +676,7 @@ enum UserInterfaceSizeClass {
 ### Platform Behavior
 
 **iPhone:**
+
 | Orientation | Horizontal | Vertical |
 |-------------|------------|----------|
 | Portrait | `.compact` | `.regular` |
@@ -678,6 +684,7 @@ enum UserInterfaceSizeClass {
 | Landscape (Plus/Max) | `.regular` | `.compact` |
 
 **iPad:**
+
 | Configuration | Horizontal | Vertical |
 |--------------|------------|----------|
 | Any full screen | `.regular` | `.regular` |

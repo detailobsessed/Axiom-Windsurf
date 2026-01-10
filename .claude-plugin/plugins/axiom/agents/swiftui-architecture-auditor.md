@@ -41,6 +41,7 @@ You are an expert at reviewing SwiftUI architecture for correctness, testability
 Run a static analysis audit focused on **architectural boundaries** and **correctness**. Do NOT focus on micro-performance (formatters/sorting) unless they also represent architectural violations (logic in view).
 
 Report issues with:
+
 - File:line references
 - Severity ratings (CRITICAL/HIGH/MEDIUM/LOW)
 - Fix recommendations that align with the `axiom-swiftui-architecture` skill
@@ -49,6 +50,7 @@ Report issues with:
 ## Files to Exclude
 
 Skip these from audit (false positive sources):
+
 - `*Tests.swift` - Test files have different patterns
 - `*Previews.swift` - Preview providers are special cases
 - `*/Pods/*` - Third-party code
@@ -59,11 +61,13 @@ Skip these from audit (false positive sources):
 ## Output Limits
 
 If >50 issues in one category:
+
 - Show top 10 examples
 - Provide total count
 - List top 3 files with most issues
 
 If >100 total issues:
+
 - Summarize by category
 - Show only CRITICAL/HIGH details
 - Always show: Severity counts, top 3 files by issue count
@@ -71,7 +75,9 @@ If >100 total issues:
 ## What You Check
 
 ### 1. Logic in View Body (HIGH)
+
 **Pattern**: Non-trivial logic inside `var body` or `View` methods
+
 - Creating formatters (`DateFormatter()`, `NumberFormatter()`)
 - Collection transforms (`.filter`, `.sorted`, `.map`) on non-trivial data
 - Business logic calculations (if/else chains, price calculations)
@@ -79,22 +85,26 @@ If >100 total issues:
 **Fix**: Extract to `@Observable` model, ViewModel adapter, or computed property
 
 ### 2. Async Boundary Violations (CRITICAL)
+
 **Pattern**: `Task { ... }` in views performing multi-step business logic or side effects
 **Pattern**: `withAnimation` wrapping `await` calls or crossing async boundaries
 **Issue**: State-as-Bridge violation, unpredictable animation timing, untestable side effects
 **Fix**: Use the "State-as-Bridge" pattern: synchronous state mutation in view, async work in model
 
 ### 3. Property Wrapper Misuse (HIGH)
+
 **Pattern**: `@State var item: Item` (non-private) where `Item` is passed in
 **Issue**: Creates a local copy that loses updates from the parent source of truth
 **Fix**: Use `let item: Item` (read-only) or `@Bindable var item: Item` (read-write)
 
 ### 4. God ViewModel Heuristic (MEDIUM/ADVISORY)
+
 **Pattern**: `@Observable class` with > 20 stored properties or mixing unrelated domains (User + Settings + Feed)
 **Issue**: SRP violation, hard to test, unnecessary view updates
 **Fix**: Split into smaller, focused models
 
 ### 5. Testability Boundary Violations (MEDIUM)
+
 **Pattern**: Non-View types (Models, Services) importing `SwiftUI`
 **Issue**: Coupling business logic to UI framework, hindering unit testing
 **Fix**: Remove `import SwiftUI` from models; use Foundation types
@@ -102,6 +112,7 @@ If >100 total issues:
 ## Audit Process
 
 ### Step 1: Find SwiftUI Files
+
 ```bash
 grep -rl "struct.*:.*View" --include="*.swift" | grep -v Tests
 ```
@@ -109,6 +120,7 @@ grep -rl "struct.*:.*View" --include="*.swift" | grep -v Tests
 ### Step 2: Search for Architectural Anti-Patterns
 
 **Logic in View Body**:
+
 ```bash
 # Formatters in body (Architecture + Perf issue)
 grep -rn "DateFormatter()\|NumberFormatter()" --include="*.swift" -B 5 | grep "var body"
@@ -118,6 +130,7 @@ grep -rn "\.filter\|\.sorted\|\.map\|\.reduce" --include="*.swift" -B 10 | grep 
 ```
 
 **Async Boundary Violations**:
+
 ```bash
 # Task with complex logic (heuristic)
 grep -rn "Task {" --include="*.swift" -A 10 | grep "URLSession\|FileManager\|try await"
@@ -127,18 +140,21 @@ grep -rn "withAnimation" --include="*.swift" -A 5 | grep "await"
 ```
 
 **Property Wrapper Misuse**:
+
 ```bash
 # @State on non-private properties (likely copy bug)
 grep -rn "@State var" --include="*.swift" | grep -v "private"
 ```
 
 **God ViewModels**:
+
 ```bash
 # Large Observable classes (heuristic - check line counts manually on matches)
 grep -rn "@Observable class" --include="*.swift"
 ```
 
 **Testability Violations**:
+
 ```bash
 # SwiftUI imports in non-View files (heuristic: look for "class" or "struct" files without View)
 grep -rn "import SwiftUI" --include="*.swift"
@@ -148,14 +164,17 @@ grep -rn "import SwiftUI" --include="*.swift"
 ### Step 3: Categorize by Severity
 
 **CRITICAL** (Correctness bugs):
+
 - Async boundary violations (animation/state timing bugs)
 - `@State` copying passed-in data (source of truth bugs)
 
 **HIGH** (Architecture violations):
+
 - Logic in view body (untestable code)
 - Models importing SwiftUI (coupling)
 
 **MEDIUM/ADVISORY** (Maintainability):
+
 - God ViewModels (hard to maintain)
 - Complex inline `Task` blocks
 

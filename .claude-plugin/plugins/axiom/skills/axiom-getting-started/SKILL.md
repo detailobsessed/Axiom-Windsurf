@@ -72,6 +72,7 @@ Based on answers, recommend 3-5 skills using this matrix:
 **Always recommend**: axiom:xcode-debugging (universal starting point)
 
 **Then add based on pain points**:
+
 - Xcode/build → xcode-debugging, axiom-build-debugging
 - Memory leaks → memory-debugging, axiom-objc-block-retain-cycles
 - UI/animation (SwiftUI) → swiftui-debugging, axiom-swiftui-performance
@@ -84,11 +85,13 @@ Based on answers, recommend 3-5 skills using this matrix:
 ### If "Optimizing performance"
 
 **SwiftUI stack**:
+
 1. performance-profiling (decision trees for tools)
 2. swiftui-performance (SwiftUI Instrument)
 3. swiftui-debugging (view update issues)
 
 **UIKit/Mixed**:
+
 1. performance-profiling (Instruments guide)
 2. memory-debugging (leak detection)
 3. uikit-animation-debugging (CAAnimation issues)
@@ -96,29 +99,35 @@ Based on answers, recommend 3-5 skills using this matrix:
 ### If "Adding new features"
 
 **Design decisions**:
+
 - hig (quick design decisions, checklists)
 - hig-ref (comprehensive HIG reference)
 
 **iOS 26+ features**:
+
 - liquid-glass (material design system)
 - foundation-models (on-device AI)
 - swiftui-26-ref (complete iOS 26 guide)
 
 **Navigation patterns**:
+
 - swiftui-nav (iOS 18+ Tab/Sidebar, deep linking)
 - swiftui-nav-ref (comprehensive API reference)
 
 **Integrations**:
+
 - app-intents-ref (Siri, Shortcuts, Spotlight)
 - networking (Network.framework modern patterns)
 
 **Data persistence**:
+
 - Ask: "Which persistence framework?" → swiftdata, axiom-sqlitedata, or grdb
 - Migration: axiom-sqlitedata-migration, axiom-realm-migration-ref
 
 ### If "Code review / quality check"
 
 **Start with audit commands** (quick wins):
+
 1. `/axiom:audit-accessibility` — WCAG compliance
 2. `/axiom:audit-concurrency` — Swift 6 violations
 3. `/axiom:audit-memory` — Leak patterns
@@ -126,6 +135,7 @@ Based on answers, recommend 3-5 skills using this matrix:
 5. `/axiom:audit-networking` — Deprecated APIs
 
 **Then suggest**:
+
 - Review skills based on what audits find
 
 ### If "Just exploring"
@@ -170,30 +180,36 @@ Include this reference section in every response for browsing:
 ### Debugging & Troubleshooting
 
 **Environment & Build Issues**
+
 - **xcode-debugging** — BUILD FAILED, simulator hangs, zombie processes, environment-first diagnostics
 - **build-debugging** — Dependency conflicts, CocoaPods/SPM failures, Multiple commands produce
 
 **Memory & Performance**
+
 - **memory-debugging** — Memory growth, retain cycles, leak diagnosis with Instruments
 - **performance-profiling** — Decision trees for Instruments (Time Profiler, Allocations, Core Data, Energy)
 - **objc-block-retain-cycles** — Objective-C block memory leaks, weak-strong pattern
 
 **UI Debugging**
+
 - **swiftui-debugging** — View update issues, struct mutation, binding identity, view recreation
 - **swiftui-performance** — SwiftUI Instrument (iOS 26), long view bodies, Cause & Effect Graph
 - **uikit-animation-debugging** — CAAnimation completion, spring physics, gesture+animation jank
 - **auto-layout-debugging** — Auto Layout conflicts, constraint debugging (not yet in manifest)
 
 ### Concurrency & Async
+
 - **swift-concurrency** — Swift 6 strict concurrency, @concurrent, actor isolation, Sendable, data races
 
 ### UI & Design (iOS 26+)
 
 **Liquid Glass (Material Design)**
+
 - **liquid-glass** — Implementation, Regular vs Clear variants, design review defense
 - **liquid-glass-ref** — Complete app-wide adoption guide (icons, controls, navigation, windows)
 
 **Layout & Navigation**
+
 - **swiftui-layout** — ViewThatFits vs AnyLayout vs onGeometryChange, decision trees, iOS 26 free-form windows
 - **swiftui-layout-ref** — Complete layout API reference
 - **swiftui-nav** — NavigationStack vs NavigationSplitView, deep links, coordinator patterns, iOS 18+ Tab/Sidebar
@@ -201,44 +217,53 @@ Include this reference section in every response for browsing:
 - **swiftui-nav-diag** — Navigation not responding, unexpected pops, deep link failures, state loss
 
 ### Testing
+
 - **ui-testing** — Recording UI Automation (Xcode 26), condition-based waiting, accessibility-first patterns
 
 ### Persistence
 
 **Frameworks**
+
 - **swiftdata** — @Model, @Query, @Relationship, CloudKit, iOS 26 features, Swift 6 concurrency
 - **sqlitedata** — Point-Free SQLiteData, @Table, FTS5, CTEs, JSON aggregation, CloudKit sync
 - **grdb** — Raw SQL, complex joins, ValueObservation, DatabaseMigrator, performance
 - **database-migration** — Safe schema evolution for SQLite/GRDB, additive migrations, prevents data loss
 
 **Migration Guides**
+
 - **sqlitedata-migration** — Decision guide, pattern equivalents, performance benchmarks
 - **realm-migration-ref** — Realm → SwiftData migration (Realm Device Sync sunset Sept 2025)
 
 ### Networking
+
 - **networking** — Network.framework (iOS 12-26), NetworkConnection (iOS 26), structured concurrency
 - **networking-diag** — Connection timeouts, TLS failures, data not arriving, performance issues
 - **network-framework-ref** — Complete API reference, TLV framing, Coder protocol, Wi-Fi Aware
 
 ### Apple Intelligence (iOS 26+)
+
 - **foundation-models** — On-device AI, LanguageModelSession, @Generable, streaming, tool calling
 - **foundation-models-diag** — Context exceeded, guardrails, slow generation, availability issues
 - **foundation-models-ref** — Complete API reference, all 26 WWDC examples
 
 ### Design & UI Guidelines
+
 - **hig** — Quick design decisions, color/background/typography choices, HIG compliance checklists
 - **hig-ref** — Comprehensive Human Interface Guidelines reference with code examples
 
 ### Integrations
+
 - **app-intents-ref** — Siri, Apple Intelligence, Shortcuts, Spotlight (iOS 16+)
 - **swiftui-26-ref** — iOS 26 SwiftUI features, @Animatable, 3D layout, WebView, AttributedString
 - **avfoundation-ref** — Audio APIs, bit-perfect DAC, iOS 26 spatial audio, ASAF/APAC
 
 ### Diagnostics (Systematic Troubleshooting)
+
 - **accessibility-diag** — VoiceOver, Dynamic Type, color contrast, WCAG compliance, App Store defense
 - **core-data-diag** — Schema migration crashes, thread-confinement, N+1 queries
 
 ### Audit Commands (Quick Scans)
+
 - `/axiom:audit-accessibility` — VoiceOver labels, Dynamic Type, contrast, touch targets
 - `/axiom:audit-concurrency` — Swift 6 violations, unsafe tasks, missing @MainActor
 - `/axiom:audit-memory` — Timer leaks, observer leaks, closure captures, delegate cycles

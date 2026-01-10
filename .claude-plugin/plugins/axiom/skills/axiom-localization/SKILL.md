@@ -42,6 +42,7 @@ This skill covers String Catalogs, SwiftUI/UIKit localization APIs, plural handl
 ### Creating a String Catalog
 
 **Method 1: Xcode Navigator**
+
 1. File → New → File
 2. Choose "String Catalog"
 3. Name it (e.g., `Localizable.xcstrings`)
@@ -50,6 +51,7 @@ This skill covers String Catalogs, SwiftUI/UIKit localization APIs, plural handl
 **Method 2: Automatic Extraction**
 
 Xcode 15 can automatically extract strings from:
+
 - SwiftUI views (string literals in `Text`, `Label`, `Button`)
 - Swift code (`String(localized:)`)
 - Objective-C (`NSLocalizedString`)
@@ -59,18 +61,21 @@ Xcode 15 can automatically extract strings from:
 - App Shortcuts phrases
 
 **Build Settings Required**:
+
 - **"Use Compiler to Extract Swift Strings"** → Yes
 - **"Localization Prefers String Catalogs"** → Yes
 
 ### String Catalog Structure
 
 Each entry has:
+
 - **Key**: Unique identifier (default: the English string)
 - **Default Value**: Fallback if translation missing
 - **Comment**: Context for translators
 - **String Table**: Organization container (default: "Localizable")
 
 **Example `.xcstrings` JSON**:
+
 ```json
 {
   "sourceLanguage" : "en",
@@ -107,6 +112,7 @@ Xcode tracks state for each translation:
 - **Stale** (🔴) - String no longer found in source code
 
 **Workflow**:
+
 1. Developer adds string → **New**
 2. Translator adds translation → **Reviewed**
 3. Developer changes source → **Needs Review**
@@ -272,6 +278,7 @@ Text("\(visitorCount) Recent Visitors")
 ```
 
 **In String Catalog**:
+
 ```json
 {
   "strings" : {
@@ -306,6 +313,7 @@ Text("\(visitorCount) Recent Visitors")
 When exporting for translation (File → Export Localizations):
 
 **Legacy (stringsdict)**:
+
 ```xml
 <trans-unit id="/%lld Recent Visitors:dict/NSStringLocalizedFormatKey:dict/:string">
     <source>%#@recentVisitors@</source>
@@ -318,6 +326,7 @@ When exporting for translation (File → Export Localizations):
 ```
 
 **String Catalog (cleaner)**:
+
 ```xml
 <trans-unit id="%lld Recent Visitors|==|plural.one">
     <source>%lld Recent Visitor</source>
@@ -338,6 +347,7 @@ let message = String(localized: "\(songCount) songs on \(albumCount) albums")
 ```
 
 Xcode creates variations for **each** variable's plural form:
+
 - `songCount`: one, other
 - `albumCount`: one, other
 - Total combinations: 2 × 2 = 4 translation entries
@@ -356,6 +366,7 @@ Text("Bird Food Shop")
 ```
 
 **String Catalog variations**:
+
 ```json
 {
   "Bird Food Shop" : {
@@ -382,6 +393,7 @@ Text("Bird Food Shop")
 ```
 
 **Result**:
+
 - iPhone/iPad: "Bird Food Shop"
 - Apple Watch: "Bird Food" (shorter for small screen)
 
@@ -447,6 +459,7 @@ Image("backButton")
 ### Testing in RTL Mode
 
 **Xcode Scheme**:
+
 1. Edit Scheme → Run → Options
 2. Application Language: Arabic / Hebrew
 3. OR: App Language → Right-to-Left Pseudolanguage
@@ -455,6 +468,7 @@ Image("backButton")
 Settings → General → Language & Region → Preferred Language Order
 
 **SwiftUI Preview**:
+
 ```swift
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
@@ -485,6 +499,7 @@ let dateString = formatter.string(from: Date())
 ```
 
 **Never hardcode date format strings**:
+
 ```swift
 // ❌ Wrong - breaks in other locales
 formatter.dateFormat = "MM/dd/yyyy"
@@ -560,14 +575,16 @@ struct ShowTopDonutsIntent: AppIntent {
 ```
 
 **String Catalog automatically extracts**:
+
 - Intent title
 - Parameter names
 - Phrase templates with placeholders
 
 **Localized phrases**:
+
 ```
 English: "Food Truck Trends for this week"
-Spanish: "Tendencias de Food Truck para esta semana"
+Spanish: "Tendencies de Food Truck para esta semana"
 ```
 
 ### AppShortcutsProvider Localization
@@ -596,11 +613,13 @@ Xcode extracts all 3 phrases into String Catalog for translation.
 ### Converting .strings to .xcstrings
 
 **Automatic migration**:
+
 1. Select `.strings` file in Navigator
 2. Editor → Convert to String Catalog
 3. Xcode creates `.xcstrings` and preserves translations
 
 **Manual approach**:
+
 1. Create new String Catalog
 2. Build project (Xcode extracts strings from code)
 3. Import translations via File → Import Localizations (XLIFF)
@@ -609,6 +628,7 @@ Xcode extracts all 3 phrases into String Catalog for translation.
 ### Converting .stringsdict
 
 **Plural files automatically merge**:
+
 1. Keep `.strings` and `.stringsdict` together
 2. Convert → Both merge into single `.xcstrings`
 3. Plural variations preserved
@@ -616,16 +636,19 @@ Xcode extracts all 3 phrases into String Catalog for translation.
 ### Gradual Migration Strategy
 
 **Phase 1**: New code uses String Catalogs
+
 - Create `Localizable.xcstrings`
 - Write new code with `String(localized:)`
 - Keep legacy `.strings` files for old code
 
 **Phase 2**: Migrate existing strings
+
 - Convert one `.strings` table at a time
 - Test translations after each conversion
 - Update code using old `NSLocalizedString` calls
 
 **Phase 3**: Remove legacy files
+
 - Delete `.strings` and `.stringsdict` files
 - Verify all strings in String Catalog
 - Submit to App Store
@@ -723,6 +746,7 @@ String(localized: "Confirm", comment: "Button to confirm delete action")
 **Cause**: Build settings not enabled
 
 **Solution**:
+
 1. Build Settings → "Use Compiler to Extract Swift Strings" → Yes
 2. Clean Build Folder (Cmd+Shift+K)
 3. Build project
@@ -730,10 +754,12 @@ String(localized: "Confirm", comment: "Button to confirm delete action")
 ### Translations not showing in app
 
 **Cause 1**: Language not added to project
+
 1. Project → Info → Localizations → + button
 2. Add target language
 
 **Cause 2**: String marked as "Stale"
+
 - Remove stale strings or verify code still uses them
 
 ### Plural forms incorrect
@@ -741,6 +767,7 @@ String(localized: "Confirm", comment: "Button to confirm delete action")
 **Cause**: Using `String.localizedStringWithFormat` instead of String Catalog
 
 **Solution**: Use String Catalog's automatic plural handling:
+
 ```swift
 // ✅ Correct
 Text("\(count) items")
@@ -754,6 +781,7 @@ Text(String.localizedStringWithFormat(NSLocalizedString("%d items", comment: "")
 **Cause**: "Localization Prefers String Catalogs" not set
 
 **Solution**:
+
 1. Build Settings → "Localization Prefers String Catalogs" → Yes
 2. Export Localizations again
 
@@ -762,6 +790,7 @@ Text(String.localizedStringWithFormat(NSLocalizedString("%d items", comment: "")
 **Cause 1**: Build setting not enabled
 
 **Solution**:
+
 1. Build Settings → "Generate String Catalog Symbols" → Yes
 2. Clean Build Folder (Cmd+Shift+K)
 3. Rebuild project
@@ -775,6 +804,7 @@ Text(String.localizedStringWithFormat(NSLocalizedString("%d items", comment: "")
 **Cause**: Wrong syntax or missing import
 
 **Solution**:
+
 ```swift
 import Foundation  // Required for #bundle
 Text("My Collections", bundle: #bundle, comment: "Section title")
@@ -785,11 +815,13 @@ Verify you're using `#bundle` not `.module`.
 ### Refactoring to symbols fails (Xcode 26+)
 
 **Cause 1**: String not in String Catalog
+
 1. Ensure string exists in `.xcstrings` file
 2. Build project to refresh catalog
 3. Try refactoring again
 
 **Cause 2**: Build setting not enabled
+
 - Enable "Generate String Catalog Symbols" in Build Settings
 - Clean and rebuild
 
@@ -829,6 +861,7 @@ Text(.appHomeScreenTitle)
 | With placeholders | Function with labeled arguments | `.subtitle(friendsPosts: 42)` |
 
 **Key naming conversion**:
+
 - `App.HomeScreen.Title` → `.appHomeScreenTitle`
 - Periods removed, camel-cased
 - Available on `LocalizedStringResource`
@@ -898,6 +931,7 @@ Auto-generated comments are marked in exported XLIFF files:
 ```
 
 **Benefits**:
+
 - Saves developer time writing translator context
 - Provides consistent, clear descriptions
 - Improves translation quality
@@ -925,6 +959,7 @@ Text("My Collections", bundle: #bundle, comment: "Section title")
 ```
 
 **Key advantages**:
+
 - Works in main app, frameworks, and Swift Packages
 - Backwards-compatible with older OS versions
 - Eliminates manual `.module` bundle management
@@ -973,6 +1008,7 @@ Text(Settings.privacyPolicy)
 ```
 
 **Organization strategy for large apps**:
+
 - **Localizable.xcstrings** - Core app strings
 - **FeatureName.xcstrings** - Feature-specific strings (e.g., Onboarding, Settings, Discover)
 - Benefits: Easier to manage, clearer ownership, better XLIFF organization
@@ -986,6 +1022,7 @@ Xcode 26 supports two complementary workflows:
 #### Workflow 1: String Extraction (Recommended for new projects)
 
 **Process**:
+
 1. Write strings directly in code
 2. Use SwiftUI views (`Text`, `Button`) and `String(localized:)`
 3. Xcode automatically extracts to String Catalog
@@ -1003,6 +1040,7 @@ Text("Welcome to WWDC!", comment: "Main welcome message")
 #### Workflow 2: Generated Symbols (Recommended as complexity grows)
 
 **Process**:
+
 1. Manually add strings to String Catalog
 2. Reference via type-safe symbols
 3. Organize into custom tables
@@ -1046,6 +1084,7 @@ Text(.welcomeToWWDC)
 ```
 
 **Benefits**:
+
 - Batch conversion of entire String Catalogs
 - Preview changes before applying
 - Maintain localization without code rewrites
@@ -1057,31 +1096,37 @@ Text(.welcomeToWWDC)
 After adopting Xcode 26 generated symbols, verify:
 
 **Build Configuration:**
+
 - [ ] "Generate String Catalog Symbols" build setting enabled
 - [ ] Project builds without "Cannot find 'symbolName' in scope" errors
 - [ ] Clean build succeeds (Cmd+Shift+K, then Cmd+B)
 
 **String Catalog Setup:**
+
 - [ ] Strings manually added to catalog using + button (not auto-extracted)
 - [ ] Symbol names follow conventions (camelCase, no periods)
 - [ ] Custom tables organized by feature (if using multiple catalogs)
 
 **Swift Package Integration:**
+
 - [ ] All `Text()` and `String(localized:)` calls in packages use `bundle: #bundle`
 - [ ] Import Foundation added where `#bundle` is used
 - [ ] Tested package builds independently and as dependency
 
 **Refactoring & Migration:**
+
 - [ ] Tested refactoring tool on sample strings
 - [ ] Preview showed expected changes before applying
 - [ ] Old string-based calls still work during transition period
 
 **Optional Features:**
+
 - [ ] Automatic comment generation enabled in Xcode Settings → Editing (optional)
 - [ ] Tested AI-generated comments for accuracy
 - [ ] XLIFF export includes auto-generated comments
 
 **Testing:**
+
 - [ ] Symbols resolve correctly in SwiftUI previews
 - [ ] Localization works across all supported languages
 - [ ] App runs on minimum supported iOS version

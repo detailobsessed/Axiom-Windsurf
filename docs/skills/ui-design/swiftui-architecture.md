@@ -13,6 +13,7 @@ Architecture patterns for modern SwiftUI. Covers Apple's native patterns (@Obser
 ## When to Use This Skill
 
 Use this skill when you're:
+
 - Logic in SwiftUI view files that you want to extract
 - Choosing between MVVM, TCA, vanilla SwiftUI, or Coordinator
 - Refactoring views to separate concerns
@@ -34,33 +35,39 @@ Questions you can ask Claude that will draw from this skill:
 ## What's Covered
 
 ### Apple's Native Patterns
+
 - @Observable for data models (replaces ObservableObject)
 - State-as-Bridge for async boundaries (WWDC 2025)
 - Three property wrappers: @State, @Environment, @Bindable
 - Synchronous UI updates for animations
 
 ### MVVM Pattern
+
 - When MVVM adds value (complex presentation logic)
 - ViewModel responsibilities
 - Testing strategies
 
 ### TCA (The Composable Architecture)
+
 - When TCA is appropriate
 - Complexity trade-offs
 - Team onboarding considerations
 
 ### Coordinator Pattern
+
 - When coordinators help
 - Navigation separation from views
 - State restoration
 
 ### Property Wrapper Decision Tree
+
 - @State for view-local state
 - @Environment for dependencies
 - @Bindable for two-way binding to @Observable
 - Plain properties for read-only data
 
 ### Refactoring Workflow
+
 - Identifying logic in views
 - Extracting to model layer
 - Testing extracted code

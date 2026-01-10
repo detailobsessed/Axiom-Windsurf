@@ -10,6 +10,7 @@ Systematic CAAnimation diagnosis covering completion handlers, spring physics, t
 ## When to Use
 
 Use this skill when:
+
 - CAAnimation completion handler never fires
 - Spring animation looks wrong on real device (but fine in simulator)
 - Animation duration doesn't match specified value

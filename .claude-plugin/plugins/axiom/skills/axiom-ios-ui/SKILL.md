@@ -11,6 +11,7 @@ user-invocable: false
 ## When to Use
 
 Use this router when working with:
+
 - SwiftUI views, state, bindings
 - UIKit views and constraints
 - Layout issues (Auto Layout, SwiftUI layout)
@@ -24,6 +25,7 @@ Use this router when working with:
 ## Conflict Resolution
 
 **ios-ui vs ios-performance**: When UI is slow (e.g., "SwiftUI List slow"):
+
 1. **Try ios-ui FIRST** — Domain-specific fixes (LazyVStack, view identity, @State optimization) often solve UI performance in 5 minutes
 2. **Only use ios-performance** if domain fixes don't help — Profiling takes longer and may confirm what domain knowledge already knows
 

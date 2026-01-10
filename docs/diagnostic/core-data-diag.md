@@ -16,6 +16,7 @@ Diagnostic workflows for schema migration crashes, thread-confinement errors, N+
 ### Critical Production Issues
 
 #### Schema Migration Crashes
+
 - "Can't find model for source store" errors
 - Migration failures on 10% of devices
 - Data corruption after migration
@@ -23,18 +24,21 @@ Diagnostic workflows for schema migration crashes, thread-confinement errors, N+
 - Missing lightweight migration options
 
 #### Thread-Confinement Errors
+
 - "Object was created in different context" crashes
 - Intermittent crashes when passing objects to tasks
 - Background fetch crashes
 - Main thread checker violations
 
 #### N+1 Query Performance
+
 - App freezing when scrolling lists
 - Relationship access triggering hundreds of queries
 - Missing prefetching hints
 - Slow list rendering (>1s per row)
 
 #### Production Crisis Scenarios
+
 - 500K+ users affected by migration crash
 - Data loss reports flooding support
 - App Store rating dropping from 4.8 → 2.3
@@ -43,6 +47,7 @@ Diagnostic workflows for schema migration crashes, thread-confinement errors, N+
 ## When to Use This Diagnostic
 
 Use this diagnostic when:
+
 - Planning schema changes for production app
 - Migration crashes reported in Crashlytics
 - Thread-confinement errors in production logs
@@ -116,6 +121,7 @@ Use this diagnostic when:
 **Scenario**: Migration crash affecting 500K users, 2-hour hotfix window
 
 **Emergency Protocol**:
+
 1. **Stop the rollout** — Halt app updates immediately
 2. **Triage severity** — Data loss vs crashes vs performance
 3. **Quick fixes only**:
@@ -127,12 +133,14 @@ Use this diagnostic when:
 6. **Monitor closely**: Crashlytics, user reports, ratings
 
 **Never do in crisis**:
+
 - ❌ Delete persistent store (100% data loss)
 - ❌ Rewrite migration from scratch (high risk)
 - ❌ Change multiple things at once (can't isolate issue)
 - ❌ Deploy without testing on real devices
 
 **Always do in crisis**:
+
 - ✅ Add defensive error handling
 - ✅ Test on 10+ real device configurations
 - ✅ Have rollback plan ready
@@ -141,6 +149,7 @@ Use this diagnostic when:
 ## Safety-First Migration Patterns
 
 #### Pattern 1: Lightweight Migration Only
+
 ```swift
 let options = [
     NSMigratePersistentStoresAutomaticallyOption: true,
@@ -150,18 +159,21 @@ let options = [
 ```
 
 #### Pattern 2: Additive Changes Only
+
 ```swift
 // ✅ SAFE: Add optional property
 // ❌ UNSAFE: Remove property, change type, add required property
 ```
 
 #### Pattern 3: Test Migration Path
+
 ```swift
 // Test v1 → v2, v1 → v3, v2 → v3
 // Users may skip versions
 ```
 
 #### Pattern 4: Never Delete Store
+
 ```swift
 // ❌ NEVER in production
 try? FileManager.default.removeItem(at: storeURL)
@@ -183,6 +195,7 @@ catch {
 This is a **diagnostic skill** — mandatory workflows with production crisis defense.
 
 #### Diagnostic includes
+
 - Step-by-step troubleshooting
 - Production crisis emergency protocols
 - Safety-first migration patterns

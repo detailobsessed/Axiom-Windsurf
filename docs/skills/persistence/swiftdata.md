@@ -10,6 +10,7 @@ Apple's native persistence framework using `@Model` classes and declarative quer
 ## When to Use This Skill
 
 Use this skill when you're:
+
 - Defining `@Model` classes and relationships
 - Writing `@Query` in SwiftUI views
 - Setting up `ModelContainer` and `ModelContext`
@@ -34,12 +35,14 @@ Questions you can ask Claude that will draw from this skill:
 ## What's Covered
 
 ### Core Patterns
+
 - `@Model` definitions with `@Attribute` and `@Relationship`
 - `@Query` with predicates, sorting, and filtering
 - `ModelContainer` setup (SwiftUI app, custom config, in-memory for tests)
 - `ModelContext` operations (insert, fetch, update, delete, batch)
 
 ### CloudKit Integration
+
 - Enabling sync with `ModelConfiguration`
 - CloudKit constraints (optional/default properties)
 - Sync status monitoring and offline handling
@@ -47,17 +50,20 @@ Questions you can ask Claude that will draw from this skill:
 - Record sharing (iOS 26+)
 
 ### Performance
+
 - Prefetching relationships (prevent N+1 queries)
 - Batch operations and chunked imports
 - Index optimization (iOS 26+)
 - Faulting strategies
 
 ### Swift 6 Concurrency
+
 - `@MainActor` isolation for models
 - Background context patterns with actors
 - Safe async/await patterns
 
 ### Migration Strategies
+
 - Realm → SwiftData pattern equivalents
 - Core Data → SwiftData migration
 - Dual-stack gradual migration

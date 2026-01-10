@@ -10,6 +10,7 @@ Language-level performance patterns for memory efficiency, runtime speed, and ze
 ## When to Use
 
 Use this skill when:
+
 - Time Profiler shows Swift code as hotspot
 - Excessive memory allocations or retain/release traffic
 - Implementing performance-critical algorithms
@@ -17,6 +18,7 @@ Use this skill when:
 - Optimizing tight loops or frequently called methods
 
 **Do NOT use for**:
+
 - First-step optimization (use performance-profiling first)
 - SwiftUI performance (use swiftui-performance)
 - Premature optimization

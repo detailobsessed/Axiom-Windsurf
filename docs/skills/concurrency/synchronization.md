@@ -12,12 +12,14 @@ description: Thread-safe primitives for performance-critical code — Mutex (iOS
 ## When to Use This Skill
 
 ✅ **Use this skill when**:
+
 - Microsecond operations where actor hop is too slow
 - Protecting single property access
 - Shared state across modules (Mutex is Sendable)
 - High-frequency counters (use Atomic)
 
 ❌ **Do NOT use this skill for**:
+
 - Complex async workflows (use actors)
 - Need suspension points (use actors)
 - Simple cases where actor is sufficient

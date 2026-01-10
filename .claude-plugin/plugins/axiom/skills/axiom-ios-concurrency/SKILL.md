@@ -11,6 +11,7 @@ user-invocable: false
 ## When to Use
 
 Use this router when:
+
 - Writing async/await code
 - Seeing concurrency errors (data races, actor isolation)
 - Working with @MainActor
@@ -22,10 +23,12 @@ Use this router when:
 ## Conflict Resolution
 
 **ios-concurrency vs ios-performance**: When app freezes or feels slow:
+
 1. **Try ios-concurrency FIRST** — Main thread blocking is the #1 cause of UI freezes. Check for synchronous work on @MainActor before profiling.
 2. **Only use ios-performance** if concurrency fixes don't help — Profile after ruling out obvious blocking.
 
 **ios-concurrency vs ios-build**: When seeing Swift 6 concurrency errors:
+
 - **Use ios-concurrency, NOT ios-build** — Concurrency errors are CODE issues, not environment issues
 - ios-build is for "No such module", simulator issues, build failures unrelated to Swift language errors
 
@@ -36,6 +39,7 @@ Use this router when:
 ### Swift Concurrency Issues
 
 **Swift 6 concurrency patterns** → `/skill axiom-swift-concurrency`
+
 - async/await patterns
 - @MainActor usage
 - Actor isolation
@@ -44,6 +48,7 @@ Use this router when:
 - Swift 6 migration
 
 **Swift performance** → `/skill axiom-swift-performance`
+
 - Value vs reference types
 - Copy-on-write optimization
 - ARC overhead
@@ -51,24 +56,28 @@ Use this router when:
 - Collection performance
 
 **Synchronous actor access** → `/skill axiom-assume-isolated`
+
 - MainActor.assumeIsolated
 - @preconcurrency protocol conformances
 - Legacy delegate callbacks
 - Testing MainActor code synchronously
 
 **Thread-safe primitives** → `/skill axiom-synchronization`
+
 - Mutex (iOS 18+)
 - OSAllocatedUnfairLock (iOS 16+)
 - Atomic types
 - Lock vs actor decision
 
 **Parameter ownership** → `/skill axiom-ownership-conventions`
+
 - borrowing/consuming modifiers
 - Noncopyable types (~Copyable)
 - ARC traffic reduction
 - consume operator
 
 **Concurrency profiling** → `/skill axiom-concurrency-profiling`
+
 - Swift Concurrency Instruments template
 - Actor contention diagnosis
 - Thread pool exhaustion
@@ -100,6 +109,7 @@ User asks about concurrency
 ## Critical Patterns
 
 **Swift 6 Concurrency** (swift-concurrency):
+
 - Progressive journey: single-threaded → async → concurrent → actors
 - @concurrent attribute for forced background execution
 - Isolated conformances
@@ -107,6 +117,7 @@ User asks about concurrency
 - 11 copy-paste patterns
 
 **Swift Performance** (swift-performance):
+
 - ~Copyable for non-copyable types
 - Copy-on-write (COW) patterns
 - Value vs reference type decisions

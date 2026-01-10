@@ -10,6 +10,7 @@ Safe database schema evolution for production apps with user data. Prevents data
 ## When to Use This Skill
 
 Use this skill when you're:
+
 - Adding new columns to existing tables
 - Modifying column types or constraints
 - Getting "FOREIGN KEY constraint failed" errors
@@ -37,6 +38,7 @@ Questions you can ask Claude that will draw from this skill:
 ### Critical Rules (Data Loss Prevention)
 
 **NEVER do these with user data:**
+
 - ❌ DROP TABLE
 - ❌ Modify shipped migrations (create new one)
 - ❌ Recreate tables to change schema
@@ -44,6 +46,7 @@ Questions you can ask Claude that will draw from this skill:
 - ❌ Delete columns (SQLite limitation)
 
 ### Safe Patterns
+
 - Adding nullable columns
 - Adding columns with defaults
 - Type migration (new column → migrate → deprecate)
@@ -51,11 +54,13 @@ Questions you can ask Claude that will draw from this skill:
 - Index creation
 
 ### Testing Workflows
+
 - Pre-flight migration testing
 - Rollback strategies
 - Version compatibility testing
 
 ### Framework-Specific
+
 - GRDB DatabaseMigrator patterns
 - SQLiteData @Column migrations
 - SwiftData schema versioning

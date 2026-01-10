@@ -14,6 +14,7 @@ Guides you through implementing computer vision: subject segmentation, hand/body
 ## When to Use This Skill
 
 Use when you need to:
+
 - ☑ Isolate subjects from backgrounds (subject lifting)
 - ☑ Detect and track hand poses for gestures
 - ☑ Detect and track body poses for fitness/action classification
@@ -47,6 +48,7 @@ Use when you need to:
 ## Red Flags
 
 Signs you're making this harder than it needs to be:
+
 - ❌ Manually implementing subject segmentation with CoreML models
 - ❌ Using ARKit just for body pose (Vision works offline)
 - ❌ Writing gesture recognition from scratch (use hand pose + simple distance checks)
@@ -258,6 +260,7 @@ nsView.addSubview(overlayView)
 ```
 
 **When to use**:
+
 - ✓ Want system behavior (long-press to select, drag to share)
 - ✓ Don't need custom processing pipeline
 - ✓ Image size within VisionKit limits (out-of-process)
@@ -534,10 +537,12 @@ for observation in observations {
 ```
 
 **Fast vs Accurate**:
+
 - **Fast**: Real-time camera, large legible text (signs, billboards), character-by-character
 - **Accurate**: Documents, receipts, small text, handwriting, ML-based word/line recognition
 
 **Language tips**:
+
 - Order matters: first language determines ML model for accurate path
 - Use `automaticallyDetectsLanguage = true` only when language unknown
 - Query `supportedRecognitionLanguages` for current revision
@@ -572,6 +577,7 @@ for barcode in observations {
 **Performance tip**: Specifying fewer symbologies = faster scanning
 
 **Revision differences**:
+
 - **Revision 1**: One code at a time, 1D codes return lines
 - **Revision 2**: Codabar, GS1Databar, MicroPDF, MicroQR, better with ROI
 - **Revision 3**: ML-based, multiple codes at once, better bounding boxes, fewer duplicates
@@ -616,6 +622,7 @@ present(scanner, animated: true) {
 ```
 
 **Delegate methods**:
+
 ```swift
 func dataScanner(_ scanner: DataScannerViewController,
                  didTapOn item: RecognizedItem) {
@@ -640,6 +647,7 @@ func dataScanner(_ scanner: DataScannerViewController,
 ```
 
 **Async stream alternative**:
+
 ```swift
 for await items in scanner.recognizedItems {
     // Process current items
@@ -710,6 +718,7 @@ let correctedImage = inputImage
 ```
 
 **VNDetectDocumentSegmentationRequest vs VNDetectRectanglesRequest**:
+
 - Document: ML-based, trained on documents, handles non-rectangles, returns one document
 - Rectangle: Edge-based, finds any quadrilateral, returns multiple, CPU-only
 
@@ -754,6 +763,7 @@ for data in allDetectedData {
 ```
 
 **Document hierarchy**:
+
 - Document → containers (text, tables, lists, barcodes)
 - Table → rows → cells → content
 - Content → text (transcript, lines, paragraphs, words, detectedData)
@@ -803,6 +813,7 @@ class StringTracker {
 ```
 
 **Key techniques from WWDC 2019**:
+
 - Use `.fast` recognition level for real-time
 - Disable language correction for codes/numbers
 - Use region of interest to improve speed and focus
@@ -816,6 +827,7 @@ class StringTracker {
 ### Anti-Pattern 1: Processing on Main Thread
 
 **Wrong**:
+
 ```swift
 let request = VNGenerateForegroundInstanceMaskRequest()
 let handler = VNImageRequestHandler(cgImage: image)
@@ -823,6 +835,7 @@ try handler.perform([request])  // Blocks UI!
 ```
 
 **Right**:
+
 ```swift
 DispatchQueue.global(qos: .userInitiated).async {
     let request = VNGenerateForegroundInstanceMaskRequest()
@@ -840,12 +853,14 @@ DispatchQueue.global(qos: .userInitiated).async {
 ### Anti-Pattern 2: Ignoring Confidence Scores
 
 **Wrong**:
+
 ```swift
 let thumbTip = try observation.recognizedPoint(.thumbTip)
 let location = thumbTip.location  // May be unreliable!
 ```
 
 **Right**:
+
 ```swift
 let thumbTip = try observation.recognizedPoint(.thumbTip)
 guard thumbTip.confidence > 0.5 else {
@@ -860,6 +875,7 @@ let location = thumbTip.location
 ### Anti-Pattern 3: Forgetting Coordinate Conversion
 
 **Wrong** (mixing coordinate systems):
+
 ```swift
 // Vision uses lower-left origin
 let visionPoint = recognizedPoint.location  // (0, 0) = bottom-left
@@ -869,6 +885,7 @@ let uiPoint = CGPoint(x: axiom-visionPoint.x, y: axiom-visionPoint.y)  // WRONG!
 ```
 
 **Right**:
+
 ```swift
 let visionPoint = recognizedPoint.location
 
@@ -884,12 +901,14 @@ let uiPoint = CGPoint(
 ### Anti-Pattern 4: Setting maximumHandCount Too High
 
 **Wrong**:
+
 ```swift
 let request = VNDetectHumanHandPoseRequest()
 request.maximumHandCount = 10  // "Just in case"
 ```
 
 **Right**:
+
 ```swift
 let request = VNDetectHumanHandPoseRequest()
 request.maximumHandCount = 2  // Only compute what you need
@@ -900,12 +919,14 @@ request.maximumHandCount = 2  // Only compute what you need
 ### Anti-Pattern 5: Using ARKit When Vision Suffices
 
 **Wrong** (if you don't need AR):
+
 ```swift
 // Requires AR session just for body pose
 let arSession = ARBodyTrackingConfiguration()
 ```
 
 **Right**:
+
 ```swift
 // Vision works offline on still images
 let request = VNDetectHumanBodyPoseRequest()
@@ -924,6 +945,7 @@ let request = VNDetectHumanBodyPoseRequest()
 **Reality**: Vision blocks UI on older devices. Users on iPhone 12 will experience frozen app.
 
 **Correct action**:
+
 1. Implement background queue (15 min)
 2. Add loading indicator (10 min)
 3. Test on iPhone 12 or earlier (5 min)
@@ -939,6 +961,7 @@ let request = VNDetectHumanBodyPoseRequest()
 **Reality**: Training requires labeled dataset (weeks), ongoing maintenance, and still won't generalize to new objects. Built-in Vision APIs + hand pose solve it in 2-5 hours.
 
 **Correct action**:
+
 1. Explain Pattern 1 (combine subject mask + hand pose)
 2. Prototype in 1 hour to demonstrate
 3. Compare against training timeline (weeks vs hours)
@@ -954,6 +977,7 @@ let request = VNDetectHumanBodyPoseRequest()
 **Reality**: `VNGeneratePersonSegmentationRequest` (iOS 15) returns single mask for all people. Doesn't solve multi-person use case.
 
 **Correct action**:
+
 1. Raise minimum deployment target to iOS 17 (best UX)
 2. OR implement fallback: use iOS 15 API but disable multi-person features
 3. OR use `@available` to conditionally enable features
@@ -965,38 +989,45 @@ let request = VNDetectHumanBodyPoseRequest()
 Before shipping Vision features:
 
 **Performance**:
+
 - ☑ All Vision requests run on background queue
 - ☑ UI shows loading indicator during processing
 - ☑ Tested on iPhone 12 or earlier (not just latest devices)
 - ☑ `maximumHandCount` set to minimum needed value
 
 **Accuracy**:
+
 - ☑ Confidence scores checked before using landmarks
 - ☑ Fallback behavior for low confidence observations
 - ☑ Handles case where no subjects/hands/people detected
 
 **Coordinates**:
+
 - ☑ Vision coordinates (lower-left origin) converted to UIKit (top-left)
 - ☑ Normalized coordinates scaled to pixel dimensions
 - ☑ UI overlays aligned correctly with image
 
 **Platform Support**:
+
 - ☑ `@available` checks for iOS 17+ APIs (instance masks)
 - ☑ Fallback for iOS 14-16 (or raised deployment target)
 - ☑ Tested on actual devices, not just simulator
 
 **Edge Cases**:
+
 - ☑ Handles images with no detectable subjects
 - ☑ Handles partially occluded hands/bodies
 - ☑ Handles hands/bodies near image edges
 - ☑ Handles >4 people for person instance segmentation
 
 **CoreImage Integration** (if applicable):
+
 - ☑ HDR preservation verified with high dynamic range images
 - ☑ Mask resolution matches source image
 - ☑ `croppedToInstancesContent` set appropriately (false for compositing)
 
 **Text/Barcode Recognition** (if applicable):
+
 - ☑ Recognition level matches use case (fast for real-time, accurate for documents)
 - ☑ Language correction disabled for codes/serial numbers
 - ☑ Barcode symbologies limited to actual needs (performance)

@@ -13,18 +13,22 @@ Core Data stack setup, concurrency patterns, relationship modeling, and migratio
 ## Key Features
 
 ### Core Data vs SwiftData Decision
+
 - **SwiftData (iOS 17+)** — New apps, simpler API, Swift-native
 - **Core Data** — iOS 16 and earlier, advanced features, existing codebases
 
 ### The Golden Rule
+
 **NEVER pass NSManagedObject across threads.** Pass objectID instead.
 
 ### Modern Stack Setup
+
 - NSPersistentContainer (iOS 10+)
 - Automatic merge from parent context
 - Background context factory
 
 ### Concurrency Patterns
+
 - `context.perform {}` for all context operations
 - `newBackgroundContext()` for heavy work
 - Async/await support (iOS 15+)

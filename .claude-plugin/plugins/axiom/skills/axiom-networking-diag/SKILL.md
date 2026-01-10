@@ -93,6 +93,7 @@ Before changing ANY code, identify ONE of these:
 5. If .ready but data not arriving → Framing or receiver issue (enable packet capture)
 
 #### If diagnostics are contradictory or unclear
+
 - STOP. Do NOT proceed to patterns yet
 - Add timestamp logging to every send/receive call
 - Enable packet capture (Charles/Wireshark)
@@ -211,12 +212,14 @@ Before proceeding to a pattern:
 5. **Performance degradation** → Profile with Instruments Network template, Pattern 4
 
 #### Apply ONE pattern at a time
+
 - Implement the fix from one pattern
 - Test thoroughly
 - Only if issue persists, try next pattern
 - DO NOT apply multiple patterns simultaneously (can't isolate cause)
 
 #### FORBIDDEN
+
 - Guessing at solutions without diagnostics
 - Changing multiple things at once
 - Assuming "just needs more timeout"
@@ -230,12 +233,14 @@ Before proceeding to a pattern:
 **Time cost** 10-15 minutes
 
 #### Symptom
+
 - Connection stuck in .preparing for >5 seconds
 - Eventually fails or times out
 - Works with IP address but not hostname
 - Works on one network, fails on another
 
 #### Diagnosis
+
 ```swift
 // Enable DNS logging
 // -NWLoggingEnabled 1
@@ -250,6 +255,7 @@ Before proceeding to a pattern:
 ```
 
 #### Common causes
+
 1. DNS server unreachable (corporate network blocks external DNS)
 2. Hostname typo or doesn't exist
 3. DNS caching stale entry (rare, but happens)
@@ -285,11 +291,13 @@ let connection = NWConnection(
 ```
 
 #### Verification
+
 - Run `nslookup your-hostname.com` — should return IP in <1 second
 - Test on cellular (different DNS servers) — should work
 - Check corporate network DNS configuration
 
 #### Prevention
+
 - Use well-known hostnames (don't rely on internal DNS)
 - Test on multiple networks during development
 - Don't hardcode IPs (if DNS fails, you need to fix DNS, not bypass it)
@@ -301,6 +309,7 @@ let connection = NWConnection(
 **Time cost** 15-20 minutes
 
 #### Symptom
+
 - Connection reaches .ready briefly, then .failed immediately
 - Error: `-9806` (kSSLPeerCertInvalid)
 - Error: `-9807` (kSSLPeerCertExpired)
@@ -308,6 +317,7 @@ let connection = NWConnection(
 - Works on some servers, fails on others
 
 #### Diagnosis
+
 ```bash
 # Test TLS manually with openssl
 openssl s_client -connect example.com:443 -showcerts
@@ -323,6 +333,7 @@ openssl s_client -connect example.com:443 -showcerts | grep "CN="
 ```
 
 #### Common causes
+
 1. Self-signed certificate (dev/staging servers)
 2. Expired certificate
 3. Certificate hostname mismatch (cert for "example.com" but connecting to "www.example.com")
@@ -332,6 +343,7 @@ openssl s_client -connect example.com:443 -showcerts | grep "CN="
 #### Fix
 
 #### For production servers with invalid certs
+
 ```swift
 // ❌ WRONG — Never disable certificate validation in production
 /*
@@ -348,6 +360,7 @@ sec_protocol_options_set_verify_block(tlsOptions.securityProtocolOptions, { ... 
 ```
 
 #### For development servers (temporary)
+
 ```swift
 // ⚠️ ONLY for development/staging
 #if DEBUG
@@ -368,6 +381,7 @@ let connection = NWConnection(host: "dev-server.example.com", port: 443, using: 
 ```
 
 #### For certificate pinning
+
 ```swift
 // Production-grade certificate pinning
 let tlsOptions = NWProtocolTLS.Options()
@@ -391,6 +405,7 @@ sec_protocol_options_set_verify_block(
 ```
 
 #### Verification
+
 - `openssl s_client -connect example.com:443` shows `Verify return code: 0 (ok)`
 - Certificate expiration > 30 days in future
 - Certificate CN matches hostname
@@ -403,12 +418,14 @@ sec_protocol_options_set_verify_block(
 **Time cost** 20-30 minutes
 
 #### Symptom
+
 - connection.send() succeeds with no error
 - connection.receive() never returns data
 - Or receive() returns partial data
 - Packet capture shows bytes on wire, but app doesn't process them
 
 #### Diagnosis
+
 ```swift
 // Enable detailed logging
 connection.send(content: data, completion: .contentProcessed { error in
@@ -433,6 +450,7 @@ connection.receive(minimumIncompleteLength: 1, maximumLength: 65536) { data, con
 **Common cause** Stream protocols (TCP/TLS) don't preserve message boundaries.
 
 #### Example
+
 ```swift
 // Sender sends 3 messages:
 send("Hello") // 5 bytes
@@ -451,6 +469,7 @@ receive() → "loWorld!" // 8 bytes
 #### Fix
 
 #### Solution 1: Use TLV Framing (iOS 26+)
+
 ```swift
 // NetworkConnection with TLV
 let connection = NetworkConnection(
@@ -478,6 +497,7 @@ if metadata.type == MessageType.chat.rawValue {
 ```
 
 #### Solution 2: Manual Length Prefix (iOS 12-25)
+
 ```swift
 // Sender: Prefix message with UInt32 length
 func sendMessage(_ message: Data) {
@@ -509,6 +529,7 @@ func receiveMessage() {
 ```
 
 #### Verification
+
 - Send 10 messages, verify receiver gets exactly 10 messages
 - Send messages of varying sizes (1 byte, 1000 bytes, 64KB)
 - Test with packet loss simulation (Network Link Conditioner)
@@ -520,12 +541,14 @@ func receiveMessage() {
 **Time cost** 15-25 minutes
 
 #### Symptom
+
 - First few sends fast, then increasingly slow
 - Latency grows from 50ms → 500ms → 2000ms over time
 - Memory usage growing (buffering unsent data)
 - User reports app "feels sluggish" after 5 minutes
 
 #### Diagnosis
+
 ```swift
 // Monitor send completion time
 let sendStart = Date()
@@ -542,6 +565,7 @@ connection.send(content: data, completion: .contentProcessed { error in
 ```
 
 #### Common causes
+
 1. Sender sending faster than receiver can process (back pressure)
 2. Network congestion (packet loss, retransmits)
 3. No pacing with contentProcessed callback
@@ -579,6 +603,7 @@ sendFrameWithPacing()
 ```
 
 #### Alternative: Async/await (iOS 26+)
+
 ```swift
 // NetworkConnection with natural back pressure
 func sendFrames() async throws {
@@ -591,6 +616,7 @@ func sendFrames() async throws {
 ```
 
 #### Verification
+
 - Send 1000 messages, monitor memory usage (should stay flat)
 - Monitor send completion time (should stay < 100ms)
 - Test with Network Link Conditioner (100ms latency, 3% packet loss)
@@ -602,12 +628,14 @@ func sendFrames() async throws {
 **Time cost** 10-15 minutes
 
 #### Symptom
+
 - Works perfectly on WiFi (dual-stack IPv4/IPv6)
 - Fails 100% of time on cellular (IPv6-only)
 - Works on some carriers (T-Mobile), fails on others (Verizon)
 - Logs show "Host unreachable" or POSIX error 65 (EHOSTUNREACH)
 
 #### Diagnosis
+
 ```bash
 # Check if hostname has IPv6
 dig AAAA example.com
@@ -623,6 +651,7 @@ dig AAAA example.com
 ```
 
 #### Common causes
+
 1. Hardcoded IPv4 address ("192.168.1.1")
 2. getaddrinfo with AF_INET only (filters out IPv6)
 3. Server has no IPv6 address (AAAA record)
@@ -657,6 +686,7 @@ let connection = NWConnection(
 ```
 
 #### Verification
+
 - Test on real device with cellular (disable WiFi)
 - Test with multiple carriers (Verizon, AT&T, T-Mobile)
 - Enable DNS64/NAT64 in developer settings
@@ -669,6 +699,7 @@ let connection = NWConnection(
 ### Context: iOS Update Causes 15% Connection Failures
 
 #### Situation
+
 - Your company releases iOS app update (v4.2) on Monday morning
 - By noon, Customer Support reports surge in "app doesn't work" tickets
 - Analytics show 15% of users experiencing connection failures (10,000+ users)
@@ -677,6 +708,7 @@ let connection = NWConnection(
 - You're the networking engineer
 
 #### Pressure signals
+
 - 🚨 **Production outage** 10K+ users affected, revenue impact, negative App Store reviews incoming
 - ⏰ **Time pressure** "Need fix ASAP, trending on Twitter"
 - 👔 **Executive visibility** CEO personally asking for updates
@@ -706,6 +738,7 @@ let connection = NWConnection(
 #### MANDATORY Diagnostic Protocol
 
 You have 1 hour to provide CEO with:
+
 1. Root cause
 2. Fix timeline
 3. Mitigation plan
@@ -869,6 +902,7 @@ Updates: I'll notify you every 30 minutes.
 **Why it fails** You're guessing what's happening. Logs show exact state transitions, error codes, timing.
 
 #### Fix
+
 ```swift
 // Add to Xcode scheme BEFORE debugging:
 // -NWLoggingEnabled 1
@@ -887,6 +921,7 @@ ProcessInfo.processInfo.environment["NW_LOGGING_ENABLED"] = "1"
 **Why it fails** 40% of connection failures are network-specific. If you only test WiFi, you miss cellular issues.
 
 #### Fix
+
 - Test on real device with WiFi OFF
 - Test on multiple carriers (Verizon, AT&T, T-Mobile have different configs)
 - Test with VPN active (enterprise users)
@@ -899,6 +934,7 @@ ProcessInfo.processInfo.environment["NW_LOGGING_ENABLED"] = "1"
 **Why it fails** Different error codes require different fixes. POSIX 61 = server issue, POSIX 50 = client network issue.
 
 #### Fix
+
 ```swift
 if case .failed(let error) = state {
     let posixError = (error as NSError).code
@@ -922,6 +958,7 @@ if case .failed(let error) = state {
 **Why it fails** Real users experience network transitions (WiFi → cellular), Airplane Mode, weak signal.
 
 #### Fix
+
 ```swift
 // Test with Network Link Conditioner:
 // 1. 100% Loss — verify .waiting state shows "Waiting for network"
@@ -936,6 +973,7 @@ if case .failed(let error) = state {
 **Why it fails** Simulator hides IPv6-only issues, doesn't simulate network transitions, has different DNS.
 
 #### Fix
+
 - ALWAYS test on real device before shipping
 - Test with Airplane Mode toggle (simulate network transitions)
 - Test with cellular only (disable WiFi)
@@ -947,6 +985,7 @@ if case .failed(let error) = state {
 ### For Preventive Patterns
 
 **networking skill** — Discipline-enforcing anti-patterns:
+
 - Red Flags: SCNetworkReachability, blocking sockets, hardcoded IPs
 - Pattern 1a: NetworkConnection with TLS (correct implementation)
 - Pattern 2a: NWConnection with proper state handling
@@ -955,6 +994,7 @@ if case .failed(let error) = state {
 ### For API Reference
 
 **network-framework-ref skill** — Complete API documentation:
+
 - NetworkConnection (iOS 26+): All 12 WWDC 2025 examples
 - NWConnection (iOS 12-25): Complete API with examples
 - TLV framing, Coder protocol, NetworkListener, NetworkBrowser
@@ -963,6 +1003,7 @@ if case .failed(let error) = state {
 ### For Related Issues
 
 **swift-concurrency skill** — If using async/await:
+
 - Pattern 3: Weak self in Task closures (similar memory leak prevention)
 - @MainActor usage for connection state updates
 - Task cancellation when connection fails

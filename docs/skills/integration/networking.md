@@ -10,6 +10,7 @@ Network.framework patterns for UDP/TCP connections. Covers NWConnection (iOS 12-
 ## When to Use This Skill
 
 Use this skill when you're:
+
 - Implementing UDP or TCP connections
 - Migrating from deprecated APIs (SCNetworkReachability, CFSocket, NSStream)
 - Adding TLS/SSL to connections
@@ -34,6 +35,7 @@ Questions you can ask Claude that will draw from this skill:
 ## What's Covered
 
 ### Anti-Patterns Prevented
+
 - SCNetworkReachability (race conditions, deprecated)
 - CFSocket, NSStream, CFStream (replaced by NWConnection)
 - NSNetService (replaced by NWBrowser)
@@ -42,12 +44,14 @@ Questions you can ask Claude that will draw from this skill:
 - Blocking socket operations on main thread
 
 ### NWConnection (iOS 12-25)
+
 - TCP and UDP connections
 - TLS with stateUpdateHandler
 - UDP batch sending (30% CPU reduction)
 - Network transition handling
 
 ### NetworkConnection (iOS 26+)
+
 - Async/await patterns
 - Declarative TLS stacks
 - UDP datagrams with batching
@@ -55,6 +59,7 @@ Questions you can ask Claude that will draw from this skill:
 - Coder protocol for Codable objects
 
 ### Listening & Discovery
+
 - NWListener for incoming connections
 - NWBrowser for service discovery
 - Bonjour integration

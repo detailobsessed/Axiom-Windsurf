@@ -11,6 +11,7 @@ Complete API reference for iOS energy efficiency. Covers Power Profiler, timer e
 ## When to Use This Reference
 
 Use this reference when you need:
+
 - Power Profiler workflow and interpretation
 - Timer API patterns for energy efficiency
 - Network coalescing and batching APIs
@@ -36,24 +37,28 @@ Questions you can ask Claude that will draw from this reference:
 ## What's Covered
 
 ### Power Profiler Workflow
+
 - Recording traces in Instruments 26
 - Interpreting the 5 power impact lanes
 - On-device profiling (iOS 26+)
 - Comparing implementations
 
 ### Timer Efficiency
+
 - DispatchSource vs NSTimer
 - Leeway configuration for coalescing
 - Timer invalidation patterns
 - Common timer leaks
 
 ### Network Efficiency
+
 - Discretionary transfers
 - Request batching
 - Connection coalescing
 - Background URLSession
 
 ### Location Efficiency
+
 - Accuracy levels and energy impact
 - Continuous vs significant-change monitoring
 - Deferred location updates
@@ -61,18 +66,21 @@ Questions you can ask Claude that will draw from this reference:
 - Background location modes
 
 ### Background Execution
+
 - BGTaskScheduler patterns
 - Processing task duration limits
 - Refresh task timing
 - App refresh budgets
 
 ### Display/GPU Optimization
+
 - Dark mode battery benefits on OLED
 - Animation energy impact
 - Blur effect costs
 - EDR and brightness
 
 ### MetricKit Integration
+
 - MXDiagnosticPayload for energy diagnostics
 - Production monitoring
 - Hang and crash correlation

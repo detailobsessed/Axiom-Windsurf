@@ -5,6 +5,7 @@ Scans for security vulnerabilities and privacy compliance issues including hardc
 ## How to Use This Agent
 
 **Natural language (automatic triggering):**
+
 - "Can you check my code for security issues?"
 - "I need to prepare for App Store security review"
 - "Are there any hardcoded credentials in my codebase?"
@@ -12,6 +13,7 @@ Scans for security vulnerabilities and privacy compliance issues including hardc
 - "Check if I'm storing tokens securely"
 
 **Explicit command:**
+
 ```bash
 /axiom:audit security
 # or
@@ -21,14 +23,17 @@ Scans for security vulnerabilities and privacy compliance issues including hardc
 ## What It Checks
 
 ### Critical (App Store Rejection Risk)
+
 - **Hardcoded API keys** — AWS keys, OpenAI keys, GitHub tokens in source
 - **Missing Privacy Manifest** — Required since May 2024 for App Store
 
 ### High Priority (Security Vulnerabilities)
+
 - **Insecure token storage** — Auth tokens in @AppStorage/UserDefaults
 - **HTTP URLs (ATS violation)** — Cleartext transmission without HTTPS
 
 ### Medium Priority (Best Practices)
+
 - **Sensitive data in logs** — Passwords, tokens in print/Logger statements
 - **Missing SSL pinning** — No certificate pinning for sensitive APIs
 
@@ -55,6 +60,7 @@ Scans for security vulnerabilities and privacy compliance issues including hardc
   ```swift
   let apiKey = "sk-1234..."  // EXPOSED
   ```
+
 ```
 
 ## Model & Tools

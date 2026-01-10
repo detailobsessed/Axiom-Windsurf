@@ -14,11 +14,13 @@ last_updated: 2025-12-05
 SwiftUI's navigation APIs provide data-driven, programmatic navigation that scales from simple stacks to complex multi-column layouts. Introduced in iOS 16 (2022) with NavigationStack and NavigationSplitView, evolved in iOS 18 (2024) with Tab/Sidebar unification, and refined in iOS 26 (2025) with Liquid Glass design.
 
 #### Evolution timeline
+
 - **2022 (iOS 16)** NavigationStack, NavigationSplitView, NavigationPath, value-based NavigationLink
 - **2024 (iOS 18)** Tab/Sidebar unification, sidebarAdaptable style, zoom navigation transition
 - **2025 (iOS 26)** Liquid Glass navigation chrome, bottom-aligned search, floating tab bars, backgroundExtensionEffect
 
 #### Key capabilities
+
 - **Data-driven navigation** NavigationPath represents stack state, enabling programmatic push/pop and deep linking
 - **Multi-column layouts** NavigationSplitView adapts automatically (3-column on iPad → single stack on iPhone)
 - **State restoration** Codable NavigationPath + SceneStorage for persistence across app launches
@@ -26,10 +28,12 @@ SwiftUI's navigation APIs provide data-driven, programmatic navigation that scal
 - **Liquid Glass** Automatic glass navigation bars, sidebars, and toolbars (iOS 26+)
 
 #### When to use vs UIKit
+
 - **SwiftUI navigation** New apps, multiplatform, simpler navigation flows → Use NavigationStack/SplitView
 - **UINavigationController** Complex coordinator patterns, legacy code, specific UIKit features → Consider UIKit
 
 #### Related Skills
+
 - Use `axiom-swiftui-nav` for anti-patterns, decision trees, pressure scenarios
 - Use `axiom-swiftui-nav-diag` for systematic troubleshooting of navigation issues
 
@@ -38,6 +42,7 @@ SwiftUI's navigation APIs provide data-driven, programmatic navigation that scal
 ## When to Use This Skill
 
 Use this skill when:
+
 - **Learning navigation APIs** from NavigationStack to NavigationSplitView to NavigationPath
 - **Implementing WWDC examples** (all 4 sessions with code examples included)
 - **Planning deep linking** with URL routing and NavigationPath manipulation
@@ -71,6 +76,7 @@ Use this skill when:
 | **Status** | Deprecated iOS 16 | Current API |
 
 #### Recommendation
+
 - New apps: Use NavigationStack and NavigationSplitView exclusively
 - Existing apps: Migrate from NavigationView (deprecated)
 - See "Migrating to new navigation types" documentation
@@ -124,6 +130,7 @@ struct PushableStack: View {
 ```
 
 **Key points:**
+
 - `path: $path` binds the navigation state to a collection
 - Value-presenting `NavigationLink` appends values to the path
 - `navigationDestination(for:)` maps values to views
@@ -182,6 +189,7 @@ NavigationStack(path: $path) {
 ```
 
 #### Placement rules
+
 - Place `navigationDestination` outside lazy containers (not inside ForEach)
 - Place near related NavigationLinks for code organization
 - Must be inside NavigationStack hierarchy
@@ -369,6 +377,7 @@ columnVisibility = .automatic    // System decides
 ### 2.5 Automatic Adaptation
 
 NavigationSplitView automatically adapts:
+
 - **iPad landscape** All columns visible (depending on configuration)
 - **iPad portrait/Slide Over** Collapses to overlay or single column
 - **iPhone** Single navigation stack
@@ -632,6 +641,7 @@ TabView {
 ```
 
 **Key features:**
+
 - `TabSection` creates groups visible in sidebar
 - `.sidebarAdaptable` enables sidebar on iPad, tab bar on iPhone
 - Search tab with `.search` role gets special placement
@@ -723,6 +733,7 @@ if showSettings {
 #### Common Patterns
 
 **Feature Flags**
+
 ```swift
 Tab("Beta Features", systemImage: "flask") {
     BetaView()
@@ -731,6 +742,7 @@ Tab("Beta Features", systemImage: "flask") {
 ```
 
 **Authentication State**
+
 ```swift
 Tab("Profile", systemImage: "person.circle") {
     ProfileView()
@@ -739,6 +751,7 @@ Tab("Profile", systemImage: "person.circle") {
 ```
 
 **Purchase Status**
+
 ```swift
 Tab("Pro Features", systemImage: "star.circle.fill") {
     ProFeaturesView()
@@ -747,6 +760,7 @@ Tab("Pro Features", systemImage: "star.circle.fill") {
 ```
 
 **Development Builds**
+
 ```swift
 Tab("Debug", systemImage: "hammer") {
     DebugView()
@@ -829,6 +843,7 @@ Tab(role: .search) {
 ### 6.1 Liquid Glass Navigation (WWDC 2025, 323)
 
 Automatic adoption when building with Xcode 26:
+
 - Navigation bars become Liquid Glass
 - Sidebars float above content with glass effect
 - Tab bars float with new compact appearance
@@ -906,12 +921,14 @@ TabView {
 ### 7.1 When to Use Coordinators
 
 **Use coordinators when:**
+
 - Navigation logic is complex with conditional flows
 - Testing navigation in isolation
 - Sharing navigation logic across multiple screens
 - UIKit interop with heavy navigation requirements
 
 **Use built-in navigation when:**
+
 - Simple linear or hierarchical navigation
 - State restoration is primary concern
 - Fewer than 5-10 navigation destinations
@@ -1048,6 +1065,7 @@ func testPopToRoot() {
 ## Testing Checklist
 
 ### Navigation Flow Testing
+
 - [ ] All NavigationLinks navigate to correct destination
 - [ ] Back button returns to previous view
 - [ ] Pop to root clears entire stack
@@ -1055,18 +1073,21 @@ func testPopToRoot() {
 - [ ] Deep links navigate correctly when app is running
 
 ### State Restoration Testing
+
 - [ ] Navigation state persists when app backgrounds
 - [ ] Navigation state restores on app launch
 - [ ] Deleted items handled gracefully (compactMap)
 - [ ] SceneStorage key is unique per scene
 
 ### Multi-Platform Testing
+
 - [ ] NavigationSplitView collapses correctly on iPhone
 - [ ] Selection in sidebar pushes on iPhone
 - [ ] Tab bar visible and functional on all platforms
 - [ ] Sidebar toggle works on iPad
 
 ### iOS 26+ Testing
+
 - [ ] Liquid Glass appearance correct
 - [ ] Bottom-aligned search on iPhone
 - [ ] Tab bar minimization works

@@ -11,6 +11,7 @@ user-invocable: false
 ## When to Use
 
 Use this router when:
+
 - Converting PyTorch/TensorFlow models to CoreML
 - Deploying ML models on-device
 - Compressing models (quantization, palettization, pruning)
@@ -25,6 +26,7 @@ Use this router when:
 ### CoreML Work
 
 **Implementation patterns** → `/skill coreml`
+
 - Model conversion workflow
 - MLTensor for model stitching
 - Stateful models with KV-cache
@@ -33,6 +35,7 @@ Use this router when:
 - Compute unit selection
 
 **API reference** → `/skill coreml-ref`
+
 - CoreML Tools Python API
 - MLModel lifecycle
 - MLTensor operations
@@ -41,6 +44,7 @@ Use this router when:
 - Performance reports
 
 **Diagnostics** → `/skill coreml-diag`
+
 - Model won't load
 - Slow inference
 - Memory issues
@@ -50,6 +54,7 @@ Use this router when:
 ### Speech Work
 
 **Implementation patterns** → `/skill speech`
+
 - SpeechAnalyzer setup (iOS 26+)
 - SpeechTranscriber configuration
 - Live transcription
@@ -72,6 +77,7 @@ User asks about on-device ML or speech
 ## Critical Patterns
 
 **coreml**:
+
 - Model conversion (PyTorch → CoreML)
 - Compression (palettization, quantization, pruning)
 - Stateful KV-cache for LLMs
@@ -80,12 +86,14 @@ User asks about on-device ML or speech
 - Async concurrent prediction
 
 **coreml-diag**:
+
 - Load failures and caching
 - Inference performance issues
 - Memory pressure from models
 - Accuracy degradation from compression
 
 **speech**:
+
 - SpeechAnalyzer + SpeechTranscriber setup
 - AssetInventory model management
 - Live transcription with volatile results

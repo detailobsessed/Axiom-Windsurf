@@ -39,6 +39,7 @@ Four key classes replace legacy CLLocationManager patterns:
 | `CLBackgroundActivitySession` | Background location support | 17+ |
 
 **Migration path**: Legacy CLLocationManager still works, but new APIs provide:
+
 - Swift concurrency (async/await)
 - Automatic pause/resume
 - Simplified authorization
@@ -97,6 +98,7 @@ Choose based on use case. If unsure, use `.default` or omit parameter.
 ### Automatic Pause/Resume
 
 When device becomes stationary:
+
 1. Final update delivered with `isStationary = true` and valid `location`
 2. Updates pause (saves battery)
 3. When device moves, updates resume with `isStationary = false`
@@ -258,6 +260,7 @@ Requires `NSLocationTemporaryUsageDescriptionDictionary` in Info.plist.
 Iterating `CLLocationUpdate.liveUpdates()` or `CLMonitor.events` creates implicit session with `.whenInUse` goal.
 
 To disable implicit sessions:
+
 ```xml
 <!-- Info.plist -->
 <key>NSLocationRequireExplicitServiceSession</key>
@@ -306,6 +309,7 @@ for try await diagnostic in session.diagnostics {
 ### Session Lifecycle
 
 Sessions persist through:
+
 - App backgrounding
 - App suspension
 - App termination (Core Location tracks)
@@ -407,6 +411,7 @@ func stopBackgroundTracking() {
 ### Background Indicator
 
 Blue status bar/pill appears when:
+
 - App authorized as "When In Use"
 - App receiving location in background
 - CLBackgroundActivitySession active
@@ -586,6 +591,7 @@ func updateMonitoredRegions(userLocation: CLLocation) async {
 ### Testing Authorization States
 
 Settings → Privacy & Security → Location Services:
+
 - Toggle app authorization
 - Toggle system-wide location services
 - Test reduced accuracy

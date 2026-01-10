@@ -15,6 +15,7 @@ user-invocable: false
 ## What's Automatic
 
 When using `ApplicationMusicPlayer`:
+
 - Track title, artist, album
 - Artwork (Apple's album art)
 - Duration and elapsed time
@@ -121,6 +122,7 @@ func playAppleMusicSong(_ song: Song) async throws {
 ## When to Use Manual Updates with MusicKit
 
 Only override MPNowPlayingInfoCenter if:
+
 - You're mixing in additional metadata (e.g., podcast chapter markers)
 - You're displaying custom content alongside Apple Music
 - You have a specific reason to replace MusicKit's automatic behavior

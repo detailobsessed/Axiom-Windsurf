@@ -11,6 +11,7 @@ user-invocable: false
 ## When to Use
 
 Use this router when you encounter:
+
 - Build failures (`BUILD FAILED`, compilation errors, linker errors)
 - Test crashes or hangs
 - Simulator issues (won't boot, device errors)
@@ -24,7 +25,9 @@ Use this router when you encounter:
 This router invokes specialized skills based on the specific issue:
 
 ### 1. Environment-First Issues → **xcode-debugging**
+
 **Triggers**:
+
 - `BUILD FAILED` without obvious code cause
 - Tests crash in clean project
 - Simulator hangs or won't boot
@@ -40,7 +43,9 @@ This router invokes specialized skills based on the specific issue:
 ---
 
 ### 2. Slow Builds → **build-performance**
+
 **Triggers**:
+
 - Compilation takes too long
 - Type checking bottlenecks
 - Want to optimize build time
@@ -51,7 +56,9 @@ This router invokes specialized skills based on the specific issue:
 ---
 
 ### 3. SPM Dependency Conflicts → **spm-conflict-resolver** (Agent)
+
 **Triggers**:
+
 - SPM resolution failures
 - "No such module" after adding package
 - Duplicate symbol linker errors
@@ -66,7 +73,9 @@ This router invokes specialized skills based on the specific issue:
 ---
 
 ### 4. Security & Privacy Audit → **security-privacy-scanner** (Agent)
+
 **Triggers**:
+
 - App Store submission prep
 - Privacy Manifest requirements (iOS 17+)
 - Hardcoded credentials in code
@@ -81,7 +90,9 @@ This router invokes specialized skills based on the specific issue:
 ---
 
 ### 5. iOS 17→18 Modernization → **modernization-helper** (Agent)
+
 **Triggers**:
+
 - Migrate ObservableObject to @Observable
 - Update @StateObject to @State
 - Adopt modern SwiftUI patterns
@@ -95,7 +106,9 @@ This router invokes specialized skills based on the specific issue:
 ---
 
 ### 6. General Dependency Issues → **build-debugging**
+
 **Triggers**:
+
 - CocoaPods resolution failures
 - "Multiple commands produce" errors
 - Framework version mismatches
@@ -106,7 +119,9 @@ This router invokes specialized skills based on the specific issue:
 ---
 
 ### 7. TestFlight Crash Triage → **testflight-triage**
+
 **Triggers**:
+
 - Beta tester reported a crash
 - Crash reports in Xcode Organizer
 - Crash logs aren't symbolicated
@@ -149,6 +164,7 @@ User reports build/environment issue
 ## Anti-Rationalization
 
 **Do NOT skip this router for:**
+
 - "Simple" build errors (may have environment cause)
 - "Quick fixes" (environment issues return if not addressed)
 
@@ -166,6 +182,7 @@ User reports build/environment issue
 | Type mismatch / compilation errors | Fix the code | These are code bugs |
 
 **ios-build is for environment mysteries**, not code errors:
+
 - ✅ "No such module" when code is correct
 - ✅ Simulator won't boot
 - ✅ Clean build fails, incremental works

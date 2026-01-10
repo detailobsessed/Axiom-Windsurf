@@ -14,34 +14,40 @@ TextKit 2 uses MVC pattern with new classes optimized for correctness, safety, a
 ### Model Layer
 
 **NSTextContentManager** (abstract)
+
 - Generates NSTextElement objects from backing store
 - Tracks element ranges within document
 - Default implementation: NSTextContentStorage
 
 **NSTextContentStorage**
+
 - Uses NSTextStorage as backing store
 - Automatically divides content into NSTextParagraph elements
 - Generates updated elements when text changes
 
 **NSTextElement** (abstract)
+
 - Represents portion of content (paragraph, attachment, custom type)
 - Immutable value semantics
 - Properties cannot change after creation
 - Default implementation: NSTextParagraph
 
 **NSTextParagraph**
+
 - Represents single paragraph
 - Contains range within document
 
 ### Controller Layer
 
 **NSTextLayoutManager**
+
 - Replaces TextKit 1's NSLayoutManager
 - **NO glyph APIs** (abstracts away glyphs entirely)
 - Takes elements, lays out into container, generates layout fragments
 - Always uses noncontiguous layout
 
 **NSTextLayoutFragment**
+
 - Immutable layout information for one or more elements
 - Key properties:
   - `textLineFragments` — array of NSTextLineFragment
@@ -49,38 +55,45 @@ TextKit 2 uses MVC pattern with new classes optimized for correctness, safety, a
   - `renderingSurfaceBounds` — actual drawing bounds (can exceed frame)
 
 **NSTextLineFragment**
+
 - Measurement info for single line of text
 - Used for line counting and geometric queries
 
 ### View Layer
 
 **NSTextViewportLayoutController**
+
 - Source of truth for viewport layout
 - Coordinates visible-only layout
 - Calls delegate methods: `willLayout`, `configureRenderingSurface`, `didLayout`
 
 **NSTextContainer**
+
 - Provides geometric information for layout destination
 - Can define exclusion paths (non-rectangular layout)
 
 ### Object-Based Ranges
 
 **NSTextLocation** (protocol)
+
 - Represents single location in text
 - Replaces integer indices
 - Supports structured documents (e.g., DOM with nested elements)
 
 **NSTextRange**
+
 - Start and end locations (end is excluded)
 - Can represent nested structure
 - Incompatible with NSRange for non-linear documents
 
 **NSTextSelection**
+
 - Contains: granularity, affinity, possibly disjoint ranges
 - Read-only properties
 - Immutable value semantics
 
 **NSTextSelectionNavigation**
+
 - Performs actions on selections
 - Returns new NSTextSelection instances
 - Handles bidirectional text correctly
@@ -95,12 +108,14 @@ From WWDC 2021:
 **Why no glyphs?**
 
 **Problem:** In scripts like Kannada and Arabic:
+
 - One glyph can represent multiple characters (ligatures)
 - One character can split into multiple glyphs
 - Glyphs reorder during shaping
 - No correct character→glyph mapping
 
 **Example (Kannada word "October"):**
+
 - Character 4 splits into 2 glyphs
 - Glyphs reorder before ligature application
 - Glyph 3 becomes conjoining form and moves below another glyph
@@ -110,12 +125,14 @@ From WWDC 2021:
 ### 2. Safety — Value Semantics
 
 **Immutable objects:**
+
 - NSTextElement
 - NSTextLayoutFragment
 - NSTextLineFragment
 - NSTextSelection
 
 **Benefits:**
+
 - No unintended sharing
 - No side effects from mutations
 - Easier to reason about state
@@ -129,17 +146,20 @@ To change layout/selection, create new instances with desired changes.
 TextKit 2 performs layout only for visible content + overscroll region.
 
 **TextKit 1:**
+
 - Optional noncontiguous layout (boolean property)
 - No visibility into layout state
 - Can't control which parts get laid out
 
 **TextKit 2:**
+
 - Always noncontiguous
 - Viewport defines visible area
 - Consistent layout info for viewport
 - Notifications for viewport layout updates
 
 **Viewport Delegate Methods:**
+
 1. `textViewportLayoutControllerWillLayout(_:)` — setup before layout
 2. `textViewportLayoutController(_:configureRenderingSurfaceFor:)` — per fragment
 3. `textViewportLayoutControllerDidLayout(_:)` — cleanup after layout
@@ -160,12 +180,14 @@ TextKit 2 performs layout only for visible content + overscroll region.
 ### API Naming Heuristics
 
 From WWDC 2022:
+
 - `.offset` in name → TextKit 1
 - `.location` in name → TextKit 2
 
 ### NSRange ↔ NSTextRange Conversion
 
 **NSRange → NSTextRange:**
+
 ```swift
 // UITextView/NSTextView
 let nsRange = NSRange(location: 0, length: 10)
@@ -183,6 +205,7 @@ let textRange = NSTextRange(location: startLocation, end: endLocation)
 ```
 
 **NSTextRange → NSRange:**
+
 ```swift
 let startOffset = textContentManager.offset(
     from: textContentManager.documentRange.location,
@@ -200,6 +223,7 @@ let nsRange = NSRange(location: startOffset, length: length)
 **NO direct glyph API equivalents.** Must use higher-level structures.
 
 **Example (TextKit 1 - counting lines):**
+
 ```swift
 // TextKit 1 - iterate glyphs
 var lineCount = 0
@@ -214,6 +238,7 @@ for glyphIndex in glyphRange.location..<NSMaxRange(glyphRange) {
 ```
 
 **Replacement (TextKit 2 - enumerate fragments):**
+
 ```swift
 // TextKit 2 - enumerate layout fragments
 var lineCount = 0
@@ -235,12 +260,14 @@ Happens when you access `.layoutManager` property.
 > "Accessing textView.layoutManager triggers TK1 fallback"
 
 **Once fallback occurs:**
+
 - No automatic way back to TextKit 2
 - Expensive to switch
 - Lose UI state (selection, scroll position)
 - **One-way operation**
 
 **Prevent Fallback:**
+
 1. Check `.textLayoutManager` first (TextKit 2)
 2. Only access `.layoutManager` in else clause
 3. Opt out at initialization if TK1 required
@@ -255,12 +282,14 @@ if let textLayoutManager = textView.textLayoutManager {
 ```
 
 **Debug Fallback:**
+
 - **UIKit:** Breakpoint on `_UITextViewEnablingCompatibilityMode`
 - **AppKit:** Subscribe to `willSwitchToNSLayoutManagerNotification`
 
 ### NSTextView Opt-In (macOS)
 
 **Create TextKit 2 NSTextView:**
+
 ```swift
 let textLayoutManager = NSTextLayoutManager()
 let textContainer = NSTextContainer()
@@ -271,6 +300,7 @@ let textView = NSTextView(frame: .zero, textContainer: textContainer)
 ```
 
 **New Convenience Constructor:**
+
 ```swift
 // iOS 16+ / macOS 13+
 let textView = UITextView(usingTextLayoutManager: true)
@@ -282,6 +312,7 @@ let nsTextView = NSTextView(usingTextLayoutManager: true)
 ### NSTextContentStorageDelegate
 
 **Customize attributes without modifying storage:**
+
 ```swift
 func textContentStorage(
     _ textContentStorage: NSTextContentStorage,
@@ -305,6 +336,7 @@ func textContentStorage(
 ```
 
 **Filter elements (hide/show content):**
+
 ```swift
 func textContentManager(
     _ textContentManager: NSTextContentManager,
@@ -322,6 +354,7 @@ func textContentManager(
 ### NSTextLayoutManagerDelegate
 
 **Provide custom layout fragments:**
+
 ```swift
 func textLayoutManager(
     _ textLayoutManager: NSTextLayoutManager,
@@ -345,6 +378,7 @@ func textLayoutManager(
 ### NSTextViewportLayoutController.Delegate
 
 **Viewport layout lifecycle:**
+
 ```swift
 func textViewportLayoutControllerWillLayout(_ controller: NSTextViewportLayoutController) {
     // Prepare for layout: clear sublayers, begin animation
@@ -390,6 +424,7 @@ class BubbleLayoutFragment: NSTextLayoutFragment {
 ### Rendering Attributes (Temporary Styling)
 
 **Add attributes that don't modify text storage:**
+
 ```swift
 textLayoutManager.addRenderingAttribute(
     .foregroundColor,
@@ -473,6 +508,7 @@ From WWDC 2024:
 > "UITextView or NSTextView has to use TextKit 2 to support the full Writing Tools experience. If using TextKit 1, you will get a limited experience that just shows rewritten results in a panel."
 
 **Free for native text views:**
+
 ```swift
 // UITextView, NSTextView, WKWebView
 // Writing Tools appears automatically
@@ -564,6 +600,7 @@ customView.writingToolsCoordinator = coordinator
 ### Coordinator Delegate
 
 **Provide context:**
+
 ```swift
 func writingToolsCoordinator(
     _ coordinator: NSWritingToolsCoordinator,
@@ -579,6 +616,7 @@ func writingToolsCoordinator(
 ```
 
 **Apply changes:**
+
 ```swift
 func writingToolsCoordinator(
     _ coordinator: NSWritingToolsCoordinator,
@@ -592,6 +630,7 @@ func writingToolsCoordinator(
 ```
 
 **Update selection:**
+
 ```swift
 func writingToolsCoordinator(
     _ coordinator: NSWritingToolsCoordinator,
@@ -604,6 +643,7 @@ func writingToolsCoordinator(
 ```
 
 **Provide previews for animation:**
+
 ```swift
 // macOS
 func writingToolsCoordinator(
@@ -635,6 +675,7 @@ func writingToolsCoordinator(
 ```
 
 **Proofreading marks:**
+
 ```swift
 func writingToolsCoordinator(
     _ coordinator: NSWritingToolsCoordinator,
@@ -652,6 +693,7 @@ func writingToolsCoordinator(
 ### PresentationIntent (iOS 26+)
 
 **Semantic rich text result option:**
+
 ```swift
 coordinator.writingToolsResultOptions = [.richText, .presentationIntent]
 ```
@@ -659,16 +701,19 @@ coordinator.writingToolsResultOptions = [.richText, .presentationIntent]
 **Difference from display attributes:**
 
 **Display attributes** (bold, italic):
+
 - Concrete font info (point sizes, font names)
 - No semantic meaning
 
 **PresentationIntent** (header, code block, emphasis):
+
 - Semantic style info
 - App converts to internal styles
 - Lists, tables, code blocks use presentation intent
 - Underline, subscript, superscript still use display attributes
 
 **Example:**
+
 ```swift
 // Check for presentation intent
 if attributedString.runs[\.presentationIntent].contains(where: { $0?.components.contains(.header(level: 1)) == true }) {
@@ -691,6 +736,7 @@ struct RecipeEditor: View {
 ```
 
 **Supported attributes:**
+
 - Bold, italic, underline, strikethrough
 - Custom fonts, point size
 - Foreground and background colors
@@ -707,6 +753,7 @@ TextEditor(text: $text, selection: $selection)
 ```
 
 **AttributedTextSelection:**
+
 ```swift
 enum AttributedTextSelection {
     case none
@@ -716,6 +763,7 @@ enum AttributedTextSelection {
 ```
 
 **Get selected text:**
+
 ```swift
 if let selection {
     let selectedText: AttributedSubstring
@@ -752,6 +800,7 @@ struct RecipeAttributeScope: AttributedScope {
 ```
 
 **Apply to TextEditor:**
+
 ```swift
 TextEditor(text: $text)
     .attributedTextFormattingDefinition(RecipeFormattingDefinition.self)
@@ -780,6 +829,7 @@ struct IngredientsAreGreen: AttributedTextValueConstraint {
 ```
 
 **System behavior:**
+
 - TextEditor probes constraints to determine if changes are valid
 - If constraint would revert change, control is disabled
 - Constraints applied to pasted content
@@ -787,6 +837,7 @@ struct IngredientsAreGreen: AttributedTextValueConstraint {
 ### Custom Attributes
 
 **Define attribute:**
+
 ```swift
 struct IngredientAttribute: CodableAttributedStringKey {
     typealias Value = UUID // Ingredient ID
@@ -800,6 +851,7 @@ extension AttributeScopes.RecipeAttributeScope {
 ```
 
 **Attribute behavior:**
+
 ```swift
 extension IngredientAttribute {
     // Don't expand when typing after ingredient
@@ -818,6 +870,7 @@ extension IngredientAttribute {
 ### AttributedString Mutations
 
 **Safe index updates:**
+
 ```swift
 // Transform updates indices/selection during mutation
 text.transform(updating: &selection) { mutableText in
@@ -834,6 +887,7 @@ text.transform(updating: &selection) { mutableText in
 ```
 
 **Don't use old indices:**
+
 ```swift
 // BAD - indices invalidated by mutation
 let range = text.characters.range(of: "butter")!
@@ -844,6 +898,7 @@ text.append(" (unsalted)") // range is now invalid!
 ### AttributedString Views
 
 Multiple views into same content:
+
 - `characters` — grapheme clusters
 - `unicodeScalars` — Unicode scalars
 - `utf8` — UTF-8 code units
@@ -856,6 +911,7 @@ All views share same indices.
 ### Viewport Scroll Issues
 
 From expert articles:
+
 - Viewport can cause scroll position instability
 - `usageBoundsForTextContainer` changes during scroll
 - Apple's TextEdit exhibits same issues
@@ -877,6 +933,7 @@ From expert articles:
 ### Limited TextKit 1 Support
 
 Unsupported in TextKit 2:
+
 - NSTextTable (use NSTextList or custom layouts)
 - Some legacy text attachments
 - Direct glyph manipulation

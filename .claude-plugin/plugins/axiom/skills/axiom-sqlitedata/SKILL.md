@@ -22,6 +22,7 @@ Type-safe SQLite persistence using [SQLiteData](https://github.com/pointfreeco/s
 ## When to Use SQLiteData
 
 **Choose SQLiteData when you need:**
+
 - Type-safe SQLite with compiler-checked queries
 - CloudKit sync with record sharing
 - Large datasets (50k+ records) with near-raw-SQLite performance
@@ -29,11 +30,13 @@ Type-safe SQLite persistence using [SQLiteData](https://github.com/pointfreeco/s
 - Swift 6 strict concurrency support
 
 **Use SwiftData instead when:**
+
 - Simple CRUD with native Apple integration
 - Prefer `@Model` classes over structs
 - Don't need CloudKit record sharing
 
 **Use raw GRDB when:**
+
 - Complex SQL joins across 4+ tables
 - Custom migration logic beyond schema changes
 - Performance-critical operations needing manual SQL
@@ -124,6 +127,7 @@ syncEngine.isSynchronizing     // either sending or fetching
 ## Anti-Patterns (Common Mistakes)
 
 ### ❌ Using `==` in predicates
+
 ```swift
 // WRONG — may not work in all contexts
 .where { $0.status == .completed }
@@ -133,6 +137,7 @@ syncEngine.isSynchronizing     // either sending or fetching
 ```
 
 ### ❌ Wrong update order
+
 ```swift
 // WRONG — .update before .where
 Item.update { $0.title = "X" }.where { $0.id == id }
@@ -143,6 +148,7 @@ Item.where(\.isOld).update { $0.archived = true }.execute(db)
 ```
 
 ### ❌ Instance methods for insert
+
 ```swift
 // WRONG — no instance insert method
 let item = Item(id: UUID(), title: "Test")
@@ -153,6 +159,7 @@ try Item.insert { Item.Draft(title: "Test") }.execute(db)
 ```
 
 ### ❌ Missing `nonisolated`
+
 ```swift
 // WRONG — Swift 6 concurrency warning
 @Table struct Item { ... }
@@ -162,6 +169,7 @@ try Item.insert { Item.Draft(title: "Test") }.execute(db)
 ```
 
 ### ❌ Awaiting inside write block
+
 ```swift
 // WRONG — write block is synchronous
 try await database.write { db in ... }
@@ -173,6 +181,7 @@ try database.write { db in
 ```
 
 ### ❌ Forgetting `.execute(db)`
+
 ```swift
 // WRONG — builds query but doesn't run it
 try database.write { db in
@@ -204,6 +213,7 @@ nonisolated struct Item: Identifiable {
 ```
 
 **Key patterns:**
+
 - Use `struct`, not `class` (value types)
 - Add `nonisolated` for Swift 6 concurrency
 - First `let` property is automatically the primary key
@@ -278,6 +288,7 @@ nonisolated struct Item: Identifiable {
 ```
 
 **Use cases:**
+
 - UI state (selection, expansion, hover)
 - Computed properties derived from stored columns
 - Transient flags for business logic
@@ -370,6 +381,7 @@ struct ItemsList: View {
 ```
 
 **Key behaviors:**
+
 - Automatically subscribes to database changes
 - Updates when any `Item` changes
 - Runs on the main thread
@@ -416,6 +428,7 @@ struct ItemsList: View {
 ```
 
 **Before v1.4.0** (manual cleanup):
+
 ```swift
 .task {
     try? await $items.load(query)
@@ -426,6 +439,7 @@ struct ItemsList: View {
 ```
 
 **With v1.4.0** (automatic):
+
 ```swift
 .task {
     try? await $items.load(query).task  // Auto-cancels
@@ -560,6 +574,7 @@ try database.write { db in
 ```
 
 **Parameters:**
+
 - `onConflict:` — Columns defining "same row" (must match UNIQUE constraint/index)
 - `doUpdate:` — What to update on conflict
   - `row` = existing database row
@@ -583,6 +598,7 @@ try Item.insert {
 ```
 
 **Schema requirement:**
+
 ```sql
 CREATE UNIQUE INDEX idx_items_sync_identity
 ON items (libraryID, remoteID)
@@ -592,6 +608,7 @@ WHERE remoteID IS NOT NULL
 #### Merge Strategies
 
 **Replace all mutable fields** (sync mirror):
+
 ```swift
 doUpdate: { row, excluded in
     row.name = excluded.name
@@ -601,6 +618,7 @@ doUpdate: { row, excluded in
 ```
 
 **Merge without clobbering** (keep existing if new is NULL):
+
 ```swift
 doUpdate: { row, excluded in
     row.name = excluded.name.ifnull(row.name)
@@ -609,6 +627,7 @@ doUpdate: { row, excluded in
 ```
 
 **Last-write-wins** (only update if newer) — use raw SQL:
+
 ```swift
 try db.execute(sql: """
     INSERT INTO items (id, name, updatedAt) VALUES (?, ?, ?)
@@ -623,6 +642,7 @@ try db.execute(sql: """
 #### ❌ Common Upsert Mistakes
 
 **Missing UNIQUE constraint:**
+
 ```swift
 // WRONG — no index to conflict against
 onConflict: { ($0.libraryID, $0.remoteID) }
@@ -630,6 +650,7 @@ onConflict: { ($0.libraryID, $0.remoteID) }
 ```
 
 **Using INSERT OR REPLACE:**
+
 ```swift
 // WRONG — REPLACE deletes then inserts, breaking FK relationships
 try db.execute(sql: "INSERT OR REPLACE INTO items ...")
@@ -702,6 +723,7 @@ try #sql("SELECT * FROM \(raw: tableName)").execute(db)
 ```
 
 **Why `#sql`?**
+
 - Type-safe parameter binding (prevents SQL injection)
 - Compile-time syntax checking
 - Seamless integration with query builder
@@ -765,6 +787,7 @@ try await syncEngine.syncChanges()
 ```
 
 **Use cases:**
+
 - User-triggered "Refresh" button
 - Sync after critical operations
 - Custom sync scheduling
@@ -797,6 +820,7 @@ struct SyncStatusView: View {
 ```
 
 **Observable properties:**
+
 - `isSendingChanges: Bool` — True during CloudKit upload
 - `isFetchingChanges: Bool` — True during CloudKit download
 - `isSynchronizing: Bool` — True if either sending or fetching
@@ -843,6 +867,7 @@ try await syncEngine.migratePrimaryKeys(
 SQLiteData is built on GRDB. Use raw GRDB when you need:
 
 **Complex joins:**
+
 ```swift
 let sql = try database.read { db in
     try Row.fetchAll(db, sql:
@@ -859,6 +884,7 @@ let sql = try database.read { db in
 ```
 
 **Window functions:**
+
 ```swift
 let ranked = try database.read { db in
     try Row.fetchAll(db, sql:

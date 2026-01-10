@@ -19,6 +19,7 @@ Scan your Swift codebase and Core Data models for the 5 most common Core Data is
 ## When to Use
 
 Run this command when:
+
 - Adding new Core Data entities or attributes
 - Before shipping production releases
 - After seeing intermittent crashes in production
@@ -30,11 +31,13 @@ Run this command when:
 ### 🔴 Critical Issues (Crashes/Data Loss)
 
 #### Schema Migration Safety
+
 - Missing `NSMigratePersistentStoresAutomaticallyOption`
 - Store deletion without migration path (100% data loss)
 - Schema changes without version increments
 
 #### Thread-Confinement Violations
+
 - NSManagedObject accessed outside `perform/performAndWait`
 - Objects passed between threads or actors
 - Background fetch without proper context usage
@@ -42,11 +45,13 @@ Run this command when:
 ### 🟡 Medium Priority (Performance)
 
 #### N+1 Query Patterns
+
 - Relationship access inside loops
 - Missing `relationshipKeyPathsForPrefetching`
 - Fetch requests that trigger hundreds of queries
 
 #### Production Risk Patterns
+
 - Hard-coded store paths
 - Missing migration unit tests
 - No rollback strategy for failed migrations
@@ -54,6 +59,7 @@ Run this command when:
 ### 🟢 Low Priority (Optimization)
 
 #### Performance Issues
+
 - Missing fetch batch sizes
 - No faulting controls on large datasets
 - Inefficient predicate patterns
@@ -66,6 +72,7 @@ Run this command when:
 ```
 
 The command will:
+
 1. Find all Swift files and Core Data models
 2. Scan for the 5 issue categories above
 3. Report findings with `file:line` references
@@ -103,6 +110,7 @@ For detailed fix guidance, use the [core-data-diag](/diagnostic/core-data-diag) 
 ```
 
 The skill provides:
+
 - Safe migration patterns
 - Thread-confinement solutions
 - N+1 query prevention
@@ -111,11 +119,13 @@ The skill provides:
 ## Real-World Impact
 
 #### Before audit
+
 - 2-5 hours debugging intermittent crashes
 - Data loss discovered in production
 - Migration failures affecting 500K+ users
 
 #### After audit
+
 - 2-5 minutes to identify issues
 - Catch problems before production
 - Proactive migration testing prevents data loss

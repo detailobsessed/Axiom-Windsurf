@@ -16,6 +16,7 @@ apple_platforms: iOS 10.0+, iPadOS 13.0+, macOS 10.12+
 ## When to Use This Skill
 
 Use this skill when:
+
 - Implementing structured data sync to iCloud
 - Choosing between SwiftData+CloudKit, CKSyncEngine, or raw CloudKit APIs
 - Setting up public/private/shared databases
@@ -30,6 +31,7 @@ Use this skill when:
 **CloudKit is for STRUCTURED DATA sync** (records with relationships), not simple file sync.
 
 Three modern approaches:
+
 1. **SwiftData + CloudKit** (Easiest, iOS 17+)
 2. **CKSyncEngine** (Custom persistence, iOS 17+, WWDC 2023)
 3. **Raw CloudKit APIs** (Maximum control, more complexity)
@@ -41,6 +43,7 @@ Three modern approaches:
 **When to use**: iOS 17+ apps with SwiftData models
 
 **Limitations**:
+
 - Private database only (no public/shared)
 - Automatic sync (less control)
 - SwiftData constraints apply
@@ -74,6 +77,7 @@ let container = try ModelContainer(
 ```
 
 **Entitlements required**:
+
 - iCloud capability
 - CloudKit container
 
@@ -86,6 +90,7 @@ let container = try ModelContainer(
 **When to use**: Custom persistence (SQLite, GRDB, JSON) with cloud sync
 
 **Advantages over raw CloudKit**:
+
 - Manages fetch/upload cycles automatically
 - Handles conflicts
 - Manages account changes
@@ -156,6 +161,7 @@ extension SyncManager: CKSyncEngineDelegate {
 ```
 
 **Key concepts**:
+
 - **State serialization**: Persist sync state between app launches
 - **Events**: Delegate receives events for changes
 - **Batches**: You provide pending changes, engine uploads them
@@ -168,6 +174,7 @@ extension SyncManager: CKSyncEngineDelegate {
 **When to use**: Only if CKSyncEngine doesn't fit (rare)
 
 **Core types**:
+
 - `CKContainer` — Entry point
 - `CKDatabase` — Public/private/shared scope
 - `CKRecord` — Individual data record
@@ -320,6 +327,7 @@ if let asset = fetchedRecord["image"] as? CKAsset,
 ### Developer Notifications
 
 Set up alerts for:
+
 - Schema changes
 - Quota exceeded
 - High error rates
@@ -328,6 +336,7 @@ Set up alerts for:
 ### Telemetry
 
 Monitor:
+
 - Request count
 - Error rate
 - Latency (p50, p95, p99)
@@ -336,11 +345,12 @@ Monitor:
 ### Logs
 
 View:
+
 - Individual requests
 - Error details
 - Performance bottlenecks
 
-**Access**: https://icloud.developer.apple.com/dashboard
+**Access**: <https://icloud.developer.apple.com/dashboard>
 
 ---
 
@@ -421,6 +431,7 @@ Required entitlements in Xcode:
 ```
 
 **Setup**:
+
 1. Xcode → Target → Signing & Capabilities
 2. "+ Capability" → iCloud
 3. Check "CloudKit"

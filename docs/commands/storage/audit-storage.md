@@ -11,29 +11,35 @@ I'll perform a comprehensive file storage audit of your iOS/macOS codebase, chec
 ## What I'll Check
 
 ### 1. Files in tmp/ Directory (CRITICAL)
+
 **Pattern**: File writes to `NSTemporaryDirectory()` or `tmp/` that aren't truly temporary
 **Impact**: iOS aggressively purges tmp/ - users lose data
 **Risk**: Data loss after device restart or storage pressure
 
 ### 2. Large Files Missing isExcludedFromBackup (HIGH)
+
 **Pattern**: Files >1MB in Documents/ or Application Support/ without `isExcludedFromBackup`
 **Impact**: User's iCloud quota filled unnecessarily
 **Risk**: Backup bloat, iCloud storage pressure
 
 ### 3. Missing File Protection (MEDIUM)
+
 **Pattern**: File writes without specifying `FileProtectionType`
 **Impact**: Sensitive data not encrypted at rest
 **Risk**: Security vulnerability, unauthorized data access
 
 ### 4. Wrong Storage Location (HIGH)
+
 **Pattern**: Files stored in inappropriate directories
 **Examples**:
+
 - User content in Application Support/ (not visible in Files app)
 - Re-downloadable content in Documents/ (backup bloat)
 - App data in tmp/ (data loss)
 **Impact**: User confusion, data loss, backup bloat
 
 ### 5. UserDefaults Abuse (MEDIUM)
+
 **Pattern**: Storing >1MB data in UserDefaults
 **Impact**: Performance degradation on app launch
 **Risk**: Not designed for large data storage
@@ -90,6 +96,7 @@ Storage Summary:
 ## Detection Patterns
 
 ### Files in tmp/
+
 ```swift
 // BAD - Data loss risk
 let tmpURL = FileManager.default.temporaryDirectory
@@ -105,6 +112,7 @@ try downloadURL.setResourceValues(resourceValues)
 ```
 
 ### Missing Backup Exclusion
+
 ```swift
 // BAD - Backs up re-downloadable content
 let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
@@ -117,6 +125,7 @@ try imageURL.setResourceValues(resourceValues)
 ```
 
 ### Missing File Protection
+
 ```swift
 // BAD - No encryption
 try tokenData.write(to: tokenURL)
@@ -126,6 +135,7 @@ try tokenData.write(to: tokenURL, options: .completeFileProtection)
 ```
 
 ### Wrong Location
+
 ```swift
 // BAD - User docs in hidden location
 let appSupportURL = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
@@ -137,6 +147,7 @@ try userDocument.write(to: documentsURL.appendingPathComponent("report.pdf"))
 ```
 
 ### UserDefaults Abuse
+
 ```swift
 // BAD - Large data in UserDefaults
 UserDefaults.standard.set(largeData, forKey: "cache") // 2MB+
@@ -180,12 +191,14 @@ Truly temporary (<1 hour lifetime)?
 ## Post-Audit
 
 After fixing issues:
+
 1. Test file persistence after device reboot
 2. Test storage pressure (fill device to <500MB free)
 3. Check backup size: Settings → [Profile] → iCloud → Manage Storage → [App]
 4. Verify file locations with Files app
 
 For comprehensive storage guidance:
+
 - `/skill axiom:storage` — Storage decision framework
 - `/skill axiom:file-protection-ref` — Encryption details
 - `/skill axiom:storage-management-ref` — Purging policies

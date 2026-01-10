@@ -12,6 +12,7 @@ Complete API reference for iOS privacy implementation. Covers privacy manifests,
 ## When to Use This Reference
 
 Use this reference when you need:
+
 - PrivacyInfo.xcprivacy structure and required keys
 - Just-in-time permission request patterns
 - App Tracking Transparency implementation
@@ -35,6 +36,7 @@ Questions you can ask Claude that will draw from this reference:
 ## What's Covered
 
 ### Privacy Manifests
+
 - PrivacyInfo.xcprivacy structure
 - NSPrivacyTracking flag
 - NSPrivacyTrackingDomains array
@@ -42,24 +44,28 @@ Questions you can ask Claude that will draw from this reference:
 - NSPrivacyAccessedAPITypes with reasons
 
 ### Permission Request UX
+
 - Just-in-time vs up-front patterns
 - Pre-permission education screens
 - Permission denied handling
 - Settings redirect patterns
 
 ### App Tracking Transparency
+
 - ATTrackingManager.requestTrackingAuthorization
 - Status checking and handling
 - Pre-prompt education patterns
 - IDFA access patterns
 
 ### Required Reason APIs
+
 - UserDefaults declarations
 - File timestamp declarations
 - System boot time declarations
 - Disk space declarations
 
 ### Privacy Nutrition Labels
+
 - Data collection categories
 - Data use purposes
 - Linked vs not linked data

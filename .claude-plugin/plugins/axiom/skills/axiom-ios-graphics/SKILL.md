@@ -11,6 +11,7 @@ user-invocable: false
 ## When to Use
 
 Use this router when:
+
 - Porting OpenGL/OpenGL ES code to Metal
 - Porting DirectX code to Metal
 - Converting GLSL/HLSL shaders to Metal Shading Language
@@ -27,12 +28,14 @@ Use this router when:
 ### Metal Migration
 
 **Strategy decisions** → `/skill axiom-metal-migration`
+
 - Translation layer vs native rewrite decision
 - Project assessment and migration planning
 - Anti-patterns and common mistakes
 - Pressure scenarios for deadline resistance
 
 **API reference & conversion** → `/skill axiom-metal-migration-ref`
+
 - GLSL → MSL shader conversion tables
 - HLSL → MSL shader conversion tables
 - GL/D3D API → Metal API equivalents
@@ -40,6 +43,7 @@ Use this router when:
 - Complete WWDC code examples
 
 **Diagnostics** → `/skill axiom-metal-migration-diag`
+
 - Black screen after porting
 - Shader compilation errors
 - Wrong colors or coordinate systems
@@ -49,6 +53,7 @@ Use this router when:
 ### Display Performance
 
 **Frame rate & render loops** → `/skill axiom-display-performance`
+
 - App stuck at 60fps on ProMotion (120Hz) device
 - MTKView or CADisplayLink configuration
 - Variable refresh rate optimization
@@ -74,24 +79,28 @@ User asks about GPU/graphics/Metal/display
 ## Critical Patterns
 
 **metal-migration**:
+
 - Translation layer (MetalANGLE) for quick demos
 - Native Metal rewrite for production
 - State management differences (GL stateful → Metal explicit)
 - Coordinate system gotchas (Y-flip, NDC differences)
 
 **metal-migration-ref**:
+
 - Complete shader type mappings
 - API equivalent tables
 - MTKView vs CAMetalLayer decision
 - Render pipeline setup patterns
 
 **metal-migration-diag**:
+
 - GPU Frame Capture workflow (2-5 min vs 30+ min guessing)
 - Shader debugger for variable inspection
 - Metal validation layer for API misuse
 - Performance regression diagnosis
 
 **display-performance**:
+
 - MTKView defaults to 60fps (must set preferredFramesPerSecond = 120)
 - CADisplayLink preferredFrameRateRange for explicit rate control
 - System caps: Low Power Mode, Limit Frame Rate, Thermal, Adaptive Power (iOS 26)

@@ -27,18 +27,23 @@ Comprehensive guide to SwiftUI gesture recognition with composition patterns, st
 These are real questions developers ask that this skill is designed to answer:
 
 #### 1. "My drag gesture isn't working - the view doesn't move when I drag it. How do I debug this?"
+
 → The skill covers DragGesture state management patterns and shows how to properly update view offset with @GestureState
 
 #### 2. "I have both a tap gesture and a drag gesture on the same view. The tap works but the drag doesn't. How do I fix this?"
+
 → The skill demonstrates gesture composition with .simultaneously, .sequenced, and .exclusively to resolve gesture conflicts
 
 #### 3. "I want users to long press before they can drag an item. How do I chain gestures together?"
+
 → The skill shows the .sequenced pattern for combining LongPressGesture with DragGesture in the correct order
 
 #### 4. "My gesture state isn't resetting when the gesture ends. The view stays in the wrong position."
+
 → The skill covers @GestureState automatic reset behavior and the updating parameter for proper state management
 
 #### 5. "VoiceOver users can't access features that require gestures. How do I make gestures accessible?"
+
 → The skill demonstrates .accessibilityAction patterns and providing alternative interactions for VoiceOver users
 
 ---
@@ -79,6 +84,7 @@ What interaction do you need?
 ### TapGesture
 
 #### ❌ WRONG (Custom tap on non-semantic view)
+
 ```swift
 Text("Submit")
   .onTapGesture {
@@ -87,11 +93,13 @@ Text("Submit")
 ```
 
 **Problems**:
+
 - Not announced as button to VoiceOver
 - No visual press feedback
 - Doesn't respect accessibility settings
 
 #### ✅ CORRECT (Use Button for tap actions)
+
 ```swift
 Button("Submit") {
   submitForm()
@@ -116,6 +124,7 @@ Image("map")
 ### DragGesture
 
 #### ❌ WRONG (Direct state mutation in gesture)
+
 ```swift
 @State private var offset = CGSize.zero
 
@@ -132,11 +141,13 @@ var body: some View {
 ```
 
 **Problems**:
+
 - View updates on every drag event (60-120 times per second)
 - No way to reset to original position
 - Loses intermediate state if drag cancelled
 
 #### ✅ CORRECT (Use GestureState for temporary state)
+
 ```swift
 @GestureState private var dragOffset = CGSize.zero
 @State private var position = CGSize.zero
@@ -184,6 +195,7 @@ var body: some View {
 ```
 
 **Key parameters**:
+
 - `minimumDuration`: How long to hold (default 0.5 seconds)
 - `maximumDistance`: How far finger can move before cancelling (default 10 points)
 
@@ -211,6 +223,7 @@ var body: some View {
 ```
 
 **Platform notes**:
+
 - iOS: Pinch gesture with two fingers
 - macOS: Trackpad pinch
 - visionOS: Pinch gesture in 3D space
@@ -500,6 +513,7 @@ DragGesture()
 ### Making Custom Gestures Accessible
 
 #### ❌ WRONG (Gesture-only, no VoiceOver support)
+
 ```swift
 Image("slider")
   .gesture(
@@ -513,6 +527,7 @@ Image("slider")
 **Problem**: VoiceOver users can't adjust the slider.
 
 #### ✅ CORRECT (Add accessibility actions)
+
 ```swift
 @State private var volume: Double = 50
 
@@ -611,6 +626,7 @@ var body: some View {
 ### Pitfall 1: Forgetting to Reset GestureState
 
 #### ❌ WRONG
+
 ```swift
 @State private var offset = CGSize.zero // Should be GestureState
 
@@ -635,6 +651,7 @@ var body: some View {
 ### Pitfall 2: Gesture Conflicts with ScrollView
 
 #### ❌ WRONG (Drag gesture blocks scrolling)
+
 ```swift
 ScrollView {
   ForEach(items) { item in
@@ -673,6 +690,7 @@ ScrollView {
 ### Pitfall 3: Using .gesture() Instead of Button
 
 #### ❌ WRONG (Reimplementing button)
+
 ```swift
 Text("Submit")
   .padding()
@@ -685,12 +703,14 @@ Text("Submit")
 ```
 
 **Problems**:
+
 - No press animation
 - No accessibility traits
 - Doesn't respect system button styling
 - More code
 
 #### ✅ CORRECT
+
 ```swift
 Button("Submit") {
   submit()
@@ -699,6 +719,7 @@ Button("Submit") {
 ```
 
 **When TapGesture is OK**: When you need tap *location* or multiple tap counts:
+
 ```swift
 Canvas { context, size in
   // Draw canvas
@@ -713,6 +734,7 @@ Canvas { context, size in
 ### Pitfall 4: Not Handling Gesture Cancellation
 
 #### ❌ WRONG (Assumes gesture always completes)
+
 ```swift
 DragGesture()
   .onChanged { value in
@@ -727,6 +749,7 @@ DragGesture()
 **Problem**: If user drags outside bounds and gesture cancels, preview stays visible.
 
 #### ✅ CORRECT (GestureState auto-resets)
+
 ```swift
 @GestureState private var isDragging = false
 
@@ -759,6 +782,7 @@ var body: some View {
 ### Pitfall 5: Forgetting coordinateSpace
 
 #### ❌ WRONG (Location relative to view, not screen)
+
 ```swift
 DragGesture()
   .onChanged { value in
@@ -770,6 +794,7 @@ DragGesture()
 **Problem**: If view is offset/scrolled, coordinates are wrong.
 
 #### ✅ CORRECT (Specify coordinate space)
+
 ```swift
 DragGesture(coordinateSpace: .named("container"))
   .onChanged { value in
@@ -784,6 +809,7 @@ ScrollView {
 ```
 
 **Options**:
+
 - `.local` — Relative to gesture's view (default)
 - `.global` — Relative to screen
 - `.named("name")` — Relative to named coordinate space
@@ -795,6 +821,7 @@ ScrollView {
 ### Minimize Work in .onChanged
 
 #### ❌ SLOW
+
 ```swift
 DragGesture()
   .onChanged { value in
@@ -806,6 +833,7 @@ DragGesture()
 ```
 
 #### ✅ FAST
+
 ```swift
 @GestureState private var dragOffset = CGSize.zero
 
@@ -853,6 +881,7 @@ DragGesture()
 ### Gesture Not Recognizing
 
 **Check**:
+
 1. Is view interactive? (Some views like `Text` ignore gestures unless wrapped)
 2. Is another gesture taking priority? (Use `.highPriorityGesture()` or `.simultaneousGesture()`)
 3. Is view clipped? (Use `.contentShape()` to define tap area)
@@ -885,6 +914,7 @@ NavigationLink(destination: DetailView()) {
 ### Gesture Breaking ScrollView
 
 **Use horizontal-only gesture detection**:
+
 ```swift
 ScrollView {
   ForEach(items) { item in

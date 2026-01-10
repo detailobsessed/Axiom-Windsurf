@@ -12,6 +12,7 @@ Profile and optimize Swift async/await code using Instruments.
 ## When to Use
 
 ✅ **Use when:**
+
 - UI stutters during async operations
 - Suspecting actor contention
 - Tasks queued but not executing
@@ -19,6 +20,7 @@ Profile and optimize Swift async/await code using Instruments.
 - Need to visualize task execution flow
 
 ❌ **Don't use when:**
+
 - Issue is pure CPU performance (use Time Profiler)
 - Memory issues unrelated to concurrency (use Allocations)
 - Haven't confirmed concurrency is the bottleneck
@@ -110,6 +112,7 @@ actor DataProcessor {
 ```
 
 **More fixes**:
+
 - Split actor into multiple (domain separation)
 - Use Mutex for hot paths (faster than actor hop)
 - Reduce actor scope (fewer isolated properties)
@@ -146,9 +149,11 @@ Task {
 ```
 
 **Debug flag**:
+
 ```
 SWIFT_CONCURRENCY_COOPERATIVE_THREAD_BOUNDS=1
 ```
+
 Detects unsafe blocking in async context.
 
 ## Workflow 4: Priority Inversion
@@ -178,6 +183,7 @@ Swift uses a **cooperative thread pool** matching CPU core count:
 | Context switch | Full kernel switch | Lightweight continuation |
 
 **Why blocking is catastrophic**:
+
 - Each blocked thread holds memory + kernel structures
 - Limited threads means blocked = no progress
 - Pool exhaustion deadlocks the app
@@ -191,6 +197,7 @@ Run these checks first:
    - Sync code in async function still blocks
 
 2. **Holding locks across await?**
+
    ```swift
    // ❌ Deadlock risk
    mutex.withLock {
@@ -199,6 +206,7 @@ Run these checks first:
    ```
 
 3. **Tasks in tight loops?**
+
    ```swift
    // ❌ Overhead may exceed benefit
    for item in items {
@@ -229,11 +237,13 @@ Run these checks first:
 ## Safe vs Unsafe Primitives
 
 **Safe with cooperative pool**:
+
 - `await`, actors, task groups
 - `os_unfair_lock`, `NSLock` (short critical sections)
 - `Mutex` (iOS 18+)
 
 **Unsafe (violate forward progress)**:
+
 - `DispatchSemaphore.wait()`
 - `pthread_cond_wait`
 - Sync file/network I/O

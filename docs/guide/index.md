@@ -15,6 +15,7 @@ Axiom provides comprehensive iOS development workflows:
 #### Total: 50 skills + 12 commands + 13 agents
 
 ### 🤖 Apple Intelligence
+
 - **Foundation Models** – Implement on-device AI with structured output and tool calling
 - **Foundation Models Diagnostics** – Fix context exceeded, guardrail violations, and availability issues
 - **Foundation Models Reference** – Complete API guide with all 26 WWDC 2025 code examples
@@ -22,6 +23,7 @@ Axiom provides comprehensive iOS development workflows:
 - **SwiftUI 26 Reference** – iOS 26 SwiftUI features including Liquid Glass and performance improvements
 
 ### 🎨 UI & Design Skills
+
 - **Human Interface Guidelines** – Quick design decisions and checklists for HIG compliance
 - **HIG Reference** – Comprehensive Apple HIG guide with troubleshooting
 - **Liquid Glass** – Implement Apple's glass effects correctly and get expert validation
@@ -29,14 +31,17 @@ Axiom provides comprehensive iOS development workflows:
 - **UI Testing** – Record tests that work reliably across devices and languages
 
 ### 🐛 Debugging & Performance
+
 - **Xcode Debugging** – Fix mysterious build failures and zombie processes fast
 - **Memory Debugging** – Find memory leaks before users complain about crashes
 - **Build Troubleshooting** – Resolve dependency conflicts under production pressure
 
 ### ⚡ Concurrency & Async
+
 - **Swift Concurrency** – Prevent data races and fix actor isolation errors in Swift 6
 
 ### 💾 Data & Persistence
+
 - **Database Migration** – Add columns without losing user data
 - **SQLiteData** – Handle batch imports and CloudKit sync without performance issues
 - **GRDB** – Optimize complex queries and prevent N+1 query problems
@@ -45,14 +50,17 @@ Axiom provides comprehensive iOS development workflows:
 - **Core Data Diagnostics** – Fix migration crashes and thread-confinement errors
 
 ### ♿ Accessibility
+
 - **Accessibility Diagnostics** – Fix VoiceOver, Dynamic Type, color contrast, and touch target issues
 
 ### 🌐 Networking
+
 - **Networking** – Network.framework patterns for UDP/TCP with NWConnection (iOS 12-25) and NetworkConnection (iOS 26+)
 - **Networking Diagnostics** – Fix connection timeouts, TLS failures, data arrival issues
 - **Network.framework Reference** – Complete API guide covering iOS 12-26+ with all WWDC examples
 
 ### 🔄 UIKit & Legacy
+
 - **UIKit Animation Debugging** – Fix animations that don't fire or behave differently on device
 - **Objective-C Block Retain Cycles** – Find and fix memory leaks from blocks
 

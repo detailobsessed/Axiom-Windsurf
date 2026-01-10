@@ -40,12 +40,14 @@ This skill covers creating privacy manifests, requesting system permissions with
 ### Creating a Privacy Manifest
 
 **Xcode Navigator**:
+
 1. File → New → File
 2. Choose "App Privacy File"
 3. Name: `PrivacyInfo.xcprivacy`
 4. Add to app target (or SDK framework)
 
 **File structure** (Property List):
+
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
@@ -116,6 +118,7 @@ Declare all data your app collects:
 ```
 
 **Common data types**:
+
 - `NSPrivacyCollectedDataTypeName` - User's name
 - `NSPrivacyCollectedDataTypeEmailAddress`
 - `NSPrivacyCollectedDataTypePhoneNumber`
@@ -127,6 +130,7 @@ Declare all data your app collects:
 - `NSPrivacyCollectedDataTypeUserID`
 
 **Common purposes**:
+
 - `NSPrivacyCollectedDataTypePurposeAppFunctionality`
 - `NSPrivacyCollectedDataTypePurposeAnalytics`
 - `NSPrivacyCollectedDataTypePurposeProductPersonalization`
@@ -159,6 +163,7 @@ Declare Required Reason APIs (see Part 5):
 ### Just-in-Time vs Up-Front
 
 **❌ Don't**: Request all permissions at launch
+
 ```swift
 // BAD - overwhelming and confusing
 func application(_ application: UIApplication,
@@ -172,6 +177,7 @@ func application(_ application: UIApplication,
 ```
 
 **✅ Do**: Request just-in-time when user triggers feature
+
 ```swift
 // GOOD - clear causality
 @objc func takePhotoButtonTapped() {
@@ -212,6 +218,7 @@ func showCameraEducation(completion: @escaping () -> Void) {
 ```
 
 **Why this works**:
+
 - User understands value proposition
 - System dialog rejection rate drops 60-80%
 - Better App Store ratings (fewer "why does it need that?" reviews)
@@ -283,11 +290,13 @@ UIApplication.shared.open(URL(string: UIApplication.openNotificationSettingsURLS
 ### When ATT Is Required
 
 You **must** request ATT permission if you:
+
 - Track users across apps/websites owned by other companies
 - Share user data with data brokers
 - Use third-party SDKs that track (Facebook SDK, Google Analytics, etc.)
 
 You **don't** need ATT if you **only**:
+
 - Use first-party analytics (no sharing with other companies)
 - Personalize ads based only on data from your own app
 - Use fraud detection/security measures
@@ -338,22 +347,26 @@ func requestTrackingPermission() {
 ### Custom ATT Prompt Message
 
 **Info.plist**:
+
 ```xml
 <key>NSUserTrackingUsageDescription</key>
 <string>This allows us to show you personalized ads and improve your experience</string>
 ```
 
 **Best practices**:
+
 - Be honest and specific
 - Explain user benefit (not company benefit)
 - Keep it concise (1-2 sentences)
 
 **❌ Bad examples**:
+
 - "We value your privacy" (vague)
 - "This is required for the app to work" (dishonest)
 - "To monetize our app" (user doesn't care)
 
 **✅ Good examples**:
+
 - "This helps us show you relevant ads for products you might like"
 - "Personalized ads help keep this app free"
 
@@ -439,6 +452,7 @@ After:
 ```
 
 **Update manifest**:
+
 ```xml
 <key>NSPrivacyTrackingDomains</key>
 <array>
@@ -489,11 +503,13 @@ APIs that **could** be misused for fingerprinting (identifying devices without p
 **API**: `NSFileSystemFreeSize` / `URLResourceKey.volumeAvailableCapacityKey`
 
 **Approved reasons**:
+
 - **E174.1**: Check if there's enough space before writing files
 - **7D9E.1**: Display storage information to user
 - **B728.1**: Include disk space in optional analytics (only if user opted in)
 
 **Declaration in manifest**:
+
 ```xml
 <key>NSPrivacyAccessedAPITypes</key>
 <array>
@@ -510,6 +526,7 @@ APIs that **could** be misused for fingerprinting (identifying devices without p
 ```
 
 **Code**:
+
 ```swift
 func checkDiskSpace() -> Bool {
     do {
@@ -537,12 +554,14 @@ if checkDiskSpace() {
 ### Example: UserDefaults API
 
 **Approved reasons**:
+
 - **CA92.1**: Access info stored by app (settings, preferences)
 - **1C8F.1**: Access info stored by App Group
 - **C56D.1**: Access info stored by App Clips
 - **AC6B.1**: Third-party SDK accessing its own defaults
 
 **Declaration**:
+
 ```xml
 <dict>
     <key>NSPrivacyAccessedAPIType</key>
@@ -558,7 +577,7 @@ if checkDiskSpace() {
 ### Feedback for Missing Reasons
 
 If your use case isn't covered, use Apple's feedback form:
-https://developer.apple.com/documentation/bundleresources/privacy_manifest_files/describing_use_of_required_reason_api
+<https://developer.apple.com/documentation/bundleresources/privacy_manifest_files/describing_use_of_required_reason_api>
 
 ---
 
@@ -567,20 +586,24 @@ https://developer.apple.com/documentation/bundleresources/privacy_manifest_files
 ### Data Types and Categories
 
 **Identifiers**:
+
 - User ID
 - Device ID
 
 **Contact Info**:
+
 - Name
 - Email address
 - Phone number
 - Physical address
 
 **Location**:
+
 - Precise location
 - Coarse location
 
 **User Content**:
+
 - Photos or videos
 - Audio data
 - Gameplay content
@@ -604,21 +627,25 @@ https://developer.apple.com/documentation/bundleresources/privacy_manifest_files
 ### Linked vs Not Linked
 
 **Linked to user**:
+
 - Data connected to user identity (name, email, user ID)
 - Example: User profile information
 
 **Not linked to user**:
+
 - Data not connected to identity (anonymous analytics)
 - Example: Aggregate crash reports
 
 ### Tracking Disclosure
 
 Data is used for **tracking** if:
+
 - Combined with data from other apps/websites
 - Shared with data brokers
 - Used for targeted advertising based on cross-app behavior
 
 **Example declaration**:
+
 ```
 Data Type: Email Address
 Purpose: App Functionality
@@ -638,6 +665,7 @@ Used for Tracking: No
 4. PDF created showing aggregated privacy data
 
 **What's included**:
+
 - All privacy manifests (app + third-party SDKs)
 - Collected data types
 - Tracking declaration
@@ -646,6 +674,7 @@ Used for Tracking: No
 ### Reviewing Report
 
 **Check for**:
+
 - Unexpected data collection (SDK collecting data you didn't know about)
 - Missing Required Reason declarations
 - Tracking domain discrepancies

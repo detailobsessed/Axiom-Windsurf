@@ -5,12 +5,14 @@ Automatically scans for TextKit 1 fallback triggers, deprecated glyph APIs, and 
 ## How to Use This Agent
 
 **Natural language (automatic triggering):**
+
 - "Check my text editor for TextKit issues"
 - "Why isn't Writing Tools appearing in my text view?"
 - "Review my UITextView code"
 - "Check for TextKit 2 compatibility"
 
 **Explicit command:**
+
 ```bash
 /axiom:audit-textkit
 ```

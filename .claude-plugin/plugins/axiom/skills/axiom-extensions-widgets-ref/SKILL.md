@@ -25,6 +25,7 @@ This skill provides comprehensive API reference for Apple's widget and extension
 ## When to Use This Skill
 
 ✅ **Use this skill when**:
+
 - Implementing any type of widget (Home Screen, Lock Screen, StandBy)
 - Creating Live Activities for ongoing events
 - Building Control Center controls
@@ -34,6 +35,7 @@ This skill provides comprehensive API reference for Apple's widget and extension
 - Supporting watchOS or visionOS widgets
 
 ❌ **Do NOT use this skill for**:
+
 - Pure App Intents questions (use **app-intents-ref** skill)
 - SwiftUI layout issues (use **swiftui-layout** skill)
 - Performance optimization (use **swiftui-performance** skill)
@@ -277,6 +279,7 @@ WidgetCenter.shared.reloadTimelines(ofKind: "MyWidget")
 ### Budget-Exempt Scenarios
 
 These do NOT count against your budget:
+
 - User explicitly reloads (pull-to-refresh on Home Screen)
 - App is foregrounded
 - User adds widget to Home Screen
@@ -303,11 +306,13 @@ let entries = (0..<60).map { offset in
 ### Memory Limits
 
 **Widget extensions have strict memory limits**:
+
 - ~30MB for standard widgets
 - ~50MB for Live Activities
 - System terminates extension if exceeded
 
 **Best practices**:
+
 ```swift
 // ✅ GOOD: Load only what you need
 func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
@@ -361,6 +366,7 @@ struct Provider: TimelineProvider {
 **Target**: Complete `getTimeline()` in under 5 seconds
 
 **Strategies**:
+
 1. **Cache in main app** - Precompute expensive operations
 2. **Async/await** - Don't block completion handler
 3. **Limit entries** - 10-20 entries maximum
@@ -397,6 +403,7 @@ func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) ->
 | On-demand only | 5-10 reloads | Minimal |
 
 **When to reload**:
+
 - ✅ Significant data change (order status update)
 - ✅ User opens app (free reload)
 - ✅ Time-based (hourly weather)
@@ -1295,6 +1302,7 @@ Live Activities from paired iPhone appear in macOS menu bar automatically (no co
 ## watchOS Controls
 
 Control Center widgets available on watchOS 11+ in:
+
 - Control Center
 - Action Button
 - Smart Stack (automatic suggestions)
@@ -1580,12 +1588,14 @@ For a complete step-by-step tutorial with working code examples, see Apple's [Bu
 ### Before Shipping Widgets
 
 **Architecture**:
+
 - [ ] App Groups entitlement configured in app AND extension
 - [ ] Group identifier matches exactly in both targets
 - [ ] Shared container used for ALL data sharing
 - [ ] No `UserDefaults.standard` in widget code
 
 **Performance**:
+
 - [ ] Timeline generation completes in < 5 seconds
 - [ ] No network requests in widget views
 - [ ] Timeline has reasonable refresh intervals (≥ 15 min)
@@ -1594,12 +1604,14 @@ For a complete step-by-step tutorial with working code examples, see Apple's [Bu
 - [ ] Images optimized (asset catalog or SF Symbols preferred)
 
 **Data & State**:
+
 - [ ] Widget handles missing/nil data gracefully
 - [ ] Entry dates in chronological order
 - [ ] Placeholder view looks reasonable
 - [ ] Snapshot view representative of actual use
 
 **User Experience**:
+
 - [ ] Widget appears in widget gallery
 - [ ] configurationDisplayName clear and concise
 - [ ] description explains widget purpose
@@ -1608,6 +1620,7 @@ For a complete step-by-step tutorial with working code examples, see Apple's [Bu
 - [ ] Interactive elements (buttons/toggles) work correctly
 
 **Live Activities** (if applicable):
+
 - [ ] ActivityAttributes under 4KB
 - [ ] Authorization checked before starting
 - [ ] Activity ends when event completes
@@ -1616,12 +1629,14 @@ For a complete step-by-step tutorial with working code examples, see Apple's [Bu
 - [ ] Dynamic Island layouts tested (compact, minimal, expanded)
 
 **Control Center Widgets** (if applicable):
+
 - [ ] ControlValueProvider async and fast (< 1 second)
 - [ ] previewValue provides reasonable fallback
 - [ ] displayName and description set
 - [ ] Tested in Control Center, Lock Screen, Action Button
 
 **Testing**:
+
 - [ ] Tested on actual device (not just simulator)
 - [ ] Tested adding/removing widget
 - [ ] Tested app data changes → widget updates
@@ -1679,24 +1694,28 @@ class TimelineProviderTests: XCTestCase {
 ### Manual Testing Checklist
 
 **Basic Functionality**:
+
 1. Add widget to Home Screen
 2. Verify it shows in widget gallery
 3. Check all supported sizes display correctly
 4. Confirm data matches app data
 
 **Data Updates**:
+
 1. Change data in main app
 2. Observe widget updates (may take seconds)
 3. Force-quit app, verify widget still shows data
 4. Reboot device, verify widget persists
 
 **Edge Cases**:
+
 1. Delete all app data, verify widget handles gracefully
 2. Disable network, verify widget works offline
 3. Enable Low Power Mode, verify widget respects limits
 4. Add multiple instances of same widget
 
 **Performance**:
+
 1. Monitor memory usage in Xcode (Debug Navigator)
 2. Check timeline generation time in Console logs
 3. Verify no crashes in crash logs
@@ -1705,6 +1724,7 @@ class TimelineProviderTests: XCTestCase {
 ### Debugging Tips
 
 **Widget not updating?**
+
 ```swift
 // Add logging to getTimeline()
 func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
@@ -1720,12 +1740,14 @@ WidgetCenter.shared.reloadAllTimelines()
 ```
 
 **Check Console logs**:
+
 ```
 Widget: ⏰ Widget timeline requested at 2024-01-15 10:30:00
 Widget: 📊 Loaded data: Optional(WidgetData(title: "Test", value: 42))
 ```
 
 **Verify App Groups**:
+
 ```swift
 // In both app and widget, verify same path
 let container = FileManager.default.containerURL(
@@ -1744,12 +1766,14 @@ print("📁 Container path: \(container?.path ?? "nil")")
 **Symptoms**: Widget doesn't show up in the widget picker
 
 **Diagnostic Steps**:
+
 1. Check `WidgetBundle` includes your widget
 2. Verify `supportedFamilies()` is set
 3. Check extension target's "Skip Install" is NO
 4. Verify extension's deployment target matches app
 
 **Solution**:
+
 ```swift
 @main
 struct MyWidgetBundle: WidgetBundle {
@@ -1765,12 +1789,14 @@ struct MyWidgetBundle: WidgetBundle {
 **Symptoms**: Widget shows stale data, doesn't update
 
 **Diagnostic Steps**:
+
 1. Check timeline policy (`.atEnd` vs `.after()` vs `.never`)
 2. Verify you're not exceeding daily budget (40-70 reloads)
 3. Check if `getTimeline()` is being called (add logging)
 4. Ensure App Groups configured correctly for shared data
 
 **Solution**:
+
 ```swift
 // Manual reload from main app when data changes
 import WidgetKit
@@ -1785,12 +1811,14 @@ WidgetCenter.shared.reloadTimelines(ofKind: "MyWidget")
 **Symptoms**: Widget shows default/empty data
 
 **Diagnostic Steps**:
+
 1. Verify App Groups entitlement in BOTH targets
 2. Check group identifier matches exactly
 3. Ensure using same suiteName in both targets
 4. Check file path if using shared container
 
 **Solution**:
+
 ```swift
 // Both app AND extension must use:
 let shared = UserDefaults(suiteName: "group.com.mycompany.myapp")!
@@ -1806,6 +1834,7 @@ let shared = UserDefaults.standard  // ❌ Different containers
 **Common Errors**:
 
 **"Activity size exceeds 4KB"**:
+
 ```swift
 // ❌ BAD: Large images in attributes
 struct MyAttributes: ActivityAttributes {
@@ -1819,6 +1848,7 @@ struct MyAttributes: ActivityAttributes {
 ```
 
 **"Activities not enabled"**:
+
 ```swift
 // Check authorization first
 let authInfo = ActivityAuthorizationInfo()
@@ -1832,12 +1862,14 @@ guard authInfo.areActivitiesEnabled else {
 **Symptoms**: Tapping button does nothing
 
 **Diagnostic Steps**:
+
 1. Verify App Intent's `perform()` returns `IntentResult`
 2. Check intent is imported in widget target
 3. Ensure button uses `intent:` parameter, not `action:`
 4. Check Console for intent execution errors
 
 **Solution**:
+
 ```swift
 // ✅ CORRECT: Use intent parameter
 Button(intent: MyIntent()) {
@@ -1857,6 +1889,7 @@ Button(action: { /* This won't work in widgets */ }) {
 **Cause**: Synchronous work in `ControlValueProvider` or intent `perform()`
 
 **Solution**:
+
 ```swift
 struct MyValueProvider: ControlValueProvider {
     func currentValue() async throws -> MyValue {
@@ -1882,12 +1915,14 @@ func currentValue() async throws -> MyValue {
 **Symptoms**: Widget clipped or incorrect aspect ratio
 
 **Diagnostic Steps**:
+
 1. Check `entry.family` in view code
 2. Verify view adapts to family size
 3. Test all supported families
 4. Check for hardcoded sizes
 
 **Solution**:
+
 ```swift
 struct MyWidgetView: View {
     @Environment(\.widgetFamily) var family
@@ -1913,6 +1948,7 @@ struct MyWidgetView: View {
 **Cause**: Entry dates not in chronological order
 
 **Solution**:
+
 ```swift
 // ✅ GOOD: Chronological dates
 let now = Date()
@@ -1933,12 +1969,14 @@ let entries = [
 **Symptoms**: Activity appears on iPhone but not Apple Watch
 
 **Diagnostic Steps**:
+
 1. Check `.supplementalActivityFamilies([.small])` is set
 2. Verify Apple Watch is paired and nearby
 3. Check watchOS version (11+)
 4. Ensure Bluetooth enabled
 
 **Solution**:
+
 ```swift
 ActivityConfiguration(for: MyAttributes.self) { context in
     MyActivityView(context: context)
@@ -1953,12 +1991,14 @@ ActivityConfiguration(for: MyAttributes.self) { context in
 **Symptoms**: Widget rendering slow, battery drain
 
 **Common Causes**:
+
 - Too many timeline entries (> 100)
 - Network requests in view code
 - Heavy computation in `getTimeline()`
 - Refresh intervals too frequent (< 15 min)
 
 **Solution**:
+
 ```swift
 // ✅ GOOD: Strategic intervals
 let entries = (0..<8).map { offset in

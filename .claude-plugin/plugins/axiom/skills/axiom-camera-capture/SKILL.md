@@ -14,6 +14,7 @@ Guides you through implementing camera capture: session setup, photo capture, vi
 ## When to Use This Skill
 
 Use when you need to:
+
 - ☑ Build a custom camera UI (not system picker)
 - ☑ Capture photos with quality/speed tradeoffs
 - ☑ Record video with audio
@@ -100,12 +101,14 @@ func requestCameraAccess() async -> Bool {
 ```
 
 **Info.plist required**:
+
 ```xml
 <key>NSCameraUsageDescription</key>
 <string>Take photos and videos</string>
 ```
 
 For audio (video recording):
+
 ```xml
 <key>NSMicrophoneUsageDescription</key>
 <string>Record audio with video</string>
@@ -277,6 +280,7 @@ class CameraManager {
 ```
 
 **When capturing**:
+
 ```swift
 func capturePhoto() {
     let settings = AVCapturePhotoSettings()
@@ -476,6 +480,7 @@ func photoOutput(_ output: AVCapturePhotoOutput,
 ```
 
 **When final processing happens**:
+
 - On-demand when image is requested from PhotoKit
 - Or automatically when device is idle (plugged in, not in use)
 
@@ -509,6 +514,7 @@ PHImageManager.default().requestImage(
 **Requirements**: iPhone 11 Pro and newer. Not used for flash captures or formats that don't benefit from extended processing.
 
 **Important considerations**:
+
 - Can't apply pixel buffer customizations (filters, metadata changes) to deferred photos
 - Use PhotoKit adjustments after processing for edits
 - Get proxy into library ASAP - limited time when backgrounded
@@ -713,6 +719,7 @@ extension CameraManager: AVCaptureFileOutputRecordingDelegate {
 ### Anti-Pattern 1: Session Work on Main Thread
 
 **Wrong**:
+
 ```swift
 func startCamera() {
     session.startRunning()  // Blocks UI for 1-3 seconds!
@@ -720,6 +727,7 @@ func startCamera() {
 ```
 
 **Right**:
+
 ```swift
 func startCamera() {
     sessionQueue.async { [self] in
@@ -733,6 +741,7 @@ func startCamera() {
 ### Anti-Pattern 2: Using Deprecated videoOrientation
 
 **Wrong** (pre-iOS 17):
+
 ```swift
 // Manually tracking orientation
 NotificationCenter.default.addObserver(
@@ -745,6 +754,7 @@ NotificationCenter.default.addObserver(
 ```
 
 **Right** (iOS 17+):
+
 ```swift
 let coordinator = AVCaptureDevice.RotationCoordinator(device: camera, previewLayer: preview)
 // Automatically tracks gravity, provides angles
@@ -755,11 +765,13 @@ let coordinator = AVCaptureDevice.RotationCoordinator(device: camera, previewLay
 ### Anti-Pattern 3: Ignoring Session Interruptions
 
 **Wrong**:
+
 ```swift
 // No interruption handling - camera freezes on phone call
 ```
 
 **Right**:
+
 ```swift
 NotificationCenter.default.addObserver(
     forName: .AVCaptureSessionWasInterrupted,
@@ -775,12 +787,14 @@ NotificationCenter.default.addObserver(
 ### Anti-Pattern 4: Modifying Session Without Configuration Block
 
 **Wrong**:
+
 ```swift
 session.removeInput(oldInput)
 session.addInput(newInput)  // May fail mid-stream
 ```
 
 **Right**:
+
 ```swift
 session.beginConfiguration()
 session.removeInput(oldInput)
@@ -801,6 +815,7 @@ session.commitConfiguration()  // Atomic change
 **Reality**: First user who gets a phone call while using camera will see frozen UI. App Store review may catch this.
 
 **Correct action**:
+
 1. Implement interruption handling (30 min)
 2. Test by calling your test device during camera use
 3. Verify UI shows appropriate feedback
@@ -816,6 +831,7 @@ session.commitConfiguration()  // Atomic change
 **Reality**: Default settings prioritize quality over speed. System camera uses deferred processing.
 
 **Correct action**:
+
 1. Set `photoQualityPrioritization = .speed` for social/sharing use cases
 2. Consider deferred processing for maximum responsiveness
 3. Show capture animation immediately (before processing completes)
@@ -831,6 +847,7 @@ session.commitConfiguration()  // Atomic change
 **Reality**: Preview is mirrored (user expectation - like a mirror). Photo is NOT mirrored (correct for sharing - text reads correctly). This is intentional behavior matching system camera.
 
 **Correct action**:
+
 1. Explain this is Apple's standard behavior
 2. If business requires mirrored photos (selfie apps), manually mirror in post-processing
 3. Never mirror the preview differently than expected
@@ -842,40 +859,47 @@ session.commitConfiguration()  // Atomic change
 Before shipping camera features:
 
 **Session Setup**:
+
 - ☑ All session work on dedicated serial queue
 - ☑ `startRunning()` never called on main thread
 - ☑ Session preset matches use case (`.photo` for photos, `.high` for video)
 - ☑ Configuration changes wrapped in `beginConfiguration()`/`commitConfiguration()`
 
 **Permissions**:
+
 - ☑ Camera permission requested before session setup
 - ☑ `NSCameraUsageDescription` in Info.plist
 - ☑ `NSMicrophoneUsageDescription` if recording audio
 - ☑ Graceful handling of denied permission
 
 **Rotation**:
+
 - ☑ RotationCoordinator used (not deprecated videoOrientation)
 - ☑ Preview layer rotation updated via observation
 - ☑ Capture rotation angle applied when taking photos
 - ☑ Tested in all orientations (portrait, landscape, face-up)
 
 **Responsiveness**:
+
 - ☑ photoQualityPrioritization set appropriately for use case
 - ☑ Capture button shows immediate feedback
 - ☑ Deferred processing considered for maximum speed
 
 **Interruptions**:
+
 - ☑ Session interruption observer registered
 - ☑ UI feedback shown when interrupted
 - ☑ Tested with incoming phone call
 - ☑ Tested in Split View (iPad)
 
 **Camera Switching**:
+
 - ☑ Front/back switch updates rotation coordinator
 - ☑ Switch happens on session queue
 - ☑ Fallback if new camera unavailable
 
 **Video Recording** (if applicable):
+
 - ☑ Microphone input added
 - ☑ Recording delegate handles completion
 - ☑ File cleanup for temporary recordings

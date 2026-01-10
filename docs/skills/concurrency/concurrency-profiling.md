@@ -12,6 +12,7 @@ description: Instruments workflows for async/await — Swift Concurrency templat
 ## When to Use This Skill
 
 ✅ **Use this skill when**:
+
 - UI stutters during async operations
 - Suspecting actor contention
 - Tasks queued but not executing
@@ -19,6 +20,7 @@ description: Instruments workflows for async/await — Swift Concurrency templat
 - Need to visualize task execution flow
 
 ❌ **Do NOT use this skill for**:
+
 - Pure CPU performance (use Time Profiler)
 - Memory issues unrelated to concurrency (use Allocations)
 - Haven't confirmed concurrency is the bottleneck
@@ -65,6 +67,7 @@ description: Instruments workflows for async/await — Swift Concurrency templat
 **Cause**: Blocking calls (`semaphore.wait()`, sync I/O) exhaust cooperative pool
 
 **Debug flag**:
+
 ```
 SWIFT_CONCURRENCY_COOPERATIVE_THREAD_BOUNDS=1
 ```

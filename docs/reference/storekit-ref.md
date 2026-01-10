@@ -13,6 +13,7 @@ Complete API reference for StoreKit 2 in-app purchases. Covers Product, Transact
 ## When to Use This Reference
 
 Use this reference when you need:
+
 - Specific API signatures and parameters
 - iOS 18.4 field additions (appTransactionID, offerPeriod, etc.)
 - Transaction lifecycle and verification details
@@ -36,12 +37,14 @@ Questions you can ask Claude that will draw from this reference:
 ## What's Covered
 
 ### Product API
+
 - Product.products(for:) loading
 - Product.PurchaseResult handling
 - Product.SubscriptionInfo for subscription details
 - Purchase options (quantity, promotionalOffer)
 
 ### Transaction API
+
 - Transaction structure and all fields
 - Transaction.updates listener
 - Transaction.currentEntitlements
@@ -49,30 +52,35 @@ Questions you can ask Claude that will draw from this reference:
 - VerificationResult and JWS verification
 
 ### Subscription APIs
+
 - RenewalInfo for upcoming renewals
 - SubscriptionStatus for current state
 - Grace period detection
 - Offer types (introductory, promotional, win-back)
 
 ### StoreKit Views (iOS 17+)
+
 - ProductView for single products
 - SubscriptionStoreView for subscription groups
 - Customization and styling options
 - Integration with purchase flow
 
 ### Product Types
+
 - Consumable (coins, hints)
 - Non-consumable (premium features)
 - Auto-renewable subscriptions
 - Non-renewing subscriptions
 
 ### App Store Server APIs
+
 - Server notifications (V2)
 - Transaction history endpoint
 - Subscription status endpoint
 - Look up order ID
 
 ### iOS 18.4 Enhancements
+
 - appTransactionID field
 - offerPeriod for subscription offers
 - Enhanced renewal info

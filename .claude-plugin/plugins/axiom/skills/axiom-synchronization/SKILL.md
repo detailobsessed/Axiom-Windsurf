@@ -42,6 +42,7 @@ if let value = mutex.withLockIfAvailable({ $0 }) {
 ```
 
 **Properties**:
+
 - Generic over protected value
 - `Sendable` — safe to share across concurrency boundaries
 - Closure-based access only (no lock/unlock methods)
@@ -65,6 +66,7 @@ defer { lock.unlock() }
 ```
 
 **Properties**:
+
 - Heap-allocated, stable memory address
 - Non-recursive (can't re-lock from same thread)
 - `Sendable`

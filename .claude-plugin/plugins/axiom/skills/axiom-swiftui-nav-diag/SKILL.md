@@ -102,6 +102,7 @@ Before changing ANY code, identify ONE of these:
 5. If crash → Force unwrap on path decode or missing type registration
 
 #### If diagnostics are contradictory or unclear
+
 - STOP. Do NOT proceed to patterns yet
 - Add print statements at every path modification point
 - Create minimal reproduction case
@@ -189,12 +190,14 @@ Before proceeding to a pattern:
 5. **Crash** → Get full stack trace, then Pattern 5
 
 #### Apply ONE pattern at a time
+
 - Implement the fix from one pattern
 - Test thoroughly
 - Only if issue persists, try next pattern
 - DO NOT apply multiple patterns simultaneously (can't isolate cause)
 
 #### FORBIDDEN
+
 - Guessing at solutions without diagnostics
 - Changing multiple things at once
 - Wrapping with UINavigationController "because SwiftUI is broken"
@@ -210,11 +213,13 @@ Before proceeding to a pattern:
 **Time cost** 5-10 minutes
 
 #### Symptom
+
 - Tapping NavigationLink does nothing
 - No navigation occurs, no errors
 - onChange(of: path) never fires
 
 #### Diagnosis
+
 ```swift
 // Check view hierarchy — NavigationLink must be INSIDE NavigationStack
 
@@ -237,6 +242,7 @@ NavigationStack {
 ```
 
 #### Fix
+
 ```swift
 // ✅ CORRECT — Link inside stack
 struct ContentView: View {
@@ -255,6 +261,7 @@ struct ContentView: View {
 ```
 
 #### Verification
+
 - Tap link, navigation occurs
 - onChange(of: path) fires when tapped
 
@@ -265,11 +272,13 @@ struct ContentView: View {
 **Time cost** 10-15 minutes
 
 #### Symptom
+
 - NavigationLink tap does nothing OR works intermittently
 - onChange fires (path updated) but view doesn't push
 - Console may show: "A navigationDestination for [Type] was not found"
 
 #### Diagnosis
+
 ```swift
 // ❌ WRONG — Destination inside lazy container (may not be loaded)
 ScrollView {
@@ -285,6 +294,7 @@ ScrollView {
 ```
 
 #### Fix
+
 ```swift
 // ✅ CORRECT — Destination outside lazy container
 ScrollView {
@@ -300,6 +310,7 @@ ScrollView {
 ```
 
 #### Verification
+
 - Add print in destination closure — should always print on navigation
 - Works regardless of scroll position
 
@@ -310,11 +321,13 @@ ScrollView {
 **Time cost** 10 minutes
 
 #### Symptom
+
 - Navigation tap does nothing
 - No matching navigationDestination for the value type
 - May work for some links, not others
 
 #### Diagnosis
+
 ```swift
 // Check: Value type must EXACTLY match destination type
 
@@ -328,6 +341,7 @@ NavigationLink(recipe.name, value: recipe)  // value is Recipe
 ```
 
 #### Fix
+
 ```swift
 // Match types exactly
 NavigationLink(recipe.name, value: recipe)  // Recipe
@@ -345,6 +359,7 @@ NavigationLink(recipe.name, value: recipe.id)  // Recipe.ID
 ```
 
 #### Verification
+
 - Print type in destination: `print(type(of: value))`
 - Types must match exactly (no inheritance)
 
@@ -355,11 +370,13 @@ NavigationLink(recipe.name, value: recipe.id)  // Recipe.ID
 **Time cost** 15-20 minutes
 
 #### Symptom
+
 - Navigation pushes then immediately pops back
 - Appears to "flash" the destination view
 - Works once, then fails, or fails immediately
 
 #### Diagnosis
+
 ```swift
 // ❌ WRONG — Path created in view body (reset every render)
 struct ContentView: View {
@@ -388,6 +405,7 @@ struct ChildView: View {
 ```
 
 #### Fix
+
 ```swift
 // ✅ CORRECT — @State at stable level
 struct ContentView: View {
@@ -413,6 +431,7 @@ struct ContentView: View {
 ```
 
 #### Verification
+
 - Add onChange logging — path should not reset unexpectedly
 - Navigate, wait, path.count stays stable
 
@@ -423,11 +442,13 @@ struct ContentView: View {
 **Time cost** 10-15 minutes
 
 #### Symptom
+
 - Navigation works sometimes, fails others
 - Swift 6 warnings about MainActor isolation
 - Unexpected pops or state corruption
 
 #### Diagnosis
+
 ```swift
 // ❌ WRONG — Modifying path from background task
 func loadAndNavigate() async {
@@ -439,6 +460,7 @@ func loadAndNavigate() async {
 ```
 
 #### Fix
+
 ```swift
 // ✅ CORRECT — Ensure MainActor
 @MainActor
@@ -468,6 +490,7 @@ class Router {
 ```
 
 #### Verification
+
 - No Swift 6 concurrency warnings
 - Navigation consistent regardless of timing
 
@@ -478,11 +501,13 @@ class Router {
 **Time cost** 15-20 minutes
 
 #### Symptom
+
 - Deep link URL received (onOpenURL fires)
 - path.append called but navigation doesn't happen
 - Works when app is in foreground, fails from cold start
 
 #### Diagnosis
+
 ```swift
 // ❌ WRONG — May be called before NavigationStack exists
 .onOpenURL { url in
@@ -495,6 +520,7 @@ func handleDeepLink(_ url: URL) {
 ```
 
 #### Fix
+
 ```swift
 // ✅ CORRECT — Defer deep link handling
 @State private var pendingDeepLink: URL?
@@ -522,6 +548,7 @@ var body: some View {
 ```
 
 #### Verification
+
 - Test deep link from cold start (app killed)
 - Test deep link when app in background
 - Test deep link when app in foreground
@@ -533,11 +560,13 @@ var body: some View {
 **Time cost** 10-15 minutes
 
 #### Symptom
+
 - Deep link navigates but to wrong screen
 - Shows intermediate screen instead of final destination
 - Path appears correct but wrong view displayed
 
 #### Diagnosis
+
 ```swift
 // ❌ WRONG — Wrong order (child before parent)
 // URL: myapp://category/desserts/recipe/apple-pie
@@ -549,6 +578,7 @@ func handleDeepLink(_ url: URL) {
 ```
 
 #### Fix
+
 ```swift
 // ✅ CORRECT — Parent before child
 func handleDeepLink(_ url: URL) {
@@ -571,6 +601,7 @@ path = NavigationPath(newPath)
 ```
 
 #### Verification
+
 - Print path after construction
 - Final item in path should be the destination screen
 
@@ -581,11 +612,13 @@ path = NavigationPath(newPath)
 **Time cost** 15-20 minutes
 
 #### Symptom
+
 - Navigate in Tab A, switch to Tab B
 - Return to Tab A — navigation state lost (back at root)
 - Or: Navigation from Tab A appears in Tab B
 
 #### Diagnosis
+
 ```swift
 // ❌ WRONG — Single NavigationStack wrapping TabView
 NavigationStack(path: $path) {
@@ -609,6 +642,7 @@ TabView {
 ```
 
 #### Fix
+
 ```swift
 // ✅ CORRECT — Each tab has own NavigationStack
 TabView {
@@ -639,6 +673,7 @@ struct HomeTab: View {
 ```
 
 #### Verification
+
 - Navigate in Tab A, switch tabs, return — state preserved
 - Each tab maintains independent navigation history
 
@@ -649,11 +684,13 @@ struct HomeTab: View {
 **Time cost** 15-20 minutes
 
 #### Symptom
+
 - Navigate to screen, background app
 - Kill app or wait for system to terminate
 - Relaunch — navigation state lost (back at root)
 
 #### Diagnosis
+
 ```swift
 // ❌ WRONG — No persistence mechanism
 @State private var path = NavigationPath()
@@ -661,6 +698,7 @@ struct HomeTab: View {
 ```
 
 #### Fix
+
 ```swift
 // ✅ CORRECT — Use SceneStorage + Codable
 struct ContentView: View {
@@ -704,6 +742,7 @@ class NavigationModel: ObservableObject {
 ```
 
 #### Verification
+
 - Navigate deep, background app
 - Kill app via Xcode
 - Relaunch — state restored
@@ -715,11 +754,13 @@ class NavigationModel: ObservableObject {
 **Time cost** 10-15 minutes
 
 #### Symptom
+
 - Crash: "No destination found for [Type]"
 - Or navigation silently fails
 - Happens when pushing certain types
 
 #### Diagnosis
+
 ```swift
 // Every type pushed on path needs a destination
 
@@ -732,6 +773,7 @@ path.append(recipe)  // Recipe type
 ```
 
 #### Fix
+
 ```swift
 // Register ALL types you might push
 NavigationStack(path: $path) {
@@ -764,6 +806,7 @@ enum AppRoute: Hashable {
 ```
 
 #### Verification
+
 - List all types you push on path
 - Verify each has matching navigationDestination
 
@@ -774,11 +817,13 @@ enum AppRoute: Hashable {
 **Time cost** 15-20 minutes
 
 #### Symptom
+
 - Crash on app launch
 - Stack trace shows JSON decode failure
 - Happens after app update or data model change
 
 #### Diagnosis
+
 ```swift
 // ❌ WRONG — Force unwrap decode
 func restore(from data: Data) {
@@ -796,6 +841,7 @@ func restore(from data: Data) {
 ```
 
 #### Fix
+
 ```swift
 // ✅ CORRECT — Graceful decode with fallback
 func restore(from data: Data) {
@@ -830,6 +876,7 @@ class NavigationModel: ObservableObject, Codable {
 ```
 
 #### Verification
+
 - Delete saved state, launch app — no crash
 - Simulate bad data — graceful fallback
 - Change data model, launch — handles mismatch
@@ -841,6 +888,7 @@ class NavigationModel: ObservableObject, Codable {
 ### Context: Navigation Randomly Breaks After iOS Update
 
 #### Situation
+
 - iOS 18 ships on Tuesday
 - By Wednesday, support tickets surge: "navigation broken"
 - 20% of users report tapping links does nothing
@@ -848,6 +896,7 @@ class NavigationModel: ObservableObject, Codable {
 - CTO asks: "What's the ETA on a fix?"
 
 #### Pressure signals
+
 - 🚨 **Production issue** 20% of users affected
 - ⏰ **Time pressure** "Users are leaving bad reviews"
 - 👔 **Executive visibility** CTO personally tracking
@@ -879,6 +928,7 @@ class NavigationModel: ObservableObject, Codable {
 #### MANDATORY Diagnostic Protocol
 
 You have 2 hours to provide CTO with:
+
 1. Root cause
 2. Fix timeline
 3. Workaround for affected users
@@ -966,6 +1016,7 @@ class Router {
 #### Professional Communication Templates
 
 #### To CTO (45 minutes after starting)
+
 ```
 Root cause identified: Navigation code wasn't properly isolated
 to the main thread. iOS 18 enforces this more strictly than iOS 17.
@@ -984,6 +1035,7 @@ often clears the issue temporarily.
 ```
 
 #### To Engineering Team
+
 ```
 iOS 18 Navigation Fix
 
@@ -1035,6 +1087,7 @@ Testing needed:
 **Why it fails** LazyVStack/ForEach don't evaluate all children. Destination may not exist when link is tapped.
 
 #### Fix
+
 ```swift
 // Move destination OUTSIDE lazy container
 List {
@@ -1054,6 +1107,7 @@ List {
 **Why it fails** No NavigationPath support, can't programmatically navigate or deep link reliably.
 
 #### Fix
+
 - Replace `NavigationView` with `NavigationStack` or `NavigationSplitView`
 - Use value-based `NavigationLink(title, value:)` instead of view-based
 
@@ -1064,6 +1118,7 @@ List {
 **Why it fails** `var body` is called repeatedly. Creating path there means it's reset constantly.
 
 #### Fix
+
 ```swift
 // Use @State, not computed
 @State private var path = NavigationPath()  // ✅ Persists
@@ -1079,6 +1134,7 @@ var path: NavigationPath { NavigationPath() }  // ❌ Reset every time
 **Why it fails** Data model changes, items deleted, encoding format changes between app versions.
 
 #### Fix
+
 - Always use `try?` or `do/catch` for decode
 - Provide fallback (empty path)
 - Consider storing IDs and resolving to objects
@@ -1090,6 +1146,7 @@ var path: NavigationPath { NavigationPath() }  // ❌ Reset every time
 **Why it fails** `onOpenURL` may fire before `NavigationStack` is rendered.
 
 #### Fix
+
 - Queue deep link URL
 - Process after `onAppear` of NavigationStack
 - Use `isReady` flag pattern
@@ -1101,6 +1158,7 @@ var path: NavigationPath { NavigationPath() }  // ❌ Reset every time
 ### For Preventive Patterns
 
 **swiftui-nav skill** — Discipline-enforcing anti-patterns:
+
 - Red Flags: NavigationView, view-based links, path in body
 - Pattern 1a-7: Correct implementation patterns
 - Pressure Scenarios: How to handle architecture pressure
@@ -1108,6 +1166,7 @@ var path: NavigationPath { NavigationPath() }  // ❌ Reset every time
 ### For API Reference
 
 **swiftui-nav-ref skill** — Complete API documentation:
+
 - NavigationStack, NavigationSplitView, NavigationPath full API
 - All WWDC code examples with timestamps
 - Router/Coordinator patterns with testing
@@ -1116,6 +1175,7 @@ var path: NavigationPath { NavigationPath() }  // ❌ Reset every time
 ### For Related Issues
 
 **swift-concurrency skill** — If MainActor issues:
+
 - Pattern 3: @MainActor isolation patterns
 - Async/await with UI updates
 - Task cancellation handling

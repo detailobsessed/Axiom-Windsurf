@@ -5,6 +5,7 @@ Comprehensive Codable patterns for JSON and PropertyList encoding/decoding in Sw
 ## When to Use This Skill
 
 Use this skill when:
+
 - Working with JSON APIs and decoding responses
 - Implementing Codable conformance for custom types
 - Encountering "Type does not conform to Decodable" errors
@@ -29,38 +30,45 @@ Has your type...
 ## What This Skill Covers
 
 ### Part 1: Automatic Synthesis
+
 - When Swift synthesizes Codable for free
 - Struct and enum synthesis patterns
 - Three enum encoding patterns (raw value, no values, associated values)
 - When synthesis breaks
 
 ### Part 2: CodingKeys Customization
+
 - Renaming keys to match JSON
 - Excluding properties from encoding/decoding
 - Snake case conversion
 - Enum associated value keys (`{CaseName}CodingKeys`)
 
 ### Part 3: Manual Implementation
+
 - Container types (keyed, unkeyed, single-value, nested)
 - Flattening hierarchical JSON
 - Bridge types for structural mismatches
 
 ### Part 4: Date Handling
+
 - Built-in strategies (iso8601, secondsSince1970, milliseconds)
 - ISO 8601 timezone nuances
 - Custom DateFormatter patterns
 - Performance considerations
 
 ### Part 5: Type Transformation
+
 - StringBacked wrapper for string-encoded numbers
 - Type coercion for loosely-typed APIs
 
 ### Part 6: Advanced Patterns
+
 - DecodableWithConfiguration (iOS 15+)
 - userInfo workaround for iOS 15-16
 - Partial decoding
 
 ### Part 7: Debugging
+
 - DecodingError cases (keyNotFound, typeMismatch, etc.)
 - Pretty-printing JSON
 - Validating JSON structure
@@ -82,18 +90,21 @@ Has your type...
 The skill includes 3 real-world pressure scenarios with professional push-back templates:
 
 ### Scenario 1: "Just Use try? to Make It Compile"
+
 - Deadline pressure to ship broken error handling
 - Why you'll rationalize ("it's only 1% of requests")
 - What actually happens (silent data loss, customer complaints)
 - 5-minute proper fix
 
 ### Scenario 2: "Dates Are Intermittent, Must Be Server Bug"
+
 - Works in your timezone, fails for European QA
 - Why you'll blame the server
 - What actually happens (missing timezone in date strings)
 - Proper timezone handling
 
 ### Scenario 3: "Just Make It Optional"
+
 - Product pressure to ship fast
 - Why making fields optional seems easier
 - What actually happens (crashes 3 months later)
@@ -102,6 +113,7 @@ The skill includes 3 real-world pressure scenarios with professional push-back t
 ## Code Examples
 
 All examples are:
+
 - ✅ Complete and compilable
 - ✅ Tested against Swift 6.x
 - ✅ Copy-paste ready

@@ -12,6 +12,7 @@ Systematic debugging for Auto Layout constraint errors. Covers constraint confli
 ## When to Use This Skill
 
 Use this skill when you're:
+
 - Seeing "Unable to simultaneously satisfy constraints" errors
 - Views positioned incorrectly or not appearing
 - Constraint warnings during app launch or navigation
@@ -36,24 +37,28 @@ Questions you can ask Claude that will draw from this skill:
 ## What's Covered
 
 ### Understanding Error Messages
+
 - Anatomy of constraint conflict messages
 - Memory addresses for view/constraint identification
 - System-generated constraints (UIView-Encapsulated-Layout)
 - Autoresizing mask translation (h=--&, v=&--)
 
 ### Debugging Workflow
+
 - Symbolic breakpoint setup (UIViewAlertForUnsatisfiableConstraints)
 - Memory address identification with po (lldb)
 - _autolayoutTrace for ambiguous layouts
 - Debug View Hierarchy with constraint inspection
 
 ### Common Patterns
+
 - Cell content with intrinsic size conflicts
 - Compression resistance vs hugging priority
 - System constraint conflicts (encapsulated layout)
 - Safe area and layout margins issues
 
 ### Resolution Strategies
+
 - Priority adjustment (999 vs 1000)
 - Removing redundant constraints
 - Content hugging and compression resistance

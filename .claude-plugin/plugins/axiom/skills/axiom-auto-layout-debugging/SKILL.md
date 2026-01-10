@@ -10,6 +10,7 @@ version: 1.0.0
 ## When to Use This Skill
 
 Use when:
+
 - Seeing "Unable to simultaneously satisfy constraints" errors in console
 - Views positioned incorrectly or not appearing
 - Constraint warnings during app launch or navigation
@@ -62,6 +63,7 @@ Will attempt to recover by breaking constraint
 ```
 
 **Key Components**:
+
 1. **Memory addresses** — `0x7f8b9c4...` identifies views and constraints
 2. **Visual Format** — Human-readable constraint description
 3. **`(active)` status** — Constraint is currently enforced
@@ -70,11 +72,13 @@ Will attempt to recover by breaking constraint
 ### System-Generated Constraints
 
 **UIView-Encapsulated-Layout-Width/Height**:
+
 - Created by UIKit for cells, system views
 - Often source of conflicts
 - Usually correct; your constraints are the problem
 
 **Autoresizing Mask Constraints**:
+
 - Format: `h=--&` or `v=&--`
 - `-` = fixed dimension
 - `&` = flexible dimension
@@ -89,6 +93,7 @@ Will attempt to recover by breaking constraint
 **Purpose**: Break when constraint conflict occurs, before system breaks constraint.
 
 **Setup**:
+
 1. Open Breakpoint Navigator (⌘+7 or ⌘+8)
 2. Click `+` → "Symbolic Breakpoint"
 3. **Symbol**: `UIViewAlertForUnsatisfiableConstraints`
@@ -129,11 +134,13 @@ expr ((UIView *)0x7f8b9c4...).backgroundColor = [UIColor redColor]
 #### Technique 3: Print View Hierarchy
 
 **Objective-C projects**:
+
 ```lldb
 po [[UIWindow keyWindow] _autolayoutTrace]
 ```
 
 **Swift projects**:
+
 ```lldb
 expr -l objc++ -O -- [[UIWindow keyWindow] _autolayoutTrace]
 ```
@@ -141,6 +148,7 @@ expr -l objc++ -O -- [[UIWindow keyWindow] _autolayoutTrace]
 **Output**: Entire view hierarchy with `*` marking ambiguous layouts.
 
 **Example**:
+
 ```
 *<UIView:0x7f8b9c4...>
 |   <UILabel:0x7f8b9c3...>
@@ -167,6 +175,7 @@ po [0x7f8b9c4... constraintsAffectingLayoutForAxis:1]
 **When to use**: Views positioned incorrectly, constraints not visible in code.
 
 **Workflow**:
+
 1. **Trigger the issue** — Navigate to screen with constraint problems
 2. **Pause execution** — Click "Debug View Hierarchy" button in debug bar (or Debug → View Debugging → Capture View Hierarchy)
 3. **Inspect 3D view** — Rotate view hierarchy to see layering
@@ -174,11 +183,13 @@ po [0x7f8b9c4... constraintsAffectingLayoutForAxis:1]
 5. **Select view** — Right panel shows all constraints affecting selected view
 
 **Key Features**:
+
 - **Show Clipped Content** — Reveals views positioned off-screen
 - **Show Constraints** — Visualizes constraint relationships
 - **Filter Bar** — Search for specific views by class or memory address
 
 **Finding Issues**:
+
 - Purple constraints = satisfied
 - Orange/red constraints = conflicts
 - Select constraint → see both views it connects
@@ -196,11 +207,13 @@ po [0x7f8b9c4... constraintsAffectingLayoutForAxis:1]
 3. Set **Identifier** field (e.g., "ProfileImageWidthConstraint")
 
 **Before**:
+
 ```
 <NSLayoutConstraint:0x7f8b9c5... UILabel:0x7f8b9c4... .width == 300   (active)>
 ```
 
 **After**:
+
 ```
 <NSLayoutConstraint:0x7f8b9c5... 'ProfileImageWidthConstraint' UILabel:0x7f8b9c4... .width == 300   (active)>
 ```
@@ -228,11 +241,13 @@ widthConstraint.isActive = true
 3. Set **Label** field (e.g., "Profile Image View")
 
 **Before**:
+
 ```
 <UIImageView:0x7f8b9c4... (active)>
 ```
 
 **After**:
+
 ```
 <UIImageView:0x7f8b9c4... 'Profile Image View' (active)>
 ```
@@ -252,6 +267,7 @@ imageView.accessibilityIdentifier = "ProfileImageView"
 ### Pattern 1: Conflicting Fixed Widths
 
 **Symptom**:
+
 ```
 Container width: 375
 Child width: 300
@@ -261,6 +277,7 @@ Child trailing: 20
 ```
 
 **❌ WRONG**:
+
 ```swift
 // Conflicting constraints
 imageView.widthAnchor.constraint(equalToConstant: 300).isActive = true
@@ -270,6 +287,7 @@ imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
 ```
 
 **✅ CORRECT Option 1** (Remove fixed width):
+
 ```swift
 // Let width be calculated from leading + trailing
 imageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
@@ -278,6 +296,7 @@ imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
 ```
 
 **✅ CORRECT Option 2** (Use priorities):
+
 ```swift
 let widthConstraint = imageView.widthAnchor.constraint(equalToConstant: 300)
 widthConstraint.priority = .defaultHigh // 750 (can be broken if needed)
@@ -297,6 +316,7 @@ imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
 **Why it happens**: System sets cell width based on table/collection view. Your constraints fight it.
 
 **❌ WRONG**:
+
 ```swift
 // In UITableViewCell
 contentLabel.widthAnchor.constraint(equalToConstant: 320).isActive = true
@@ -304,6 +324,7 @@ contentLabel.widthAnchor.constraint(equalToConstant: 320).isActive = true
 ```
 
 **✅ CORRECT**:
+
 ```swift
 // Use relative constraints, not fixed widths
 contentLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16).isActive = true
@@ -318,6 +339,7 @@ contentLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, cons
 **Symptom**: Mixing Auto Layout with `autoresizingMask` or not setting `translatesAutoresizingMaskIntoConstraints = false`.
 
 **❌ WRONG**:
+
 ```swift
 let imageView = UIImageView()
 view.addSubview(imageView)
@@ -328,6 +350,7 @@ imageView.widthAnchor.constraint(equalToConstant: 100).isActive = true
 ```
 
 **✅ CORRECT**:
+
 ```swift
 let imageView = UIImageView()
 imageView.translatesAutoresizingMaskIntoConstraints = false // ← CRITICAL
@@ -347,6 +370,7 @@ imageView.widthAnchor.constraint(equalToConstant: 100).isActive = true
 **Problem**: Not enough constraints to determine unique position/size.
 
 **❌ WRONG** (Ambiguous X position):
+
 ```swift
 imageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 20).isActive = true
 imageView.widthAnchor.constraint(equalToConstant: 100).isActive = true
@@ -355,6 +379,7 @@ imageView.heightAnchor.constraint(equalToConstant: 100).isActive = true
 ```
 
 **✅ CORRECT**:
+
 ```swift
 imageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 20).isActive = true
 imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true // ← Added
@@ -363,6 +388,7 @@ imageView.heightAnchor.constraint(equalToConstant: 100).isActive = true
 ```
 
 **Rule**: Every view needs:
+
 - **Horizontal**: 2 constraints (e.g., leading + width, OR leading + trailing, OR centerX + width)
 - **Vertical**: 2 constraints (e.g., top + height, OR top + bottom, OR centerY + height)
 
@@ -375,6 +401,7 @@ imageView.heightAnchor.constraint(equalToConstant: 100).isActive = true
 **Problem**: Multiple constraints at same priority competing.
 
 **❌ WRONG**:
+
 ```swift
 // Both required (priority 1000)
 imageView.widthAnchor.constraint(equalToConstant: 100).isActive = true
@@ -383,6 +410,7 @@ imageView.widthAnchor.constraint(greaterThanOrEqualToConstant: 150).isActive = t
 ```
 
 **✅ CORRECT**:
+
 ```swift
 let preferredWidth = imageView.widthAnchor.constraint(equalToConstant: 100)
 preferredWidth.priority = .defaultHigh // 750
@@ -396,6 +424,7 @@ minWidth.isActive = true
 ```
 
 **Priority levels** (higher = stronger):
+
 - `.required` (1000) — Must be satisfied
 - `.defaultHigh` (750) — Strong preference
 - `.defaultLow` (250) — Weak preference
@@ -406,11 +435,13 @@ minWidth.isActive = true
 ## Debugging Checklist
 
 ### Before Debugging
+
 - [ ] Read full error message in console (don't ignore it)
 - [ ] Note which constraints are listed as conflicting
 - [ ] Check if error is consistent or intermittent
 
 ### During Debugging
+
 - [ ] Set symbolic breakpoint at UIViewAlertForUnsatisfiableConstraints
 - [ ] Identify views using memory addresses (background color technique)
 - [ ] Use Debug View Hierarchy to visualize constraints
@@ -418,6 +449,7 @@ minWidth.isActive = true
 - [ ] Verify translatesAutoresizingMaskIntoConstraints = false for programmatic views
 
 ### After Fixing
+
 - [ ] Test on multiple device sizes (iPhone SE, iPhone Pro Max)
 - [ ] Test orientation changes (portrait/landscape)
 - [ ] Test with Dynamic Type sizes
@@ -458,18 +490,21 @@ imageView.heightAnchor.constraint(lessThanOrEqualTo: containerView.heightAnchor)
 ### Content Hugging and Compression Resistance
 
 **Content Hugging** (resist expanding):
+
 ```swift
 // Label should not stretch beyond its text width
 label.setContentHuggingPriority(.defaultHigh, for: .horizontal)
 ```
 
 **Compression Resistance** (resist shrinking):
+
 ```swift
 // Label should not truncate if possible
 label.setContentCompressionResistancePriority(.required, for: .horizontal)
 ```
 
 **Common pattern**:
+
 ```swift
 // In horizontal stack: priorityLabel (hugs) + spacer + valueLabel (hugs)
 priorityLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
@@ -486,6 +521,7 @@ spacerView.setContentHuggingPriority(.defaultLow, for: .horizontal)
 **Problem**: View transformations (rotate, scale) don't affect Auto Layout.
 
 **Gotcha**:
+
 ```swift
 imageView.transform = CGAffineTransform(rotationAngle: .pi / 4) // 45° rotation
 // Auto Layout still uses original (un-rotated) frame for calculations
@@ -500,6 +536,7 @@ imageView.transform = CGAffineTransform(rotationAngle: .pi / 4) // 45° rotation
 ### Issue: Breakpoint Never Hits
 
 **Check**:
+
 1. Symbolic breakpoint symbol is exactly `UIViewAlertForUnsatisfiableConstraints`
 2. Breakpoint is enabled (checkmark visible)
 3. Constraint conflict actually exists (check console for error message)
@@ -509,17 +546,20 @@ imageView.transform = CGAffineTransform(rotationAngle: .pi / 4) // 45° rotation
 ### Issue: Can't Identify View from Memory Address
 
 **Solution 1**: Use background color technique
+
 ```lldb
 expr ((UIView *)0x7f8b9c4...).backgroundColor = [UIColor redColor]
 continue
 ```
 
 **Solution 2**: Print recursive description
+
 ```lldb
 po [0x7f8b9c4... recursiveDescription]
 ```
 
 **Solution 3**: Check view's class
+
 ```lldb
 po [0x7f8b9c4... class]
 ```
@@ -529,6 +569,7 @@ po [0x7f8b9c4... class]
 ### Issue: Debug View Hierarchy Shows No Constraints
 
 **Check**:
+
 1. Click "Show Constraints" button in debug bar (looks like constraint icon)
 2. Select specific view to see its constraints in right panel
 3. Constraints may be satisfied (purple) vs conflicting (orange/red)
@@ -538,6 +579,7 @@ po [0x7f8b9c4... class]
 ### Issue: Constraints Change at Runtime
 
 **Check**:
+
 1. UIKit system constraints (UIView-Encapsulated-Layout) added for cells/system views
 2. Dynamic Type changes (font size changes = size invalidation)
 3. Orientation changes triggering new constraints
@@ -574,6 +616,7 @@ po [0x7f8b9c4... class]
 ### ❌ Mixing Auto Layout and Frames
 
 **Wrong**:
+
 ```swift
 imageView.frame = CGRect(x: 50, y: 50, width: 100, height: 100) // Manual frame
 imageView.widthAnchor.constraint(equalToConstant: 100).isActive = true // Auto Layout
@@ -586,12 +629,14 @@ imageView.widthAnchor.constraint(equalToConstant: 100).isActive = true // Auto L
 ## Real-World Impact
 
 **Before** (no systematic approach):
+
 - 30-60 minutes per constraint conflict
 - Trial-and-error constraint changes
 - Frustration from cryptic error messages
 - Breaking working constraints to fix new ones
 
 **After** (systematic debugging):
+
 - 5-10 minutes per constraint conflict
 - Targeted fixes with Debug View Hierarchy
 - Named constraints = instant identification

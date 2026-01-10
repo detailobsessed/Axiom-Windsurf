@@ -11,6 +11,7 @@ user-invocable: false
 ## When to Use
 
 Use this router when:
+
 - Analyzing images or video
 - Detecting objects, faces, or people
 - Tracking hand or body pose
@@ -26,6 +27,7 @@ Use this router when:
 ### Vision Work
 
 **Implementation patterns** → `/skill axiom-vision`
+
 - Subject segmentation (VisionKit)
 - Hand pose detection (21 landmarks)
 - Body pose detection (2D/3D)
@@ -39,6 +41,7 @@ Use this router when:
 - Structured document extraction (RecognizeDocumentsRequest, iOS 26+)
 
 **API reference** → `/skill axiom-vision-ref`
+
 - Complete Vision framework API
 - VNDetectHumanHandPoseRequest
 - VNDetectHumanBodyPoseRequest
@@ -50,6 +53,7 @@ Use this router when:
 - Coordinate conversion patterns
 
 **Diagnostics** → `/skill axiom-vision-diag`
+
 - Subject not detected
 - Hand pose missing landmarks
 - Low confidence observations
@@ -78,6 +82,7 @@ User asks about computer vision
 ## Critical Patterns
 
 **vision**:
+
 - Subject segmentation with VisionKit
 - Hand pose detection (21 landmarks)
 - Body pose detection (2D/3D, up to 4 people)
@@ -90,6 +95,7 @@ User asks about computer vision
 - Structured document extraction (iOS 26+)
 
 **vision-diag**:
+
 - Subject detection failures
 - Landmark tracking issues
 - Performance optimization

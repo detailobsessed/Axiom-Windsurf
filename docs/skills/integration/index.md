@@ -7,6 +7,7 @@ Skills for integrating your app with Apple's system-level experiences: Siri, App
 ### [Foundation Models](./foundation-models)
 
 On-device AI with Apple's Foundation Models framework (iOS 26+):
+
 - **LanguageModelSession** — Text generation and conversations
 - **@Generable** — Structured output with Swift types
 - **Streaming** — Progressive response display
@@ -21,6 +22,7 @@ On-device AI with Apple's Foundation Models framework (iOS 26+):
 ### [Background Processing](./background-processing)
 
 BGTaskScheduler implementation and debugging:
+
 - **BGAppRefreshTask** — Keep content fresh (~30s)
 - **BGProcessingTask** — Maintenance work (overnight, charging)
 - **BGContinuedProcessingTask** — User-initiated continuation (iOS 26+)
@@ -35,6 +37,7 @@ BGTaskScheduler implementation and debugging:
 ### [Networking](./networking)
 
 Network.framework patterns for custom protocols:
+
 - **NWConnection** — iOS 12-25 completion-based API
 - **NetworkConnection** — iOS 26+ async/await API
 - **TLV Framing** — Message boundaries
@@ -49,6 +52,7 @@ Network.framework patterns for custom protocols:
 ### [Core Location](./core-location)
 
 Implementation patterns for location services:
+
 - **Authorization Strategy** — When In Use vs Always, progressive upgrade
 - **Monitoring Approach** — CLLocationUpdate, CLMonitor, significant-change
 - **Background Location** — CLBackgroundActivitySession, relaunch recovery
@@ -63,6 +67,7 @@ Implementation patterns for location services:
 ### [App Intents Integration](/reference/app-intents-ref)
 
 Comprehensive guide to the App Intents framework for exposing app functionality to:
+
 - **Siri & Apple Intelligence** — Voice commands and intelligent automation
 - **Shortcuts** — User-created workflows and automations
 - **Spotlight** — System-wide search integration
@@ -70,6 +75,7 @@ Comprehensive guide to the App Intents framework for exposing app functionality 
 - **Widgets & Live Activities** — Dynamic system UI
 
 #### Key Features
+
 - Three building blocks: AppIntent, AppEntity, AppEnum
 - Parameter validation and natural language summaries
 - Entity queries for content discovery
@@ -86,6 +92,7 @@ Comprehensive guide to the App Intents framework for exposing app functionality 
 ## Integration Categories
 
 ### System Services
+
 - **Siri & Voice Control** — Natural language command handling
 - **Apple Intelligence** — AI-powered automation and reasoning
 - **Shortcuts** — Custom workflow creation
@@ -93,11 +100,13 @@ Comprehensive guide to the App Intents framework for exposing app functionality 
 - **Background Processing** — BGTaskScheduler, background URLSession
 
 ### Context & Personalization
+
 - **Focus Filters** — Context-aware content filtering
 - **Live Activities** — Dynamic Lock Screen updates
 - **Widgets** — Home/Lock Screen content
 
 ### Platform-Specific
+
 - **Action Button** — Apple Watch Ultra quick actions
 - **Mac Automations** — Automated workflows on macOS
 - **Spotlight on Mac** — Desktop search integration

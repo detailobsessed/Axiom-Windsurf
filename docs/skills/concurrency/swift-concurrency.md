@@ -10,6 +10,7 @@ Progressive journey from single-threaded to concurrent Swift code. Covers Swift 
 ## When to Use This Skill
 
 Use this skill when you're:
+
 - Starting a new project and deciding concurrency strategy
 - Debugging Swift 6 concurrency errors (actor isolation, data races, Sendable)
 - Deciding when to introduce async/await vs full concurrency
@@ -36,6 +37,7 @@ Questions you can ask Claude that will draw from this skill:
 ## What's Covered
 
 ### The Progressive Journey
+
 ```
 Single-Threaded → Asynchronous → Concurrent → Actors
      ↓                ↓             ↓           ↓
@@ -44,6 +46,7 @@ Single-Threaded → Asynchronous → Concurrent → Actors
 ```
 
 ### Core Concepts
+
 - **@MainActor** — Isolate to main thread (UI code)
 - **nonisolated** — Opt out of actor isolation
 - **@concurrent** (Swift 6.2+) — Force background execution
@@ -51,6 +54,7 @@ Single-Threaded → Asynchronous → Concurrent → Actors
 - **Actor** — Isolated mutable state
 
 ### Common Patterns
+
 - Async/await for network calls
 - Task groups for parallel operations
 - Actor-isolated data managers
@@ -58,12 +62,14 @@ Single-Threaded → Asynchronous → Concurrent → Actors
 - Continuation for bridging callbacks
 
 ### Error Resolution
+
 - "Sending 'self' risks causing data races"
 - "Non-sendable type cannot cross actor boundary"
 - "Actor-isolated property cannot be mutated"
 - "Call to main actor-isolated function in synchronous context"
 
 ### Xcode 26 Features
+
 - Main Actor mode build settings
 - Approachable concurrency defaults
 - Isolated conformances

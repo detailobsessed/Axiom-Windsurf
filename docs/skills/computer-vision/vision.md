@@ -5,6 +5,7 @@ Guides you through implementing computer vision: subject segmentation, hand/body
 ## Overview
 
 The Vision framework provides computer vision capabilities for:
+
 - **Subject segmentation** - Isolate foreground objects from backgrounds
 - **Hand pose detection** - 21 landmarks per hand for gesture recognition
 - **Body pose detection** - 18 joints (2D) or 17 joints (3D) for fitness/action classification
@@ -18,6 +19,7 @@ The Vision framework provides computer vision capabilities for:
 ## When to Use This Skill
 
 Use when you need to:
+
 - ☑ Isolate subjects from backgrounds (subject lifting)
 - ☑ Detect and track hand poses for gestures
 - ☑ Detect and track body poses for fitness/action classification

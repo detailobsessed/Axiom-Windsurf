@@ -19,12 +19,14 @@ apple_platforms: iOS 18+, iPadOS 18+, CarPlay (iOS 14+)
 > "Now Playing eligibility requires THREE things working together: AVAudioSession activation, remote command handlers, and metadata publishing. Missing ANY of these silently breaks the entire system. 90% of Now Playing issues stem from incorrect activation order or missing command handlers, not API bugs."
 
 **Key Insight from WWDC 2022/110338**: Apps must meet two system heuristics:
+
 1. Register handlers for at least one remote command
 2. Configure AVAudioSession with a non-mixable category
 
 ## When to Use This Skill
 
 ✅ **Use this skill when**:
+
 - Now Playing info doesn't appear on Lock Screen or Control Center
 - Play/pause/skip buttons are grayed out or don't respond
 - Album artwork is missing, wrong, or flickers between images
@@ -40,6 +42,7 @@ apple_platforms: iOS 18+, iPadOS 18+, CarPlay (iOS 14+)
 iOS 26 introduces **Liquid Glass visual design** for Lock Screen and Control Center Now Playing widgets. This is **automatic system behavior** — no code changes required. The patterns in this skill remain valid for iOS 26.
 
 ❌ **Do NOT use this skill for**:
+
 - Background audio configuration details (see AVFoundation skill)
 
 ## Related Skills
@@ -63,6 +66,7 @@ iOS 26 introduces **Liquid Glass visual design** for Lock Screen and Control Cen
 - `playbackState` property doesn't update (iOS doesn't have `playbackState`, macOS only!)
 
 **FORBIDDEN Assumptions:**
+
 - "Just set nowPlayingInfo and it works" - Must have AVAudioSession + command handlers
 - "playbackState controls Control Center" - iOS ignores playbackState, uses playbackRate
 - "Artwork just needs an image" - Needs proper MPMediaItemArtwork with size handler
@@ -191,6 +195,7 @@ Now Playing not working?
 **Time cost**: 10-15 minutes
 
 ### Symptom
+
 - Now Playing info never appears on Lock Screen
 - Info appears briefly then disappears on lock
 - Works in foreground, disappears in background
@@ -258,6 +263,7 @@ class PlayerService {
 ```
 
 ### Verification
+
 - Lock screen shows Now Playing controls
 - Info persists when app backgrounded
 - Survives app switch (unless another app plays)
@@ -269,6 +275,7 @@ class PlayerService {
 **Time cost**: 15-20 minutes
 
 ### Symptom
+
 - Play/pause buttons grayed out
 - Buttons visible but tapping does nothing
 - Skip buttons don't appear
@@ -369,6 +376,7 @@ class PlayerService {
 ```
 
 ### Verification
+
 - Buttons not grayed out in Control Center
 - Tapping play/pause actually plays/pauses
 - Skip buttons show with correct interval (15s)
@@ -380,6 +388,7 @@ class PlayerService {
 **Time cost**: 15-25 minutes
 
 ### Symptom
+
 - Artwork never appears (generic placeholder)
 - Wrong artwork for current track
 - Artwork flickers between images
@@ -472,11 +481,13 @@ class NowPlayingService {
 **Why value capture, not `nonisolated(unsafe)`**: The closure passed to `MPMediaItemArtwork` may be called by the system from any thread. Under Swift 6 strict concurrency, accessing `@MainActor`-isolated stored properties from this closure would cause a compile error. Capturing the image value directly is cleaner than using `nonisolated(unsafe)` because UIImage is immutable and thread-safe for reads.
 
 ### Artwork Size Guidelines
+
 - Lock Screen: 300x300 points (600x600 @2x, 900x900 @3x)
 - Control Center: Various sizes
 - **Best practice**: Provide image at least 600x600 pixels
 
 ### Verification
+
 - Artwork appears on Lock Screen
 - Correct artwork for current track
 - No flickering when track changes
@@ -489,6 +500,7 @@ class NowPlayingService {
 **Time cost**: 10-20 minutes
 
 ### Symptom
+
 - Control Center shows "Playing" when actually paused
 - Progress bar doesn't move or jumps unexpectedly
 - Duration shows wrong value
@@ -556,7 +568,7 @@ class NowPlayingService {
     }
 
     // ✅ Update when user SEEKS
-    func userSeeked(to time: CMTime, player: AVPlayer) {
+    func userSought(to time: CMTime, player: AVPlayer) {
         var nowPlayingInfo = MPNowPlayingInfoCenter.default().nowPlayingInfo ?? [:]
 
         nowPlayingInfo[MPNowPlayingInfoPropertyElapsedPlaybackTime] = time.seconds
@@ -598,6 +610,7 @@ class NowPlayingService {
 | Playback rate changes (2x, 0.5x) | rate=newRate |
 
 ### DO NOT Update
+
 - On a timer (system infers from elapsed + rate + timestamp)
 - Elapsed time continuously (causes jitter)
 - Partial dictionaries (loses other values)
@@ -609,6 +622,7 @@ class NowPlayingService {
 **Time cost**: 20-30 minutes
 
 ### When to Use MPNowPlayingSession
+
 - iOS 16+ (available since iOS 16, previously tvOS only)
 - Using AVPlayer for playback
 - Want automatic publishing of playback state
@@ -750,18 +764,22 @@ For MusicKit-specific integration patterns and hybrid app examples, invoke `/ski
 ### Scenario 1: Apple Music Keeps Taking Over (24-Hour Launch Deadline)
 
 #### Situation
+
 - App launching tomorrow
 - QA reports: "Now Playing works, but when user opens Apple Music then returns to our app, our controls disappear"
 - Product manager: "This is a blocker, users will think our app is broken"
 - You're 2 hours from code freeze
 
 #### Rationalization Traps (DO NOT)
+
 1. *"Just tell users not to use Apple Music"* - Unacceptable UX, will get 1-star reviews
 2. *"Force our app to always be Now Playing"* - Impossible, system controls eligibility
 3. *"File a bug with Apple"* - Won't help before launch
 
 #### Root Cause
+
 Your app loses eligibility because:
+
 - Using `.mixWithOthers` option (allows other apps to play simultaneously)
 - Not calling `becomeActiveIfPossible()` when returning to foreground
 - AVAudioSession deactivated when backgrounded
@@ -824,6 +842,7 @@ To QA: Please test this flow:
 ```
 
 #### Time Saved
+
 - 2-3 hours of debugging speculation
 - Launch delay avoided
 - QA confidence restored
@@ -833,12 +852,15 @@ To QA: Please test this flow:
 ### Scenario 2: Artwork Flickers Every Track Change
 
 #### Situation
+
 - User feedback: "Album art keeps flashing when songs change"
 - Analytics show 3-4 artwork updates per track change
 - Designer: "This looks unprofessional"
 
 #### Root Cause
+
 Multiple artwork sources racing:
+
 1. Cache check (async)
 2. Remote URL fetch (async)
 3. Embedded artwork extraction (async)
@@ -892,6 +914,7 @@ Testing: Verified with 10 track changes, zero flicker.
 ```
 
 #### Time Saved
+
 - 1-2 hours investigating image caching
 - Designer approval unblocked
 - Professional UX restored
@@ -928,11 +951,13 @@ Testing: Verified with 10 track changes, zero flicker.
 ## Expert Checklist
 
 ### Before Implementing Now Playing
+
 - [ ] Added `audio` to UIBackgroundModes in Info.plist
 - [ ] AVAudioSession category is `.playback` without `.mixWithOthers`
 - [ ] Decided: Manual (MPNowPlayingInfoCenter) or Automatic (MPNowPlayingSession)?
 
 ### AVAudioSession Setup
+
 - [ ] `setCategory(.playback)` called at app launch
 - [ ] `setActive(true)` called before playback starts
 - [ ] `setActive(false, options: .notifyOthersOnDeactivation)` on stop
@@ -940,6 +965,7 @@ Testing: Verified with 10 track changes, zero flicker.
 - [ ] Foreground notification handled (reactivate after background)
 
 ### Remote Commands
+
 - [ ] At least one command has target registered
 - [ ] All registered commands have `isEnabled = true`
 - [ ] Skip commands have `preferredIntervals` set
@@ -949,6 +975,7 @@ Testing: Verified with 10 track changes, zero flicker.
 - [ ] Commands removed in deinit
 
 ### Now Playing Info
+
 - [ ] Title set (`MPMediaItemPropertyTitle`)
 - [ ] Duration set (`MPMediaItemPropertyPlaybackDuration`)
 - [ ] Elapsed time set at play/pause/seek (`MPNowPlayingInfoPropertyElapsedPlaybackTime`)
@@ -958,12 +985,14 @@ Testing: Verified with 10 track changes, zero flicker.
 - [ ] NOT updating elapsed time on a timer
 
 ### Artwork
+
 - [ ] Image at least 600x600 pixels
 - [ ] MPMediaItemArtwork block never returns nil (return placeholder if needed)
 - [ ] Single source of truth prevents flickering
 - [ ] Previous artwork load cancelled on track change
 
 ### Testing
+
 - [ ] Lock screen shows correct info
 - [ ] Control Center shows correct info
 - [ ] Play/pause buttons respond
@@ -976,6 +1005,7 @@ Testing: Verified with 10 track changes, zero flicker.
 - [ ] Tested with Spotify conflict
 
 ### CarPlay (if applicable)
+
 - [ ] Added `com.apple.developer.carplay-audio` entitlement
 - [ ] CPNowPlayingTemplate configured at `templateApplicationScene(_:didConnect:)`
 - [ ] Custom buttons (if any) configured with CPNowPlayingButton

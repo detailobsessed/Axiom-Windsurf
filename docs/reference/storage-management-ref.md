@@ -12,6 +12,7 @@ Comprehensive reference for storage pressure, purging policies, disk space check
 **Answers the question**: "Does iOS provide purge priority APIs?"
 
 iOS provides two approaches:
+
 1. **Location-based purging** (implicit): tmp/ → Caches/ → never (Documents/)
 2. **Capacity checking** (explicit): volumeAvailableCapacityForImportant vs Opportunistic
 

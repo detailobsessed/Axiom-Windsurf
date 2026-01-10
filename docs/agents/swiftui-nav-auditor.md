@@ -5,12 +5,14 @@ Automatically scans SwiftUI navigation code for architecture and correctness iss
 ## How to Use This Agent
 
 **Natural language (automatic triggering):**
+
 - "Check my SwiftUI navigation for correctness issues"
 - "Review my navigation implementation for architectural problems"
 - "My deep links aren't working, can you scan my navigation code?"
 - "Audit my app's navigation state restoration"
 
 **Explicit command:**
+
 ```bash
 /axiom:audit-swiftui-nav
 ```

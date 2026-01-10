@@ -13,6 +13,7 @@ MediaPlayer framework patterns for Lock Screen and Control Center integration. C
 ## When to Use This Skill
 
 Use this skill when you're:
+
 - Now Playing info doesn't appear on Lock Screen or Control Center
 - Play/pause/skip buttons are grayed out or don't respond
 - Album artwork is missing, wrong, or flickers between images
@@ -37,42 +38,49 @@ Questions you can ask Claude that will draw from this skill:
 ## What's Covered
 
 ### AVAudioSession Configuration (Pattern 1)
+
 - Non-mixable `.playback` category for eligibility
 - Background mode "audio" in Info.plist
 - Activation timing before playback
 - Session deactivation with notify option
 
 ### Remote Command Registration (Pattern 2)
+
 - Command targets AND `isEnabled = true`
 - Skip intervals with `preferredIntervals`
 - Handler return values
 - Strong references to targets
 
 ### Artwork (Pattern 3)
+
 - `MPMediaItemArtwork` with size handler
 - Single source of truth to prevent flickering
 - Task cancellation on track change
 - Minimum 600x600 pixel images
 
 ### Playback State Sync (Pattern 4)
+
 - `playbackRate` (not `playbackState`) on iOS
 - When to update: play, pause, seek, track change
 - NOT on timer (causes jitter)
 - Preserve dictionary values on partial updates
 
 ### MPNowPlayingSession (Pattern 5)
+
 - iOS 16+ automatic publishing
 - `session.remoteCommandCenter` not shared
 - `becomeActiveIfPossible()` for eligibility
 - Multiple sessions for PiP
 
 ### CarPlay (Pattern 6)
+
 - Same MPNowPlayingInfoCenter as iOS
 - `com.apple.developer.carplay-audio` entitlement
 - Custom buttons via CPNowPlayingTemplate
 - Configuration at scene connection
 
 ### MusicKit (Pattern 7)
+
 - ApplicationMusicPlayer auto-publishes
 - Don't manually set nowPlayingInfo
 - Hybrid apps switching between players

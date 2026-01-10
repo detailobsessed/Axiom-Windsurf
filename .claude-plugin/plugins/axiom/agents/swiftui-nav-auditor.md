@@ -29,6 +29,7 @@ You are an expert at detecting SwiftUI navigation architecture and correctness i
 ## Your Mission
 
 Run a comprehensive SwiftUI navigation audit focused on **correctness and architecture**. Report all issues with:
+
 - File:line references
 - Severity ratings (CRITICAL/HIGH/MEDIUM/LOW)
 - Fix recommendations with code examples
@@ -42,81 +43,99 @@ Skip: `*Tests.swift`, `*Previews.swift`, `*/Pods/*`, `*/Carthage/*`, `*/.build/*
 ## What You Check
 
 ### 1. Missing NavigationPath (HIGH)
+
 **Issue**: NavigationStack without `@State var path = NavigationPath()`
 **Impact**: Can't navigate programmatically or handle deep links
 **Fix**: Add path binding to NavigationStack
 
 ### 2. Deep Link Gaps (CRITICAL)
+
 **Issue**: Missing `.onOpenURL`, no URL scheme in Info.plist
 **Impact**: Deep links fail silently
 **Fix**: Implement `.onOpenURL` handler, register URL schemes
 
 ### 3. State Restoration Issues (HIGH)
+
 **Issue**: Missing `.navigationDestination(for:)` for path types
 **Impact**: Navigation state lost on backgrounding
 **Fix**: Add `.navigationDestination` for every type in path
 
 ### 4. Wrong Container (MEDIUM)
+
 **Issue**: NavigationStack for master-detail, NavigationSplitView for linear flows
 **Impact**: Poor iPad/Mac experience
 **Fix**: Use NavigationSplitView for master-detail, NavigationStack for linear
 
 ### 5. Type Safety Issues (HIGH)
+
 **Issue**: Multiple `.navigationDestination` with same type
 **Impact**: Wrong view shown, navigation breaks
 **Fix**: Use unique types or wrapper enum with associated values
 
 ### 6. Tab/Nav Integration (MEDIUM)
+
 **Issue**: Missing `.tabViewStyle(.sidebarAdaptable)` (iOS 18+)
 **Impact**: Tab bar doesn't unify with sidebar on iPad
 **Fix**: Use `.tabViewStyle(.sidebarAdaptable)`
 
 ### 7. Missing State Preservation (HIGH)
+
 **Issue**: No `@SceneStorage` for navigation path
 **Impact**: User loses place when app terminates
 **Fix**: Store NavigationPath in `@SceneStorage`
 
 ### 8. Deprecated NavigationLink APIs (MEDIUM)
+
 **Issue**: Using `NavigationLink(isActive:)` or `NavigationLink(tag:selection:)` (deprecated iOS 16+)
 **Fix**: Migrate to NavigationStack + NavigationPath pattern
 
 ### 9. Coordinator Pattern Violations (LOW)
+
 **Issue**: Navigation logic scattered across views
 **Fix**: Centralize in coordinator/router
 
 ### 10. Missing NavigationSplitViewVisibility (LOW)
+
 **Issue**: No explicit sidebar visibility state management
 **Fix**: Add `@State var visibility: NavigationSplitViewVisibility`
 
 ## Audit Process
 
 ### Step 1: Find Navigation Files
+
 Search for files with NavigationStack, NavigationSplitView, NavigationPath, navigationDestination
 
 ### Step 2: Search for Issues
 
 **Missing NavigationPath**:
+
 - `NavigationStack {` or `NavigationStack()` without path binding
 - Compare against `@State.*NavigationPath` and `NavigationStack(path:` count
 
 **Deep Link Gaps**:
+
 - Missing `.onOpenURL` handler
 - Note: Check Info.plist for URL scheme registration
 
 **State Restoration**:
+
 - `.navigationDestination(for:` count vs path types
 - Missing `@SceneStorage.*path` or `@SceneStorage.*navigation`
 
 **Wrong Container**:
+
 - Context: NavigationSplitView for master-detail, NavigationStack for linear
 
 **Type Safety**:
+
 - Multiple `.navigationDestination` with potentially same type
 
 **Tab/Nav Integration** (iOS 18+):
+
 - TabView with NavigationStack but no `.tabViewStyle(.sidebarAdaptable)`
 
 **Deprecated APIs**:
+
 - `NavigationLink.*isActive:` or `NavigationLink.*tag:.*selection:`
 
 ### Step 3: Categorize by Severity
@@ -129,6 +148,7 @@ Search for files with NavigationStack, NavigationSplitView, NavigationPath, navi
 ## Output Format
 
 Generate a "SwiftUI Navigation Architecture Audit Results" report with:
+
 1. **Summary**: Issue counts by severity
 2. **Navigation Architecture Risk Score**: 0-10 (CRITICAL=+4, HIGH=+2, MEDIUM=+1, LOW=+0.5, cap at 10)
 3. **Issues by severity**: CRITICAL first, with file:line, issue, impact, fix with code example

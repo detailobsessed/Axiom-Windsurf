@@ -10,6 +10,7 @@ version: 1.0.0
 ## When to Use This Skill
 
 ✅ **Use this skill when**:
+
 - Researching Apple frameworks or APIs (WidgetKit, SwiftUI, etc.)
 - Need full WWDC session transcripts with code samples
 - Looking for Apple Developer documentation
@@ -17,6 +18,7 @@ version: 1.0.0
 - Building comprehensive skills based on Apple technologies
 
 ❌ **Do NOT use this skill for**:
+
 - Third-party framework documentation
 - General web research
 - Questions already answered in existing skills
@@ -43,6 +45,7 @@ Apple Developer video pages (`developer.apple.com/videos/play/wwdc20XX/XXXXX/`) 
 #### Step-by-Step Process
 
 1. **Navigate** using Chrome browser MCP tool:
+
    ```json
    {
      "action": "navigate",
@@ -53,6 +56,7 @@ Apple Developer video pages (`developer.apple.com/videos/play/wwdc20XX/XXXXX/`) 
    Tool name: `mcp__plugin_superpowers-chrome_chrome__use_browser`
 
    **Complete invocation**:
+
    ```
    Use the mcp__plugin_superpowers-chrome_chrome__use_browser tool with:
    - action: "navigate"
@@ -65,6 +69,7 @@ Apple Developer video pages (`developer.apple.com/videos/play/wwdc20XX/XXXXX/`) 
    - Filename pattern: `NNN-navigate.md` (e.g., `001-navigate.md`)
 
    **Finding the latest session**:
+
    ```bash
    # List sessions sorted by modification time (newest first)
    ls -lt ~/Library/Caches/superpowers/browser/*/session-* | head -5
@@ -78,6 +83,7 @@ Apple Developer video pages (`developer.apple.com/videos/play/wwdc20XX/XXXXX/`) 
 ### What You Get
 
 **✅ WWDC transcripts contain:**
+
 - Full spoken content with timestamps (e.g., `[0:07]`, `[1:23]`)
 - API names mentioned by speakers (e.g., `widgetRenderingMode`, `supportedMountingStyles`)
 - Descriptions of what code does ("I'll add the widgetRenderingMode environment variable")
@@ -85,6 +91,7 @@ Apple Developer video pages (`developer.apple.com/videos/play/wwdc20XX/XXXXX/`) 
 - Chapter markers and resource links
 
 **❌ WWDC transcripts do NOT contain:**
+
 - Formatted Swift code blocks ready to copy-paste
 - Complete implementations
 - Structured code examples
@@ -118,6 +125,7 @@ If the transcript's code descriptions aren't detailed enough, follow this fallba
    - Result: Full picture without manually reconstructing everything
 
 **Example transcript structure**:
+
 ```markdown
 # Session Title - WWDC## - Videos - Apple Developer
 
@@ -136,6 +144,7 @@ Now I'll add the widgetAccentedRenderingMode modifier...
 ### Example Session
 
 **WWDC 2025-278** "What's new in widgets":
+
 - Navigate: `https://developer.apple.com/videos/play/wwdc2025/278/`
 - Captured: `001-navigate.md`
 - Contains: ~15 minutes of full transcript with API references and code concepts
@@ -149,11 +158,13 @@ Developer.apple.com documentation is HTML-heavy and difficult to parse. sosumi.a
 ### URL Pattern
 
 **Instead of**:
+
 ```
 https://developer.apple.com/documentation/widgetkit
 ```
 
 **Use**:
+
 ```
 https://sosumi.ai/documentation/widgetkit
 ```
@@ -163,17 +174,20 @@ https://sosumi.ai/documentation/widgetkit
 **Format**: `https://sosumi.ai/documentation/[framework]`
 
 **Rules for framework name**:
+
 1. **Lowercase** - Use lowercase even if framework is capitalized (SwiftUI → swiftui)
 2. **No spaces** - Remove all spaces (Core Data → coredata)
 3. **No hyphens** - Remove all hyphens (App Intents → appintents, NOT app-intents)
 4. **Case-insensitive** - Both `SwiftUI` and `swiftui` work, but lowercase is recommended
 
 **Common mistakes**:
+
 - ❌ `app-intents` → ✅ `appintents`
 - ❌ `axiom-core-data` → ✅ `coredata`
 - ❌ `AVFoundation` → ✅ `avfoundation`
 
 **Examples**:
+
 | Framework Name | sosumi.ai URL |
 |----------------|---------------|
 | SwiftUI | `sosumi.ai/documentation/swiftui` |
@@ -286,6 +300,7 @@ Result: Clean markdown, instant access
 **Symptom**: Can't locate `001-navigate.md` file
 
 **Solution**:
+
 1. Check Chrome actually navigated (look for URL confirmation)
 2. Find latest session: `ls -lt ~/Library/Caches/superpowers/browser/*/`
 3. Session directory format: `YYYY-MM-DD/session-TIMESTAMP/`
@@ -295,6 +310,7 @@ Result: Clean markdown, instant access
 **Symptom**: File exists but missing transcript
 
 **Solution**:
+
 1. Page may still be loading - wait 2-3 seconds
 2. Try navigating again
 3. Some sessions require scrolling to load full content
@@ -304,6 +320,7 @@ Result: Clean markdown, instant access
 **Symptom**: 404 or invalid URL
 
 **Solution**:
+
 1. Verify framework name spelling
 2. Check sosumi.ai format: `/documentation/[frameworkname]`
 3. Fallback: Use developer.apple.com but expect HTML
@@ -311,6 +328,7 @@ Result: Clean markdown, instant access
 ## Verification Checklist
 
 Before using captured content:
+
 - ☐ Transcript includes timestamps
 - ☐ Code samples are complete (not truncated)
 - ☐ Speaker names and chapter markers present

@@ -33,8 +33,11 @@ Comprehensive guide to SwiftUI's animation system, from foundational concepts to
 ## System Requirements
 
 #### iOS 13+ for Animatable protocol
+
 #### iOS 17+ for default spring animations, scoped animations
+
 #### iOS 18+ for zoom transitions, UIKit/AppKit animation bridging
+
 #### iOS 26+ for @Animatable macro
 
 ---
@@ -58,6 +61,7 @@ While this animation runs, SwiftUI computes intermediate values:
 ```
 
 **How values are distributed**
+
 - Determined by the animation's timing curve or velocity function
 - Spring animations use physics simulation
 - Timing curves use bezier curves
@@ -84,6 +88,7 @@ protocol VectorArithmetic {
 ```
 
 **Built-in conforming types**
+
 - **1-dimensional**: `CGFloat`, `Double`, `Float`, `Angle`
 - **2-dimensional**: `CGPoint`, `CGSize`
 - **4-dimensional**: `CGRect`
@@ -133,11 +138,13 @@ struct AnimatedCounterView: View {
 Animatable attributes conceptually have two values:
 
 #### Model Value
+
 - The target value set by your code
 - Updated immediately when state changes
 - What you write in your view's body
 
 #### Presentation Value
+
 - The current interpolated value being rendered
 - Updates frame-by-frame during animation
 - What the user actually sees
@@ -149,6 +156,7 @@ Animatable attributes conceptually have two values:
 ```
 
 When `selected` becomes `true`:
+
 - **Model value**: Immediately becomes `1.5`
 - **Presentation value**: Interpolates `1.0 → 1.1 → 1.2 → 1.3 → 1.4 → 1.5` over time
 
@@ -175,6 +183,7 @@ SwiftUI builds an animatable attribute for any view conforming to this protocol.
 Many SwiftUI modifiers conform to Animatable:
 
 #### Visual Effects
+
 - `.scaleEffect()` — Animates scale transform
 - `.rotationEffect()` — Animates rotation
 - `.offset()` — Animates position offset
@@ -183,6 +192,7 @@ Many SwiftUI modifiers conform to Animatable:
 - `.shadow()` — Animates shadow properties
 
 #### All Shape types
+
 - `Circle`, `Rectangle`, `RoundedRectangle`
 - `Capsule`, `Ellipse`, `Path`
 - Custom `Shape` implementations
@@ -216,6 +226,7 @@ struct ScaleEffectModifier: ViewModifier, Animatable {
 ```
 
 **How it works**
+
 - `CGSize` is 2-dimensional (width, height)
 - `UnitPoint` is 2-dimensional (x, y)
 - `AnimatablePair` fuses them into a 4-dimensional vector
@@ -224,6 +235,7 @@ struct ScaleEffectModifier: ViewModifier, Animatable {
 ### Custom Animatable Conformance
 
 #### When to use
+
 - Animating custom layout (like RadialLayout)
 - Animating custom drawing code
 - Animating properties that affect shape paths
@@ -251,6 +263,7 @@ AnimatableNumberView(number: value)
 ```
 
 **How it works**
+
 1. `number` changes from 0 to 100
 2. SwiftUI calls `body` for every frame of the animation
 3. Each frame gets a new `number` value: 0 → 5 → 15 → 30 → 55 → 80 → 100
@@ -261,16 +274,19 @@ AnimatableNumberView(number: value)
 **Custom Animatable conformance can be expensive.**
 
 When you conform a view to Animatable:
+
 - SwiftUI calls your view's `body` **for every frame of the animation**
 - Layout is rerun every frame
 - This happens on the main thread
 
 **Built-in animatable effects** (like `.scaleEffect()`, `.opacity()`) are much more efficient:
+
 - They run off the main thread
 - They don't call your view's body
 - They update only the rendering layer
 
 **Guideline**
+
 - Use built-in effects whenever possible
 - Only use custom Animatable conformance if you can't achieve the effect with built-in modifiers
 - Profile with Instruments if you have performance issues
@@ -319,6 +335,7 @@ struct RadialLayout: Layout {
 The `@Animatable` macro eliminates the boilerplate of manually conforming to the Animatable protocol.
 
 **Before iOS 26**, you had to:
+
 1. Manually conform to `Animatable`
 2. Write `animatableData` getter and setter
 3. Use `AnimatablePair` for multiple properties
@@ -340,6 +357,7 @@ struct MyView: View {
 ```
 
 The macro automatically:
+
 - Generates `Animatable` conformance
 - Inspects all stored properties
 - Creates `animatableData` from VectorArithmetic-conforming properties
@@ -403,6 +421,7 @@ struct HikingRouteShape: Shape {
 Use `@AnimatableIgnored` to exclude properties from animation.
 
 #### When to use
+
 - **Debug values** — Flags for development only
 - **IDs** — Identifiers that shouldn't animate
 - **Timestamps** — When the view was created/updated
@@ -444,6 +463,7 @@ struct ProgressView: View {
 Numeric animations are extremely common across app categories:
 
 #### Fintech Apps
+
 ```swift
 @MainActor
 @Animatable
@@ -465,6 +485,7 @@ struct StockPriceView: View {
 **Use case**: Animate stock price changes, portfolio value, account balance transitions
 
 #### Health & Fitness
+
 ```swift
 @MainActor
 @Animatable
@@ -489,6 +510,7 @@ struct HeartRateView: View {
 **Use case**: Heart rate indicators, step counters, calorie calculations, distance traveled
 
 #### Games
+
 ```swift
 @MainActor
 @Animatable
@@ -511,6 +533,7 @@ struct ScoreView: View {
 **Use case**: Score animations, XP transitions, level progress, combo multipliers
 
 #### Productivity Apps
+
 ```swift
 @MainActor
 @Animatable
@@ -629,6 +652,7 @@ Spring animations use physics simulation to create natural, organic motion.
 ```
 
 **Parameters**
+
 - `duration` — Perceived animation duration
 - `bounce` — Amount of bounce (0 = no bounce, 1 = very bouncy)
 
@@ -667,6 +691,7 @@ Multiplies the animation speed.
 ### Default Animation Changes (iOS 17+)
 
 **Before iOS 17**
+
 ```swift
 withAnimation {
     // Used timing curve by default
@@ -674,6 +699,7 @@ withAnimation {
 ```
 
 **iOS 17+**
+
 ```swift
 withAnimation {
     // Uses .smooth spring by default
@@ -701,6 +727,7 @@ Button("Scale Up") {
 ```
 
 **How it works**
+
 1. `withAnimation` opens a transaction
 2. Sets the animation in the transaction dictionary
 3. Executes the closure (state changes)
@@ -787,6 +814,7 @@ struct AvatarView: View {
 ```
 
 **How it works**
+
 - Animation only applies to attributes in the closure
 - Other attributes are unaffected
 - Prevents accidental animations
@@ -894,6 +922,7 @@ struct LinearAnimation: CustomAnimation {
 **Critical understanding**: The `value` parameter is the **delta vector** (target - current), not the target value itself.
 
 **Example in practice**:
+
 - Current position: `10.0`
 - Target position: `100.0`
 - Delta vector passed to `animate()`: `90.0` (target - current)
@@ -901,6 +930,7 @@ struct LinearAnimation: CustomAnimation {
 - SwiftUI adds this to current: `10.0 + 45.0 = 55.0` (halfway to target) ✅
 
 **Common mistake**:
+
 ```swift
 // ❌ WRONG: Treating value as the target
 let progress = time / duration
@@ -929,6 +959,7 @@ func shouldMerge(...) -> Bool {
 **Behavior**: Both animations run together, results are combined additively.
 
 **Example**
+
 - First tap: animate 1.0 → 1.5 (running)
 - Second tap (before finish): animate 1.5 → 1.0
 - Result: Both animations run, values combine
@@ -944,6 +975,7 @@ func shouldMerge(...) -> Bool {
 **Behavior**: New animation incorporates state of previous animation, preserving velocity.
 
 **Example**
+
 - First tap: animate 1.0 → 1.5 with velocity V
 - Second tap (before finish): retarget to 1.0, preserving current velocity V
 - Result: Smooth transition, no sudden velocity change
@@ -1101,6 +1133,7 @@ func handleTap() {
 ```
 
 **Guidelines**
+
 - Be ready for a new transition to start at any time
 - Keep temporary transition state to a minimum
 - Reset transition state in `viewDidAppear` or `viewDidDisappear`
@@ -1385,6 +1418,7 @@ struct DraggableBead: View {
 ### Why This Matters
 
 **Continuous velocity** creates natural, physical-feeling interactions:
+
 - No jarring velocity discontinuities
 - Momentum carries through gesture end
 - Spring animations feel connected to user input
@@ -1402,6 +1436,7 @@ Built-in animatable attributes run efficiently:
 ```
 
 **Benefits**
+
 - Runs off the main thread
 - Doesn't call your view's `body`
 - Minimal performance impact
@@ -1439,11 +1474,13 @@ SwiftUI animates the *difference* between values, not the values themselves.
 ```
 
 **What SwiftUI actually animates**
+
 - Delta vector: 1.5 - 1.0 = 0.5
 - Animation interpolates: 0.0 → 0.1 → 0.2 → 0.3 → 0.4 → 0.5
 - Final value: 1.0 + interpolated delta
 
 **Why this matters**
+
 - Makes animation merging easier
 - Allows additive combination of animations
 - Simplifies CustomAnimation implementations
@@ -1597,7 +1634,7 @@ See **Animation Merging Behavior** section above for detailed explanation of mer
 
 **WWDC**: 2023-10156, 2023-10157, 2023-10158, 2024-10145, 2025-256
 
-**Docs**: /swiftui/animatable, /swiftui/animation, /swiftui/vectorarithmetic, /swiftui/transaction, /swiftui/view/navigationtransition(_:), /swiftui/view/matchedtransitionsource(id:in:configuration:), /uikit/uiview/animate(_:changes:completion:)
+**Docs**: /swiftui/animatable, /swiftui/animation, /swiftui/vectorarithmetic, /swiftui/transaction, /swiftui/view/navigationtransition(*:), /swiftui/view/matchedtransitionsource(id:in:configuration:), /uikit/uiview/animate(*:changes:completion:)
 
 **Skills**: axiom-swiftui-26-ref, axiom-swiftui-nav-ref, axiom-swiftui-performance, axiom-swiftui-debugging
 

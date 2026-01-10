@@ -859,12 +859,14 @@ func processPayload(_ payload: MXMetricPayload) {
 ### Xcode Organizer Integration
 
 View field metrics in Xcode:
+
 1. Window → Organizer
 2. Select your app
 3. Click "Battery Usage" in sidebar
 4. Compare versions, filter by device/OS
 
 Categories shown:
+
 - Audio
 - Networking
 - Processing (CPU + GPU)
@@ -1022,6 +1024,7 @@ func application(
 ## Expert Review Checklist
 
 ### Timers (10 items)
+
 - [ ] Tolerance ≥10% on all timers
 - [ ] Timers invalidated in deinit
 - [ ] No timers running when app backgrounded
@@ -1034,6 +1037,7 @@ func application(
 - [ ] Background timer usage justified
 
 ### Network (10 items)
+
 - [ ] waitsForConnectivity = true
 - [ ] allowsExpensiveNetworkAccess appropriate
 - [ ] allowsConstrainedNetworkAccess appropriate
@@ -1046,6 +1050,7 @@ func application(
 - [ ] Connection reuse via single URLSession
 
 ### Location (10 items)
+
 - [ ] Accuracy appropriate for use case
 - [ ] distanceFilter set
 - [ ] Updates stopped when not needed
@@ -1058,6 +1063,7 @@ func application(
 - [ ] Location icon explained to users
 
 ### Background Execution (10 items)
+
 - [ ] endBackgroundTask called promptly
 - [ ] Expiration handlers implemented
 - [ ] BGTasks use requiresExternalPower when possible
@@ -1070,6 +1076,7 @@ func application(
 - [ ] Thermal state monitored
 
 ### Display/GPU (10 items)
+
 - [ ] Dark Mode supported
 - [ ] Animations stop when view hidden
 - [ ] Frame rates appropriate for content

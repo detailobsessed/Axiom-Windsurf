@@ -18,6 +18,7 @@ Comprehensive guide to Core Spotlight framework and NSUserActivity for making ap
 ## When to Use This Skill
 
 Use this skill when:
+
 - Indexing app content (documents, notes, orders, messages) for Spotlight
 - Using NSUserActivity for Handoff or Siri predictions
 - Choosing between CSSearchableItem, IndexedEntity, and NSUserActivity
@@ -28,6 +29,7 @@ Use this skill when:
 - Integrating NSUserActivity with App Intents (appEntityIdentifier)
 
 Do NOT use this skill for:
+
 - App Shortcuts implementation (use app-shortcuts-ref)
 - App Intents basics (use app-intents-ref)
 - Overall discoverability strategy (use app-discoverability)
@@ -103,6 +105,7 @@ func indexOrder(_ order: Order) {
 ### Key Properties
 
 #### uniqueIdentifier
+
 **Purpose** Stable, persistent ID unique to this item within your app.
 
 ```swift
@@ -110,6 +113,7 @@ uniqueIdentifier: order.id.uuidString
 ```
 
 **Requirements:**
+
 - Must be stable (same item = same identifier)
 - Used for updates and deletion
 - Scoped to your app
@@ -117,6 +121,7 @@ uniqueIdentifier: order.id.uuidString
 ---
 
 #### domainIdentifier
+
 **Purpose** Groups related items for bulk operations.
 
 ```swift
@@ -124,11 +129,13 @@ domainIdentifier: "orders"
 ```
 
 **Use cases:**
+
 - Delete all items in a domain
 - Organize by type (orders, documents, messages)
 - Batch operations
 
 **Pattern:**
+
 ```swift
 // Index with domains
 item1.domainIdentifier = "orders"
@@ -205,6 +212,7 @@ attributes.subject = "Meeting notes"
 ### Batch Indexing for Performance
 
 #### ❌ DON'T: Index items one at a time
+
 ```swift
 // Bad: 100 index operations
 for order in orders {
@@ -213,6 +221,7 @@ for order in orders {
 ```
 
 #### ✅ DO: Batch index operations
+
 ```swift
 // Good: 1 index operation
 let items = orders.map { $0.asSearchableItem() }
@@ -233,6 +242,7 @@ CSSearchableIndex.default().indexSearchableItems(items) { error in
 ### Deletion Patterns
 
 #### Delete by Identifier
+
 ```swift
 let identifiers = ["order-1", "order-2", "order-3"]
 
@@ -246,6 +256,7 @@ CSSearchableIndex.default().deleteSearchableItems(
 ```
 
 #### Delete by Domain
+
 ```swift
 // Delete all items in "orders" domain
 CSSearchableIndex.default().deleteSearchableItems(
@@ -254,6 +265,7 @@ CSSearchableIndex.default().deleteSearchableItems(
 ```
 
 #### Delete All
+
 ```swift
 // Nuclear option: delete everything
 CSSearchableIndex.default().deleteAllSearchableItems { error in
@@ -264,6 +276,7 @@ CSSearchableIndex.default().deleteAllSearchableItems { error in
 ```
 
 **When to delete:**
+
 - User deletes content
 - Content expires
 - User logs out
@@ -274,6 +287,7 @@ CSSearchableIndex.default().deleteAllSearchableItems { error in
 ### App Entity Integration (App Intents)
 
 #### Create from App Entity
+
 ```swift
 import AppIntents
 
@@ -300,6 +314,7 @@ CSSearchableIndex.default().indexSearchableItems([item])
 ```
 
 #### Associate Entity with Existing Item
+
 ```swift
 let attributes = CSSearchableItemAttributeSet(contentType: .item)
 attributes.title = "Order #1234"
@@ -315,6 +330,7 @@ item.associateAppEntity(orderEntity, priority: .default)
 ```
 
 **Benefits:**
+
 - Automatic "Find" actions in Shortcuts
 - Spotlight search returns entities directly
 - App Intents integration
@@ -326,6 +342,7 @@ item.associateAppEntity(orderEntity, priority: .default)
 ### Overview
 
 NSUserActivity captures user engagement for:
+
 - **Handoff** — Continue activity on another device
 - **Spotlight search** — Index currently viewed content
 - **Siri predictions** — Suggest returning to this screen
@@ -462,6 +479,7 @@ func viewOrder(_ order: Order) {
 ```
 
 **Benefits:**
+
 - Siri suggests this order in relevant contexts
 - App Intents can reference this activity
 - Shortcuts integration
@@ -492,6 +510,7 @@ func showEvent(_ event: Event) {
 ### Quick Note Integration (macOS/iPadOS)
 
 For Quick Note linking, activities must:
+
 1. Be the app's **current activity** (via `becomeCurrent()`)
 2. Have a clear, concise `title` (nouns, not verbs)
 3. Provide stable, consistent identifiers
@@ -513,6 +532,7 @@ activity.becomeCurrent()
 When users tap Spotlight results, handle continuation:
 
 #### UIKit
+
 ```swift
 // AppDelegate or SceneDelegate
 func application(
@@ -537,6 +557,7 @@ func application(
 ```
 
 #### SwiftUI
+
 ```swift
 @main
 struct CoffeeApp: App {
@@ -556,6 +577,7 @@ struct CoffeeApp: App {
 ```
 
 #### Searchable Item Continuation
+
 ```swift
 // When continuing from CSSearchableItem
 func application(
@@ -581,11 +603,13 @@ func application(
 ### Deletion APIs
 
 #### Delete All Saved Activities
+
 ```swift
 NSUserActivity.deleteAllSavedUserActivities { }
 ```
 
 #### Delete Specific Activities
+
 ```swift
 let identifiers = ["order-1", "order-2"]
 
@@ -595,6 +619,7 @@ NSUserActivity.deleteSavedUserActivities(
 ```
 
 **When to delete:**
+
 - User deletes content
 - User logs out
 - Content no longer accessible
@@ -614,6 +639,7 @@ NSUserActivity.deleteSavedUserActivities(
 | **Example** | User viewing order detail | Index all 500 orders |
 
 **Recommended** Use both:
+
 - NSUserActivity for screens currently visible
 - CSSearchableItem for comprehensive content indexing
 
@@ -624,12 +650,14 @@ NSUserActivity.deleteSavedUserActivities(
 ### Verify Indexed Items
 
 #### Using Spotlight
+
 1. Open Spotlight (swipe down on Home Screen)
 2. Search for indexed content keywords
 3. Verify your app's results appear
 4. Tap result → Verify navigation works
 
 #### Using Console Logs
+
 ```swift
 CSSearchableIndex.default().fetchLastClientState { clientState, error in
     if let error = error {
@@ -645,6 +673,7 @@ CSSearchableIndex.default().fetchLastClientState { clientState, error in
 ### Common Issues
 
 #### Items not appearing in Spotlight
+
 - Wait 1-2 minutes for indexing
 - Verify `isEligibleForSearch = true`
 - Check System Settings → Siri & Search → [App] → Show App in Search
@@ -652,12 +681,14 @@ CSSearchableIndex.default().fetchLastClientState { clientState, error in
 - Check console for indexing errors
 
 #### Activity not triggering Handoff
+
 - Verify `isEligibleForHandoff = true`
 - Ensure both devices signed into same iCloud account
 - Check Bluetooth and Wi-Fi enabled on both devices
 - Verify activityType is reverse DNS (com.company.app.action)
 
 #### Continuation not working
+
 - Verify `application(_:continue:restorationHandler:)` implemented
 - Check activityType matches exactly
 - Ensure persistentIdentifier is set
@@ -670,12 +701,14 @@ CSSearchableIndex.default().fetchLastClientState { clientState, error in
 ### 1. Selective Indexing
 
 #### ❌ DON'T: Index everything
+
 ```swift
 // Bad: Index all 10,000 items
 let allItems = try await ItemService.shared.all()
 ```
 
 #### ✅ DO: Index selectively
+
 ```swift
 // Good: Index recent/important items
 let recentItems = try await ItemService.shared.recent(limit: 100)
@@ -689,12 +722,14 @@ let favoriteItems = try await ItemService.shared.favorites()
 ### 2. Use Domain Identifiers
 
 #### ❌ DON'T: Rely only on unique identifiers
+
 ```swift
 // Hard to delete all orders
 CSSearchableIndex.default().deleteSearchableItems(withIdentifiers: allOrderIDs)
 ```
 
 #### ✅ DO: Group with domains
+
 ```swift
 // Easy to delete all orders
 CSSearchableIndex.default().deleteSearchableItems(withDomainIdentifiers: ["orders"])
@@ -705,12 +740,14 @@ CSSearchableIndex.default().deleteSearchableItems(withDomainIdentifiers: ["order
 ### 3. Set Expiration Dates
 
 #### ❌ DON'T: Index items forever
+
 ```swift
 // Bad: Items never expire
 let item = CSSearchableItem(/* ... */)
 ```
 
 #### ✅ DO: Set reasonable expiration
+
 ```swift
 // Good: Expire after 1 year
 item.expirationDate = Date().addingTimeInterval(60 * 60 * 24 * 365)
@@ -721,11 +758,13 @@ item.expirationDate = Date().addingTimeInterval(60 * 60 * 24 * 365)
 ### 4. Provide Rich Metadata
 
 #### ❌ DON'T: Minimal metadata
+
 ```swift
 attributes.title = "Item"
 ```
 
 #### ✅ DO: Rich, searchable metadata
+
 ```swift
 attributes.title = "Medium Latte Order"
 attributes.contentDescription = "Ordered on December 12, 2025"

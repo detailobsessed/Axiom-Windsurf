@@ -138,6 +138,7 @@ struct TaskListView: View {
 ```
 
 **Key differences:**
+
 - `class` → `struct` with `nonisolated`
 - `@Model` → `@Table`
 - `@Query` → `@FetchAll`
@@ -241,6 +242,7 @@ let project = Project.find(task.projectID)
 ---
 
 **Related Skills:**
+
 - `axiom-sqlitedata` — Full SQLiteData API reference
 - `axiom-swiftdata` — SwiftData patterns if staying with Apple's framework
 - `axiom-grdb` — Raw GRDB for complex queries

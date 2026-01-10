@@ -17,6 +17,7 @@ mcp:
 ## When to Use This Skill
 
 Use when:
+
 - Choosing navigation architecture (NavigationStack vs NavigationSplitView vs TabView)
 - Implementing programmatic navigation with NavigationPath
 - Setting up deep linking and URL routing
@@ -26,6 +27,7 @@ Use when:
 - Requesting code review of navigation implementation before shipping
 
 #### Related Skills
+
 - Use `axiom-swiftui-nav-diag` for systematic troubleshooting of navigation failures
 - Use `axiom-swiftui-nav-ref` for comprehensive API reference (including Tab customization, iOS 26+ features) with all WWDC examples
 
@@ -34,18 +36,23 @@ Use when:
 These are real questions developers ask that this skill is designed to answer:
 
 #### 1. "Should I use NavigationStack or NavigationSplitView for my app?"
+
 -> The skill provides a decision tree based on device targets, content hierarchy depth, and multiplatform requirements
 
 #### 2. "How do I navigate programmatically in SwiftUI?"
+
 -> The skill shows NavigationPath manipulation patterns for push, pop, pop-to-root, and deep linking
 
 #### 3. "My deep links aren't working. The app opens but shows the wrong screen."
+
 -> The skill covers URL parsing patterns, path construction order, and timing issues with onOpenURL
 
 #### 4. "Navigation state is lost when my app goes to background."
+
 -> The skill demonstrates Codable NavigationPath, SceneStorage persistence, and crash-resistant restoration
 
 #### 5. "How do I implement a coordinator pattern in SwiftUI?"
+
 -> The skill provides Router pattern examples alongside guidance on when coordinators add value vs complexity
 
 ---
@@ -57,6 +64,7 @@ If you're doing ANY of these, STOP and use the patterns in this skill:
 ### ❌ CRITICAL — Never Do These
 
 #### 1. Using deprecated NavigationView on iOS 16+
+
 ```swift
 // ❌ WRONG — Deprecated, different behavior on iOS 16+
 NavigationView {
@@ -64,18 +72,22 @@ NavigationView {
 }
 .navigationViewStyle(.stack)
 ```
+
 **Why this fails** NavigationView is deprecated since iOS 16. It lacks NavigationPath support, making programmatic navigation and deep linking unreliable. Different behavior across iOS versions causes bugs.
 
 #### 2. Using view-based NavigationLink for programmatic navigation
+
 ```swift
 // ❌ WRONG — Cannot programmatically control
 NavigationLink("Recipe") {
     RecipeDetail(recipe: recipe)  // View destination, no value
 }
 ```
+
 **Why this fails** View-based links cannot be controlled programmatically. No way to deep link or pop to this destination. Deprecated since iOS 16.
 
 #### 3. Putting navigationDestination inside lazy containers
+
 ```swift
 // ❌ WRONG — May not be loaded when needed
 LazyVGrid(columns: columns) {
@@ -87,36 +99,44 @@ LazyVGrid(columns: columns) {
     }
 }
 ```
+
 **Why this fails** Lazy containers don't load all views immediately. navigationDestination may not be visible to NavigationStack, causing navigation to silently fail.
 
 #### 4. Storing full model objects in NavigationPath for restoration
+
 ```swift
 // ❌ WRONG — Duplicates data, stale on restore
 class NavigationModel: Codable {
     var path: [Recipe] = []  // Full Recipe objects
 }
 ```
+
 **Why this fails** Duplicates data already in your model. On restore, Recipe data may be stale (edited/deleted elsewhere). Use IDs and resolve to current data.
 
 #### 5. Modifying NavigationPath outside MainActor
+
 ```swift
 // ❌ WRONG — UI update off main thread
 Task.detached {
     await viewModel.path.append(recipe)  // Background thread
 }
 ```
+
 **Why this fails** NavigationPath binds to UI. Modifications must happen on MainActor or navigation state becomes corrupted. Can cause crashes or silent failures.
 
 #### 6. Missing @MainActor isolation for navigation state
+
 ```swift
 // ❌ WRONG — Not MainActor isolated
 class Router: ObservableObject {
     @Published var path = NavigationPath()  // No @MainActor
 }
 ```
+
 **Why this fails** In Swift 6 strict concurrency, @Published properties accessed from SwiftUI views require MainActor isolation. Causes data race warnings and potential crashes.
 
 #### 7. Not handling navigation state in multi-tab apps
+
 ```swift
 // ❌ WRONG — Shared NavigationPath across tabs
 TabView {
@@ -125,13 +145,16 @@ TabView {
 }
 // All tabs share same NavigationStack — wrong!
 ```
+
 **Why this fails** Each tab should have its own NavigationStack to preserve navigation state when switching tabs. Shared state causes confusing UX.
 
 #### 8. Ignoring NavigationPath decoding errors
+
 ```swift
 // ❌ WRONG — Crashes on invalid data
 let path = NavigationPath(try! decoder.decode(NavigationPath.CodableRepresentation.self, from: data))
 ```
+
 **Why this fails** User may have deleted items that were in the path. Schema may have changed. Force unwrap causes crash on restore.
 
 ---
@@ -235,6 +258,7 @@ struct RecipeList: View {
 ```
 
 **Key points:**
+
 - Typed array `[Recipe]` when all values are same type
 - Value-based `NavigationLink(title, value:)`
 - `navigationDestination(for:)` outside lazy containers
@@ -295,6 +319,7 @@ struct ContentView: View {
 ```
 
 **Key points:**
+
 - `NavigationPath` for heterogeneous types
 - Pop to root before building deep link path
 - Build path in correct order (parent → child)
@@ -339,6 +364,7 @@ struct MultiColumnView: View {
 ```
 
 **Key points:**
+
 - `selection: $binding` on List connects to column selection
 - Value-presenting links update selection automatically
 - Adapts to single stack on iPhone
@@ -379,6 +405,7 @@ struct GridWithDrillDown: View {
 ```
 
 **Key points:**
+
 - NavigationStack inside detail column
 - Grid → Detail drill-down while preserving sidebar
 - Separate path for drill-down, selection for sidebar
@@ -421,6 +448,7 @@ struct TabBasedApp: View {
 ```
 
 **Key points:**
+
 - Each Tab has its own NavigationStack
 - Navigation state preserved when switching tabs
 - iOS 18+ Tab syntax with systemImage
@@ -463,6 +491,7 @@ struct AdaptableApp: View {
 ```
 
 **Key points:**
+
 - `.tabViewStyle(.sidebarAdaptable)` enables sidebar on iPad
 - `TabSection` creates collapsible groups in sidebar
 - `Tab(role: .search)` gets special placement
@@ -530,6 +559,7 @@ struct ContentView: View {
 ```
 
 **Key points:**
+
 - Store IDs, resolve to current objects
 - `@MainActor` for Swift 6 concurrency safety
 - SceneStorage for automatic scene-scoped persistence
@@ -598,12 +628,14 @@ struct ContentView: View {
 ```
 
 **When coordinators add value:**
+
 - Complex conditional navigation flows
 - Navigation logic needs unit testing
 - Multiple views trigger same navigation
 - UIKit interop with custom transitions
 
 **When coordinators add complexity without value:**
+
 - Simple linear navigation
 - < 5 navigation destinations
 - No need for navigation testing
@@ -666,6 +698,7 @@ var body: some View {
 ### The Problem
 
 Product/design asks for complex navigation like Instagram:
+
 - "Tab bar with per-tab navigation stacks"
 - "Smooth coordinator pattern for all flows"
 - "Deep linking to any screen"
@@ -682,11 +715,13 @@ If you hear ANY of these, **STOP and evaluate**:
 ### Time Cost Comparison
 
 #### Option A: Over-Engineered Coordinator
+
 - Time to build coordinator layer: 3-5 days
 - Time to maintain and debug: Ongoing
 - Time when requirements change: Significant refactor
 
 #### Option B: Built-in Navigation + Simple Router
+
 - Time to implement Pattern 4 (TabView + NavigationStack): 2-3 hours
 - Time to add Router if needed: 1-2 hours
 - Time when requirements change: Incremental additions
@@ -694,6 +729,7 @@ If you hear ANY of these, **STOP and evaluate**:
 ### How to Push Back Professionally
 
 #### Step 1: Quantify Current Needs
+
 ```
 "Let's list our actual navigation flows:
 1. Home → Item Detail
@@ -704,6 +740,7 @@ That's 6 destinations. NavigationPath handles this natively."
 ```
 
 #### Step 2: Show the Built-in Solution
+
 ```
 "Here's our navigation with NavigationStack + NavigationPath:
 [Show Pattern 1b code]
@@ -718,6 +755,7 @@ Without a coordinator layer."
 ```
 
 #### Step 3: Offer Incremental Path
+
 ```
 "If we find NavigationPath insufficient, we can add a Router
 (Pattern 7) later. It's 30-45 minutes of work.
@@ -729,17 +767,20 @@ only when we hit a real limitation."
 ### Real-World Example: 48-Hour Feature Push
 
 **Scenario:**
+
 - PM: "We need deep linking for the campaign launch in 2 days"
 - Lead: "Let's build a proper coordinator first"
 - Time available: 16 working hours
 
 **Wrong approach:**
+
 - 8 hours: Build coordinator infrastructure
 - 4 hours: Debug coordinator edge cases
 - 4 hours: Rush deep linking on broken foundation
 - Result: Buggy, deadline missed
 
 **Correct approach:**
+
 - 2 hours: Implement Pattern 1b (NavigationStack with deep linking)
 - 1 hour: Test all deep link URLs
 - 1 hour: Add SceneStorage restoration (Pattern 6)
@@ -791,24 +832,28 @@ checks and fallback UI for older devices."
 ## Code Review Checklist
 
 ### Navigation Architecture
+
 - [ ] Correct container for use case (Stack vs SplitView vs TabView)
 - [ ] Value-based NavigationLink (not view-based)
 - [ ] navigationDestination outside lazy containers
 - [ ] Each tab has own NavigationStack (if tab-based)
 
 ### State Management
+
 - [ ] NavigationPath in @State or @StateObject (not recreated in body)
 - [ ] @MainActor isolation for navigation state (Swift 6)
 - [ ] IDs stored for restoration (not full objects)
 - [ ] Error handling for decode failures
 
 ### Deep Linking
+
 - [ ] onOpenURL handler present
 - [ ] Pop to root before building path
 - [ ] Path built in correct order (parent → child)
 - [ ] Missing data handled gracefully
 
 ### iOS 26+ Features
+
 - [ ] No custom backgrounds interfering with Liquid Glass
 - [ ] Bottom-aligned search working on iPhone
 - [ ] Tab bar minimization if appropriate

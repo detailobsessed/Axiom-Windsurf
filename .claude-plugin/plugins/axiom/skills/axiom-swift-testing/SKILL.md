@@ -43,6 +43,7 @@ import Testing
 ```
 
 **Key differences from XCTest**:
+
 - No `test` prefix required — `@Test` attribute is explicit
 - Can be global functions, not just methods in a class
 - Supports `async`, `throws`, and actor isolation
@@ -66,6 +67,7 @@ let first = try #require(items.first)
 ```
 
 **Why #expect is better than XCTAssert**:
+
 - Captures source code and sub-values automatically
 - Single macro handles all operators (==, >, contains, etc.)
 - No need for specialized assertions (XCTAssertEqual, XCTAssertNil, etc.)
@@ -115,6 +117,7 @@ struct VideoTests {
 ```
 
 **Key behaviors**:
+
 - Structs preferred (value semantics, no accidental state sharing)
 - Each `@Test` gets its own suite instance
 - Use `init` for setup, `deinit` for teardown (actors/classes only)
@@ -174,6 +177,7 @@ struct PerformanceTests {
 ```
 
 **Use tags to**:
+
 - Run subsets of tests (filter by tag in Test Navigator)
 - Exclude slow tests from quick feedback loops
 - Group related tests across different files/suites
@@ -445,6 +449,7 @@ class FeatureModel: ObservableObject {
 ```
 
 **Clock types**:
+
 - `TestClock` — Advance time manually, deterministic
 - `ImmediateClock` — All sleeps return instantly (great for previews)
 - `UnimplementedClock` — Fails if used (catch unexpected time dependencies)
@@ -527,6 +532,7 @@ Handle expected failures without noise:
 ```
 
 **Better than .disabled because**:
+
 - Test still compiles (catches syntax errors)
 - You're notified when the issue is fixed
 - Results show "expected failure" not "skipped"
@@ -667,6 +673,7 @@ Scheme → Edit Scheme → Test → Info → ☐ Debugger
 ### Delete UI Test Templates
 
 Xcode's default UI tests slow everything down. Remove them:
+
 1. Delete UI test target (Project Settings → select target → -)
 2. Delete UI test source folder
 
@@ -681,6 +688,7 @@ Build Settings → Debug Information Format
 ### Check Build Scripts
 
 Run Script phases without defined inputs/outputs cause full rebuilds. Always specify:
+
 - Input Files / Input File Lists
 - Output Files / Output File Lists
 
@@ -689,11 +697,13 @@ Run Script phases without defined inputs/outputs cause full rebuilds. Always spe
 ## Checklist
 
 ### Before Writing Tests
+
 - [ ] Identify what can move to a Swift Package (pure logic)
 - [ ] Set up framework target if package isn't viable
 - [ ] Configure Host Application: None for unit tests
 
 ### Writing Tests
+
 - [ ] Use `@Test` with clear display names
 - [ ] Use `#expect` for all assertions
 - [ ] Use `#require` to fail fast on preconditions
@@ -701,11 +711,13 @@ Run Script phases without defined inputs/outputs cause full rebuilds. Always spe
 - [ ] Add `.tags()` for organization
 
 ### Async Tests
+
 - [ ] Mark test functions `async` and use `await`
 - [ ] Use `confirmation()` for callback-based code
 - [ ] Consider `withMainSerialExecutor` for flaky tests
 
 ### Parallel Safety
+
 - [ ] Avoid shared mutable state between tests
 - [ ] Use fresh instances in each test
 - [ ] Only use `.serialized` when absolutely necessary

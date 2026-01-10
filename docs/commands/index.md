@@ -66,15 +66,18 @@ Commands output results with `file:line` references and link to relevant skills 
 ## Command Categories
 
 ### Utility
+
 - `/axiom:ask` — Natural language helper
 - `/axiom:audit` — Unified audit command (smart selector or direct area targeting)
 - `/axiom:status` — Project health dashboard
 
 ### Build & Environment
+
 - `/axiom:fix-build` — Automatic build failure diagnosis and fixes
 - `/axiom:optimize-build` — Build performance optimization
 
 ### Testing
+
 - `/axiom:screenshot` — Quick simulator screenshot
 - `/axiom:test-simulator` — Full simulator testing capabilities
 
@@ -83,6 +86,7 @@ Commands output results with `file:line` references and link to relevant skills 
 The `/axiom:audit` command supports these areas:
 
 ### UI & Design
+
 - `accessibility` — VoiceOver, Dynamic Type, WCAG compliance
 - `axiom-liquid-glass` — Liquid Glass adoption opportunities
 - `axiom-swiftui-architecture` — SwiftUI architecture and testability
@@ -91,15 +95,18 @@ The `/axiom:audit` command supports these areas:
 - `textkit` — TextKit 1 vs 2 modernization
 
 ### Code Quality
+
 - `axiom-codable` — JSON serialization anti-patterns
 - `concurrency` — Swift 6 strict concurrency
 - `memory` — Memory leak detection
 - `axiom-swift-performance` — ARC and allocation issues
 
 ### Persistence & Storage
+
 - `axiom-core-data` — Core Data safety and migrations
 - `icloud` — iCloud sync reliability
 - `axiom-storage` — File storage safety
 
 ### Integration
+
 - `axiom-networking` — Deprecated networking APIs

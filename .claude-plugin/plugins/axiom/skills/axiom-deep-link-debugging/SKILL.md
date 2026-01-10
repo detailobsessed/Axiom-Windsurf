@@ -17,6 +17,7 @@ mcp:
 ## When to Use This Skill
 
 Use when:
+
 - Adding debug-only deep links for simulator testing
 - Enabling automated navigation to specific screens for screenshot/testing
 - Integrating with `simulator-tester` agent or `/axiom:screenshot`
@@ -24,6 +25,7 @@ Use when:
 - Testing navigation flows without manual tapping
 
 **Do NOT use for**:
+
 - Production deep linking (use `axiom-swiftui-nav` skill instead)
 - Universal links or App Clips
 - Complex routing architectures
@@ -31,12 +33,15 @@ Use when:
 ## Example Prompts
 
 #### 1. "Claude Code can't navigate to specific screens for testing"
+
 → Add debug-only URL scheme to enable `xcrun simctl openurl` navigation
 
 #### 2. "I want to take screenshots of different screens automatically"
+
 → Create debug deep links for each screen, callable from simulator
 
 #### 3. "Automated testing needs to set up specific app states"
+
 → Add debug links that navigate AND configure state
 
 ---
@@ -46,11 +51,13 @@ Use when:
 If you're experiencing ANY of these, add debug deep links:
 
 **Testing friction**:
+
 - ❌ "I have to manually tap through 5 screens to test this feature"
 - ❌ "Screenshot capture can't show the screen I need to debug"
 - ❌ "Automated tests can't reach the error state without complex setup"
 
 **Debugging inefficiency**:
+
 - ❌ "I make a fix, rebuild, manually navigate, check — takes 3 minutes per iteration"
 - ❌ "Can't visually verify fixes because Claude Code can't navigate there"
 
@@ -130,6 +137,7 @@ extension URL {
 ```
 
 **Usage**:
+
 ```bash
 # From simulator
 xcrun simctl openurl booted "debug://settings"
@@ -218,6 +226,7 @@ enum Destination: Hashable {
 ```
 
 **Usage**:
+
 ```bash
 # Navigate to settings
 xcrun simctl openurl booted "debug://settings"
@@ -277,6 +286,7 @@ extension DebugRouter {
 ```
 
 **Usage**:
+
 ```bash
 # Test login error state
 xcrun simctl openurl booted "debug://login-error"
@@ -345,6 +355,7 @@ sleep 1
 ### With `simulator-tester` Agent
 
 Simply tell the agent:
+
 - "Navigate to Settings and take a screenshot"
 - "Open the recipe editor and verify the layout"
 - "Go to the error state and show me what it looks like"
@@ -360,6 +371,7 @@ The agent will use your debug deep links to navigate.
 ### Step 1: Define Navigation Needs
 
 List all screens you need to reach for testing:
+
 ```
 - Settings screen
 - Profile screen (with specific user ID)
@@ -414,6 +426,7 @@ func handleDebugURL(_ url: URL) {
 **Problem**: URL handler now owns navigation logic, duplicating coordinator/router patterns.
 
 **✅ RIGHT — Use existing navigation system**:
+
 ```swift
 #if DEBUG
 func handleDebugURL(_ url: URL) {
@@ -439,6 +452,7 @@ func handleDebugURL(_ url: URL) {
 **Problem**: Debug endpoints exposed in production. Security risk.
 
 **✅ RIGHT — Wrap in #if DEBUG**:
+
 ```swift
 #if DEBUG
 func handleDebugURL(_ url: URL) {
@@ -462,6 +476,7 @@ case "profile":
 **Problem**: Crashes if `id` is missing or invalid.
 
 **✅ RIGHT — Validate parameters**:
+
 ```swift
 #if DEBUG
 case "profile":
@@ -496,6 +511,7 @@ Before using debug deep links in automated workflows:
 **Scenario**: You're debugging a recipe app layout issue in the editor screen.
 
 **Before** (manual testing):
+
 1. Build app → 30 seconds
 2. Launch simulator
 3. Tap "Recipes" → wait for load
@@ -507,6 +523,7 @@ Before using debug deep links in automated workflows:
 **Total**: 2-3 minutes per iteration
 
 **After** (with debug deep links):
+
 1. Build app → 30 seconds
 2. Run: `xcrun simctl openurl booted "debug://recipe-edit?id=42"`
 3. Run: `/axiom:screenshot`
@@ -576,6 +593,7 @@ case "test-scenario":
 ```
 
 **Usage**:
+
 ```bash
 # Test premium user with empty recipe list
 xcrun simctl openurl booted "debug://test-scenario?user=premium&recipes=empty"
@@ -615,6 +633,7 @@ case "screenshot":
 ```
 
 **Usage**:
+
 ```bash
 # Navigate to login screen with error state, wait, then screenshot
 xcrun simctl openurl booted "debug://screenshot?screen=login&state=error"
@@ -635,12 +654,14 @@ xcrun simctl io booted screenshot login-error.png
 ## Summary
 
 Debug deep links enable:
+
 - **Closed-loop debugging** with visual verification
 - **60-75% faster iteration** on visual fixes
 - **Automated testing** without manual navigation
 - **Screenshot automation** for any app state
 
 **Remember**:
+
 1. Wrap ALL debug code in `#if DEBUG`
 2. Strip URL scheme from release builds
 3. Integrate with existing navigation, don't duplicate

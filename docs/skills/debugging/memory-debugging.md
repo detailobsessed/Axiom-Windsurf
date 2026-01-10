@@ -10,6 +10,7 @@ Systematic memory leak diagnosis using Instruments. This skill covers the 5 leak
 ## When to Use This Skill
 
 Use this skill when you're:
+
 - Seeing app memory grow progressively during use (50MB → 100MB → 200MB)
 - Finding multiple instances of the same view controller in Instruments
 - Getting crashes after 10-15 minutes with no error message
@@ -41,17 +42,20 @@ Questions you can ask Claude that will draw from this skill:
 5. **Parent-Child Cycles** — Navigation or container relationships
 
 ### Instruments Workflows
+
 - Allocations instrument setup and heap snapshots
 - Reference count tracking and retain cycle visualization
 - Mark Generation technique for isolating leaks
 - Memory Graph Debugger for finding retainers
 
 ### Diagnostic Decision Tree
+
 - Progressive growth vs temporary spikes
 - Leak vs expected cache behavior
 - Normal memory use vs problematic patterns
 
 ### Verification Patterns
+
 - `deinit` logging to confirm deallocation
 - Heap snapshot comparison before/after
 - Regression testing for leaks

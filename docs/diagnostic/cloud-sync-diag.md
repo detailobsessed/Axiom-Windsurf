@@ -10,6 +10,7 @@ Systematic troubleshooting for iCloud sync issues covering both CloudKit and iCl
 ## Symptoms This Diagnoses
 
 Use when you're experiencing:
+
 - Files/data not appearing on other devices
 - "iCloud account not available" errors
 - Persistent sync conflicts
@@ -113,4 +114,4 @@ This page documents the `axiom-cloud-sync-diag` diagnostic skill—systematic tr
 
 **Docs**: /cloudkit, /icloud, /swiftdata
 
-**Console**: https://icloud.developer.apple.com/dashboard
+**Console**: <https://icloud.developer.apple.com/dashboard>

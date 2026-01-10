@@ -62,6 +62,7 @@ Environment cleanup takes 2-5 minutes. Code debugging for environment issues was
 ## Your Mission
 
 When the user reports a build failure:
+
 1. Run mandatory environment checks FIRST (never skip)
 2. Identify the specific issue type
 3. Apply the appropriate fix automatically
@@ -96,12 +97,14 @@ xcrun simctl list devices | grep -E "Booted|Booting|Shutting Down"
 ### Interpreting Results
 
 **Clean environment** (probably a code issue):
+
 - Project/workspace file found in current directory
 - 0-2 xcodebuild processes (all < 10 minutes old)
 - Derived Data < 10GB
 - No simulators stuck in Booting/Shutting Down
 
 **Environment problem** (apply fixes below):
+
 - No project/workspace file found (wrong directory!)
 - 10+ xcodebuild processes OR any process > 30 minutes old (zombies)
 - Derived Data > 10GB (stale cache)
@@ -111,6 +114,7 @@ xcrun simctl list devices | grep -E "Booted|Booting|Shutting Down"
 ## Red Flags: Environment Not Code
 
 If user mentions ANY of these, it's definitely an environment issue:
+
 - "It works on my machine but not CI"
 - "Tests passed yesterday, failing today with no code changes"
 - "Build succeeds but old code executes"
@@ -163,6 +167,7 @@ xcodebuild clean build -scheme <ACTUAL_SCHEME_NAME> \
 ```
 
 **Red Flags for CI/CD:**
+
 - "Works locally but fails in CI" → Usually SPM cache or Xcode version mismatch
 - "Intermittent CI failures" → Network issues downloading packages
 - "CI hangs indefinitely" → Timeout on package resolution, check network
@@ -223,6 +228,7 @@ xcodebuild build -scheme <ACTUAL_SCHEME_NAME> \
 ```
 
 **CRITICAL**:
+
 - Use the actual scheme name from `xcodebuild -list`, not a placeholder
 - If `xcodebuild -list` fails, verify you're in the correct directory with a workspace/project file
 
@@ -248,6 +254,7 @@ xcodebuild build -scheme <ACTUAL_SCHEME_NAME> \
 ```
 
 **When to use this**:
+
 - "No such module" errors for Swift Package dependencies
 - Package resolution failures
 - "Package.resolved" conflicts
@@ -374,6 +381,7 @@ Provide a clear, structured report:
 ## When to Stop and Report
 
 If you encounter:
+
 - Permission denied errors → Report to user
 - Xcode not installed → Report to user
 - `xcodebuild -list` fails (no workspace/project found) → Report to user, verify correct directory
@@ -406,6 +414,7 @@ Common errors and their fixes:
 **User**: "My build is failing with MODULE_NOT_FOUND"
 
 **Your response**:
+
 1. Run 3 mandatory checks
 2. Identify: Derived Data issue (common with "No such module" errors)
 3. Apply fix: Clean Derived Data, clean build, rebuild
@@ -413,6 +422,7 @@ Common errors and their fixes:
 5. Report results
 
 **Never**:
+
 - Guess without running diagnostics
 - Skip the verification step
 - Leave user without clear next steps

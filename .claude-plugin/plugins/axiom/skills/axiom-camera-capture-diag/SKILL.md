@@ -15,6 +15,7 @@ Systematic troubleshooting for AVFoundation camera issues: frozen preview, wrong
 ## Overview
 
 **Core Principle**: When camera doesn't work, the problem is usually:
+
 1. **Threading** (session work on main thread) - 35%
 2. **Session lifecycle** (not started, interrupted, not configured) - 25%
 3. **Rotation** (deprecated APIs, missing coordinator) - 20%
@@ -64,6 +65,7 @@ for output in session.outputs {
 ```
 
 **Expected output**:
+
 - ✅ isRunning: true, inputs ≥ 1, outputs ≥ 1 → Session working
 - ⚠️ isRunning: false → Session not started or interrupted
 - ❌ inputs: 0 → Camera not added (permission? configuration?)
@@ -85,6 +87,7 @@ sessionQueue.async {
 ```
 
 **Expected output**:
+
 - ✅ All background → Correct
 - ❌ Any main thread → UI will freeze
 
@@ -162,11 +165,13 @@ Camera not working as expected?
 **Symptom**: Black preview, `isRunning = false`
 
 **Common causes**:
+
 1. `startRunning()` never called
 2. `startRunning()` called but session has no inputs
 3. Session stopped and never restarted
 
 **Diagnostic**:
+
 ```swift
 // Check if startRunning was called
 print("isRunning before start: \(session.isRunning)")
@@ -175,6 +180,7 @@ print("isRunning after start: \(session.isRunning)")
 ```
 
 **Fix**:
+
 ```swift
 // Ensure session is started on session queue
 func startSession() {
@@ -199,12 +205,14 @@ func startSession() {
 **Symptom**: `session.inputs.count = 0`
 
 **Common causes**:
+
 1. Camera permission denied
 2. `AVCaptureDeviceInput` creation failed
 3. `canAddInput()` returned false
 4. Configuration not committed
 
 **Diagnostic**:
+
 ```swift
 // Step through input setup
 guard let camera = AVCaptureDevice.default(for: .video) else {
@@ -228,6 +236,7 @@ do {
 ```
 
 **Fix**: Ensure permission is granted BEFORE creating input, and wrap in configuration block:
+
 ```swift
 session.beginConfiguration()
 // Add input here
@@ -241,11 +250,13 @@ session.commitConfiguration()
 **Symptom**: `isRunning = true`, inputs configured, but preview is black
 
 **Common causes**:
+
 1. Preview layer session not set
 2. Preview layer not in view hierarchy
 3. Preview layer frame is zero
 
 **Diagnostic**:
+
 ```swift
 print("Preview layer session: \(previewLayer.session != nil)")
 print("Preview layer superlayer: \(previewLayer.superlayer != nil)")
@@ -254,6 +265,7 @@ print("Preview layer connection: \(previewLayer.connection != nil)")
 ```
 
 **Fix**:
+
 ```swift
 // Ensure preview layer is properly configured
 previewLayer.session = session
@@ -272,6 +284,7 @@ previewLayer.frame = view.bounds
 **Root cause**: `startRunning()` is a blocking call executed on main thread
 
 **Diagnostic**:
+
 ```swift
 // If this prints on main thread, that's the problem
 print("startRunning on thread: \(Thread.current)")
@@ -279,6 +292,7 @@ session.startRunning()
 ```
 
 **Fix**:
+
 ```swift
 // Create dedicated serial queue
 private let sessionQueue = DispatchQueue(label: "camera.session")
@@ -299,6 +313,7 @@ func startSession() {
 **Root cause**: Session interrupted but no handling/UI feedback
 
 **Diagnostic**:
+
 ```swift
 // Check if session is still running after returning from call
 print("Session running: \(session.isRunning)")
@@ -318,12 +333,14 @@ print("Session running: \(session.isRunning)")
 **Root cause**: Camera not available with multiple foreground apps
 
 **Diagnostic**:
+
 ```swift
 // Check interruption reason
 // InterruptionReason.videoDeviceNotAvailableWithMultipleForegroundApps
 ```
 
 **Fix**: Show appropriate UI message and resume when user exits Split View:
+
 ```swift
 case .videoDeviceNotAvailableWithMultipleForegroundApps:
     showMessage("Camera unavailable in Split View. Use full screen.")
@@ -338,6 +355,7 @@ case .videoDeviceNotAvailableWithMultipleForegroundApps:
 **Root cause**: Device getting hot, system reducing resources
 
 **Diagnostic**:
+
 ```swift
 // Check thermal state
 print("Thermal state: \(ProcessInfo.processInfo.thermalState.rawValue)")
@@ -345,6 +363,7 @@ print("Thermal state: \(ProcessInfo.processInfo.thermalState.rawValue)")
 ```
 
 **Fix**: Reduce quality or show cooling message:
+
 ```swift
 case .videoDeviceNotAvailableDueToSystemPressure:
     // Reduce quality
@@ -361,11 +380,13 @@ case .videoDeviceNotAvailableDueToSystemPressure:
 **Root cause**: Not using RotationCoordinator (iOS 17+) or not observing updates
 
 **Diagnostic**:
+
 ```swift
 print("Preview connection rotation: \(previewLayer.connection?.videoRotationAngle ?? -1)")
 ```
 
 **Fix**:
+
 ```swift
 // Create and observe RotationCoordinator
 let coordinator = AVCaptureDevice.RotationCoordinator(device: camera, previewLayer: previewLayer)
@@ -390,6 +411,7 @@ observation = coordinator.observe(\.videoRotationAngleForHorizonLevelPreview) { 
 **Root cause**: Rotation angle not applied to photo output connection
 
 **Diagnostic**:
+
 ```swift
 if let connection = photoOutput.connection(with: .video) {
     print("Photo connection rotation: \(connection.videoRotationAngle)")
@@ -397,6 +419,7 @@ if let connection = photoOutput.connection(with: .video) {
 ```
 
 **Fix**:
+
 ```swift
 func capturePhoto() {
     // Apply current rotation to capture
@@ -417,11 +440,13 @@ func capturePhoto() {
 **Reality**: This is CORRECT behavior, not a bug.
 
 **Explanation**:
+
 - Preview is mirrored (like looking in a mirror - user expectation)
 - Captured photo is NOT mirrored (text reads correctly when shared)
 - This matches the system Camera app behavior
 
 **If business requires mirrored photos** (selfie apps):
+
 ```swift
 func mirrorImage(_ image: UIImage) -> UIImage? {
     guard let cgImage = image.cgImage else { return nil }
@@ -438,12 +463,14 @@ func mirrorImage(_ image: UIImage) -> UIImage? {
 **Root cause**: `photoQualityPrioritization = .quality` (default for some devices)
 
 **Diagnostic**:
+
 ```swift
 print("Max quality prioritization: \(photoOutput.maxPhotoQualityPrioritization.rawValue)")
 // Check what you're requesting in AVCapturePhotoSettings
 ```
 
 **Fix**:
+
 ```swift
 var settings = AVCapturePhotoSettings()
 
@@ -463,6 +490,7 @@ settings.photoQualityPrioritization = .balanced
 **Symptom**: Want maximum responsiveness (zero-shutter-lag)
 
 **Solution**: Enable deferred processing (iOS 17+)
+
 ```swift
 photoOutput.isAutoDeferredPhotoDeliveryEnabled = true
 
@@ -478,6 +506,7 @@ photoOutput.isAutoDeferredPhotoDeliveryEnabled = true
 **Symptom**: `authorizationStatus = .notDetermined`
 
 **Fix**:
+
 ```swift
 // Must request before setting up session
 Task {
@@ -495,6 +524,7 @@ Task {
 **Symptom**: `authorizationStatus = .denied`
 
 **Fix**: Show settings prompt
+
 ```swift
 func showSettingsPrompt() {
     let alert = UIAlertController(
@@ -521,6 +551,7 @@ func showSettingsPrompt() {
 **Root cause**: Using iOS 17+ APIs without availability check
 
 **Fix**:
+
 ```swift
 if #available(iOS 17.0, *) {
     // Use RotationCoordinator
@@ -552,6 +583,7 @@ if #available(iOS 17.0, *) {
 Before escalating camera issues:
 
 **Basics**:
+
 - ☑ Session has at least one input
 - ☑ Session has at least one output
 - ☑ Session isRunning = true
@@ -559,21 +591,25 @@ Before escalating camera issues:
 - ☑ Preview layer has non-zero frame
 
 **Threading**:
+
 - ☑ All session work on sessionQueue
 - ☑ startRunning() on background thread
 - ☑ UI updates on main thread
 
 **Permissions**:
+
 - ☑ Authorization status checked
 - ☑ Permission requested if notDetermined
 - ☑ Graceful UI for denied state
 
 **Rotation**:
+
 - ☑ RotationCoordinator created with device AND previewLayer
 - ☑ Observation set up for preview angle changes
 - ☑ Capture angle applied when taking photos
 
 **Interruptions**:
+
 - ☑ Interruption observer registered
 - ☑ UI feedback for interrupted state
 - ☑ Tested with incoming phone call

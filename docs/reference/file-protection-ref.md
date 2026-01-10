@@ -14,24 +14,28 @@ iOS Data Protection provides hardware-accelerated file encryption tied to device
 ## Protection Levels
 
 ### .complete
+
 - **Encrypted**: Always
 - **Accessible**: Only while unlocked
 - **Use For**: Sensitive data (health, financial)
 - **Background Access**: ❌ No
 
 ### .completeUnlessOpen
+
 - **Encrypted**: When file closed
 - **Accessible**: After first unlock, while open
 - **Use For**: Large downloads, videos
 - **Background Access**: ✅ If already open
 
 ### .completeUntilFirstUserAuthentication
+
 - **Encrypted**: Always
 - **Accessible**: After first unlock following boot
 - **Use For**: Most app data (recommended default)
 - **Background Access**: ✅ Yes
 
 ### .none
+
 - **Encrypted**: Never
 - **Accessible**: Always
 - **Use For**: Public caches only

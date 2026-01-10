@@ -11,6 +11,7 @@ Symptom-based troubleshooting for iOS energy issues. Start with your symptom, fo
 ## Symptoms This Diagnoses
 
 Use when you're experiencing:
+
 - App at top of Battery Settings
 - Device gets hot during app use
 - High background battery drain
@@ -34,6 +35,7 @@ Claude guides you through symptom-based diagnosis:
 ### Symptom 1: App at Top of Battery Settings
 
 **Power Profiler reveals which subsystem:**
+
 - CPU high → Timer leak or polling loop
 - Network high → Batching issue or polling
 - GPU high → Animations running when not visible
@@ -42,17 +44,20 @@ Claude guides you through symptom-based diagnosis:
 ### Symptom 2: Device Gets Hot
 
 **During specific action:**
+
 - Video/camera → Check encoding efficiency
 - Scroll/animation → Reduce effects, check frame rate
 - Data processing → Move to background, cache results
 
 **During normal use:**
+
 - Run Power Profiler to identify continuous drain
 - Check for infinite loops or runaway recursion
 
 ### Symptom 3: Background Drain
 
 **Check Info.plist background modes:**
+
 - Location → Use significant-change, not continuous
 - Audio → Deactivate session when not playing
 - Fetch → Reasonable earliestBeginDate
@@ -61,6 +66,7 @@ Claude guides you through symptom-based diagnosis:
 ### Symptom 4: Cellular-Only Drain
 
 **Check URLSession configuration:**
+
 - `allowsExpensiveNetworkAccess` → Set false for non-urgent
 - `isDiscretionary` → Set true for background downloads
 - Request patterns → Batch small requests
@@ -68,11 +74,13 @@ Claude guides you through symptom-based diagnosis:
 ## Quick Diagnostic Checklist
 
 ### 30-Second Check
+
 - Device plugged in? (Power metrics show 0)
 - Debug build? (Less optimized)
 - Low Power Mode on? (Affects measurements)
 
 ### 5-Minute Check
+
 - Which subsystem dominant? (CPU/GPU/Network/Display)
 - Sustained or spiky?
 - Foreground or background?

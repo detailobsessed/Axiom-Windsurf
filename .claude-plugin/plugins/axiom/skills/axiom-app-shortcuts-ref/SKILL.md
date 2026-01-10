@@ -18,6 +18,7 @@ Comprehensive guide to App Shortcuts framework for making your app's actions ins
 ## When to Use This Skill
 
 Use this skill when:
+
 - Implementing AppShortcutsProvider for your app
 - Adding suggested phrases for Siri invocation
 - Configuring instant Spotlight availability
@@ -29,6 +30,7 @@ Use this skill when:
 - Choosing between App Intents and App Shortcuts
 
 Do NOT use this skill for:
+
 - General App Intents implementation (use app-intents-ref)
 - Core Spotlight indexing (use core-spotlight-ref)
 - Overall discoverability strategy (use app-discoverability)
@@ -102,6 +104,7 @@ AppShortcut(
 ```
 
 **Components:**
+
 - `intent` — The App Intent to execute
 - `phrases` — Spoken/typed phrases for Siri/Spotlight
 - `shortTitle` — Short label for Shortcuts app tiles
@@ -121,6 +124,7 @@ phrases: [
 ```
 
 **User sees in Siri/Spotlight:**
+
 - "Start meditation in Calm"
 - "Meditate with Calm"
 
@@ -145,6 +149,7 @@ static var appShortcuts: [AppShortcut] {
 ```
 
 **Result builder features:**
+
 - Conditional shortcuts (if/else)
 - Loop-generated shortcuts (for-in)
 - Inline array construction
@@ -169,6 +174,7 @@ AppShortcut(
 ```
 
 **Benefits:**
+
 - Simple, discoverable
 - Works for all users
 - No parameter ambiguity
@@ -233,6 +239,7 @@ static var appShortcuts: [AppShortcut] {
 ```
 
 **Benefits:**
+
 - One-phrase completion (no follow-up questions)
 - Better user experience for common use cases
 - Spotlight shows specific shortcuts
@@ -269,6 +276,7 @@ struct MeditationAppShortcuts: AppShortcutsProvider {
 ```
 
 **When to use:**
+
 - Phrases that sound similar to your shortcuts but mean the opposite
 - Common phrases users might say that shouldn't trigger your app
 - Disambiguation when multiple apps have similar capabilities
@@ -303,10 +311,12 @@ struct OrderConfirmationView: View {
 ```
 
 **Requirements:**
+
 - Intent must be used in an AppShortcut (otherwise shows empty view)
 - isVisible binding controls display state
 
 **Styles:**
+
 - `.automatic` — Adapts to environment
 - `.light` — Light background
 - `.dark` — Dark background
@@ -336,6 +346,7 @@ struct SettingsView: View {
 ```
 
 **When to use:**
+
 - Settings screen
 - Help/Support section
 - Onboarding flow
@@ -360,6 +371,7 @@ struct CoffeeAppShortcuts: AppShortcutsProvider {
 ```
 
 **Available colors:**
+
 | Color | Use Case |
 |-------|----------|
 | `.blue` | Default, professional |
@@ -417,6 +429,7 @@ extension MeditationData {
 ```
 
 **When to call:**
+
 - User adds/removes favorites
 - Available options change
 - App data structure updates
@@ -644,6 +657,7 @@ Once implemented, your App Shortcuts are available in:
 5. Verify shortcuts appear with correct titles and icons
 
 **If shortcuts don't appear:**
+
 - Ensure AppShortcutsProvider is in your main app target
 - Check that `isDiscoverable` is true for the AppIntents (default)
 - Rebuild and reinstall app
@@ -658,12 +672,14 @@ Once implemented, your App Shortcuts are available in:
 3. Verify Siri executes the intent
 
 **Example**:
+
 - You: "Order coffee in CoffeeApp"
 - Siri: "What size and type?"
 - You: "Medium latte"
 - Siri: "Your medium latte is ordered for pickup"
 
 **If Siri doesn't recognize phrase:**
+
 - Check phrase includes `\(.applicationName)`
 - Verify phrase is in appShortcuts array
 - Try simpler phrases (3-6 words ideal)
@@ -679,6 +695,7 @@ Once implemented, your App Shortcuts are available in:
 4. Tap to execute
 
 **If shortcut doesn't appear in Spotlight:**
+
 - Wait a few minutes (indexing delay)
 - Restart device
 - Check System Settings → Siri & Search → [Your App] → Show App in Search
@@ -717,6 +734,7 @@ struct CoffeeAppShortcuts: AppShortcutsProvider {
 ### 1. Phrase Design
 
 #### ❌ DON'T: Long, complex phrases
+
 ```swift
 phrases: [
     "I would like to order a coffee from \(.applicationName) please"
@@ -724,6 +742,7 @@ phrases: [
 ```
 
 #### ✅ DO: Short, natural phrases
+
 ```swift
 phrases: [
     "Order coffee in \(.applicationName)",
@@ -732,6 +751,7 @@ phrases: [
 ```
 
 **Guidelines:**
+
 - 3-6 words ideal
 - Start with verb (Order, Start, Get, Show)
 - Include `\(.applicationName)` for disambiguation
@@ -742,12 +762,14 @@ phrases: [
 ### 2. Shortcut Quantity
 
 #### ❌ DON'T: Provide 20+ shortcuts
+
 ```swift
 // Bad: Overwhelming
 AppShortcut for every possible combination
 ```
 
 #### ✅ DO: Focus on 3-5 core actions
+
 ```swift
 // Good: Focused on common tasks
 AppShortcut(intent: OrderIntent(), /* ... */)
@@ -762,6 +784,7 @@ AppShortcut(intent: ViewOrdersIntent(), /* ... */)
 ### 3. Parameter Combinations
 
 #### ❌ DON'T: Parameterize every variant
+
 ```swift
 // Bad: Creates 12 shortcuts (3 sizes × 4 types)
 for size in CoffeeSize.allCases {
@@ -772,6 +795,7 @@ for size in CoffeeSize.allCases {
 ```
 
 #### ✅ DO: Provide generic + top 2-3 common cases
+
 ```swift
 // Good: Generic + common specific cases
 AppShortcut(intent: OrderIntent(), /* ... */)  // Generic
@@ -784,11 +808,13 @@ AppShortcut(intent: OrderIntent(type: .espresso, size: .small), /* ... */)  // Q
 ### 4. Short Titles
 
 #### ❌ DON'T: Verbose or redundant
+
 ```swift
 shortTitle: "Order Coffee from Coffee App"
 ```
 
 #### ✅ DO: Concise and clear
+
 ```swift
 shortTitle: "Order"
 ```
@@ -800,12 +826,14 @@ shortTitle: "Order"
 ### 5. System Images
 
 #### ❌ DON'T: Use custom images
+
 ```swift
 // Not supported
 shortImage: UIImage(named: "custom")
 ```
 
 #### ✅ DO: Use SF Symbols
+
 ```swift
 systemImageName: "cup.and.saucer.fill"
 ```

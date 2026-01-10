@@ -43,6 +43,7 @@ Scan the Xcode project and identify optimization opportunities in these categori
 4. **Compiler Flags** (LOW-MEDIUM IMPACT)
 
 For each finding, provide:
+
 - Category and severity (HIGH/MEDIUM/LOW)
 - Current configuration
 - Recommended fix
@@ -56,24 +57,29 @@ For each finding, provide:
 **Check Debug configuration**:
 
 Use Glob to locate project file:
+
 - Pattern: `**/*.xcodeproj/project.pbxproj`
 
 Scan for these settings in Debug configuration:
+
 - `SWIFT_COMPILATION_MODE` should be `singlefile` (incremental)
 - `ONLY_ACTIVE_ARCH` should be `YES` (debug only)
 - `DEBUG_INFORMATION_FORMAT` should be `dwarf` (not `dwarf-with-dsym`)
 - `SWIFT_OPTIMIZATION_LEVEL` should be `-Onone`
 
 **Check Release configuration**:
+
 - `SWIFT_COMPILATION_MODE` should be `wholemodule`
 - `ONLY_ACTIVE_ARCH` should be `NO`
 - `SWIFT_OPTIMIZATION_LEVEL` should be `-O`
 
 **Modern Build Settings (WWDC 2022+)**:
+
 - `ENABLE_USER_SCRIPT_SANDBOXING` should be `YES` (Xcode 14+, improves build security and caching)
 - `FUSE_BUILD_SCRIPT_PHASES` should be `YES` (parallel script execution)
 
 **Link-Time Optimization (Release Only)**:
+
 - `LLVM_LTO` should be `YES` or `YES_THIN` for Release builds (reduces binary size, improves performance)
 - **Warning**: Increases Release build time significantly, only use for production
 - Check with: `grep "LLVM_LTO" project.pbxproj`
@@ -86,6 +92,7 @@ grep -A 10 "shellScript" project.pbxproj
 ```
 
 **Red flags**:
+
 - Scripts running in ALL configurations (should skip debug when possible)
 - Expensive operations without conditional checks:
   - dSYM uploads
@@ -94,6 +101,7 @@ grep -A 10 "shellScript" project.pbxproj
   - Asset processing
 
 **Example fix**:
+
 ```bash
 # ❌ BAD - Runs in debug AND release
 firebase-crashlytics-upload-symbols
@@ -109,15 +117,18 @@ fi
 **Enable type checking warnings**:
 
 Check if these compiler flags are present:
+
 ```bash
 grep "OTHER_SWIFT_FLAGS" project.pbxproj
 ```
 
 Recommend adding:
+
 - `-warn-long-function-bodies 100` (warns if function takes >100ms to type-check)
 - `-warn-long-expression-type-checking 100` (warns if expression takes >100ms)
 
 **How to find slow files**:
+
 ```bash
 # Run build with timing
 xcodebuild -workspace YourApp.xcworkspace \
@@ -152,6 +163,7 @@ Recommend setting "Build Active Architecture Only" to YES for debug to maximize 
 ### 6. Build Timeline Analysis (Xcode 14+)
 
 **How to access Build Timeline**:
+
 1. Build your project in Xcode
 2. Open Report Navigator (Cmd+9)
 3. Select most recent build
@@ -159,12 +171,14 @@ Recommend setting "Build Active Architecture Only" to YES for debug to maximize 
 5. Look for timeline view showing task duration
 
 **What to look for**:
+
 - Tasks taking >10 seconds (optimization candidates)
 - Sequential tasks that could be parallelized
 - Script phases blocking compilation
 - Redundant asset processing
 
 **Actionable fixes from Build Timeline**:
+
 - Move slow scripts to background (`.alwaysOutOfDate = false`)
 - Split large targets into smaller frameworks
 - Enable build phase parallelization
@@ -174,12 +188,14 @@ Recommend setting "Build Active Architecture Only" to YES for debug to maximize 
 ### Step 1: Find Xcode Project
 
 Use Glob to find Xcode project files:
+
 - Workspaces: `**/*.xcworkspace`
 - Projects: `**/*.xcodeproj`
 
 ### Step 2: Locate project.pbxproj
 
 Use Glob to find project configuration:
+
 - Pattern: `**/*.xcodeproj/project.pbxproj`
 
 ### Step 3: Scan Build Settings
@@ -217,6 +233,7 @@ grep "OTHER_SWIFT_FLAGS" project.pbxproj
 ## Output Format
 
 Generate a "Build Performance Optimization Report" with:
+
 1. **Summary**: Potential time savings, counts by severity (HIGH/MEDIUM/LOW)
 2. **Issues by severity**: HIGH first, then MEDIUM, then LOW
 3. **Each issue includes**: Current value, Issue description, Fix, Implementation steps, Expected impact
@@ -229,4 +246,3 @@ Generate a "Build Performance Optimization Report" with:
 3. **Be specific** - Exact settings names, exact values, exact steps
 4. **Check configurations separately** - Debug vs Release have different optimal settings
 5. **Provide commands** - Give exact bash commands for verification
-

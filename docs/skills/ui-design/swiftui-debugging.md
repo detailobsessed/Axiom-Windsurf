@@ -12,6 +12,7 @@ Diagnostic decision trees for SwiftUI issues. Covers view update failures, previ
 ## When to Use This Skill
 
 Use this skill when you're:
+
 - A view isn't updating when you expect it to
 - Preview crashes or won't load
 - Layout looks wrong on specific devices or screen sizes
@@ -34,17 +35,20 @@ Questions you can ask Claude that will draw from this skill:
 ## What's Covered
 
 ### View Not Updating Decision Tree
+
 - **Struct Mutation** — Direct mutation doesn't trigger updates; reassign the full value
 - **Lost Binding Identity** — Passing `.constant()` or recreating bindings breaks two-way connection
 - **Accidental View Recreation** — Conditionals destroy and recreate views, resetting @State
 - **Missing Observer Pattern** — @Observable vs ObservableObject usage
 
 ### Preview Crashes Decision Tree
+
 - **Missing Dependencies** — Views need @EnvironmentObject or environment values
 - **State Initialization Failures** — Array bounds, optional unwraps, invalid defaults
 - **Cache Corruption** — When code builds but preview fails
 
 ### Layout Issues Quick Reference
+
 - ZStack ordering and zIndex
 - GeometryReader sizing constraints
 - SafeArea handling
@@ -52,11 +56,13 @@ Questions you can ask Claude that will draw from this skill:
 - frame() vs fixedSize() behavior
 
 ### View Identity
+
 - Structural vs explicit identity
 - When `.id()` helps vs hurts
 - State preservation with `.opacity()` instead of conditionals
 
 ### Debugging Tools
+
 - `Self._printChanges()` for understanding update triggers
 - Debug View Hierarchy for layout inspection
 

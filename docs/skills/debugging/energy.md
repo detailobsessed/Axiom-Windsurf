@@ -11,6 +11,7 @@ Power Profiler workflows for identifying and fixing battery drain. Covers CPU, G
 ## When to Use This Skill
 
 Use this skill when you're:
+
 - App appears at top of Battery Settings
 - Device gets hot during normal use
 - Users report battery drain in reviews
@@ -37,35 +38,41 @@ Questions you can ask Claude that will draw from this skill:
 ## What's Covered
 
 ### Power Profiler Workflow
+
 - Running baseline measurement (5 min)
 - Identifying dominant subsystem
 - Before/after verification
 
 ### CPU Subsystem
+
 - Timer leaks and polling loops
 - Eager loading vs lazy loading
 - Background task duration
 - Repeated parsing
 
 ### GPU Subsystem
+
 - Animation visibility (hidden views still animate)
 - Blur effects over dynamic content
 - Complex compositing (shadows, masks)
 - Frame rate optimization
 
 ### Network Subsystem
+
 - Polling vs push notifications
 - Request batching
 - Discretionary flag for background
 - Connection coalescing
 
 ### Location Subsystem
+
 - Continuous updates vs significant-change
 - Accuracy requirements
 - Background location modes
 - Deferred location updates
 
 ### Display Subsystem
+
 - Dark mode for OLED battery savings
 - Reduce brightness API usage
 - EDR (Extended Dynamic Range) impact

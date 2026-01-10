@@ -11,6 +11,7 @@ Reliable UI testing with condition-based waiting patterns. Covers Recording UI A
 ## When to Use This Skill
 
 Use this skill when you're:
+
 - Writing UI tests for the first time
 - Tests pass locally but fail in CI
 - Tests use `sleep()` and are flaky
@@ -34,36 +35,42 @@ Questions you can ask Claude that will draw from this skill:
 ## What's Covered
 
 ### Condition-Based Waiting
+
 - `waitForExistence(timeout:)` instead of `sleep()`
 - `XCTNSPredicateExpectation` for element disappearance
 - Predicate-based waiting for specific states
 - Appropriate timeouts (2s UI, 10s network, 30s max)
 
 ### Recording UI Automation (Xcode 26)
+
 - Three phases: Record → Replay → Review
 - Accessibility identifiers as foundation
 - Query selection (stable identifiers over labels)
 - Video debugging with UI element overlays
 
 ### Accessibility-First Testing
+
 - `.accessibilityIdentifier()` for stable element queries
 - Avoiding hardcoded localized labels
 - Accessibility Inspector for reviewing elements
 - `performAccessibilityAudit()` in tests
 
 ### Test Plans
+
 - Multiple device/language configurations
 - Video and screenshot capture settings
 - Right-to-left language testing
 - Xcode Cloud integration
 
 ### Network Conditioning
+
 - Network Link Conditioner for slow network simulation
 - 3G profile for edge case failures
 - Longer timeouts for slow networks
 - Catch device + network combination failures
 
 ### Debugging Test Failures
+
 - Video review workflow
 - UI element overlay at failure point
 - Crash log analysis

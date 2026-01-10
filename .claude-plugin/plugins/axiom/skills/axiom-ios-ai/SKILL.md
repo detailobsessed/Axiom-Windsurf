@@ -11,6 +11,7 @@ user-invocable: false
 ## When to Use
 
 Use this router when:
+
 - Implementing Apple Intelligence features
 - Using Foundation Models
 - Working with LanguageModelSession
@@ -23,6 +24,7 @@ Use this router when:
 ### Foundation Models Work
 
 **Implementation patterns** → `/skill axiom-foundation-models`
+
 - LanguageModelSession basics
 - @Generable structured output
 - Tool protocol integration
@@ -31,12 +33,14 @@ Use this router when:
 - 26 WWDC code examples
 
 **API reference** → `/skill axiom-foundation-models-ref`
+
 - Complete API documentation
 - All @Generable examples
 - Tool protocol patterns
 - Streaming generation patterns
 
 **Diagnostics** → `/skill axiom-foundation-models-diag`
+
 - AI response blocked
 - Generation slow
 - Guardrail violations
@@ -55,6 +59,7 @@ User asks about Apple Intelligence
 ## Critical Patterns
 
 **foundation-models**:
+
 - LanguageModelSession setup
 - @Generable for structured output
 - Tool protocol for function calling
@@ -62,6 +67,7 @@ User asks about Apple Intelligence
 - Dynamic schema evolution
 
 **foundation-models-diag**:
+
 - Blocked response handling
 - Performance optimization
 - Guardrail violations

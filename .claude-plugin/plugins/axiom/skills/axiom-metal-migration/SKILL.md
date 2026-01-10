@@ -13,6 +13,7 @@ Porting OpenGL/OpenGL ES or DirectX code to Metal on Apple platforms.
 ## When to Use This Skill
 
 Use this skill when:
+
 - Porting an OpenGL/OpenGL ES codebase to iOS/macOS
 - Porting a DirectX codebase to Apple platforms
 - Deciding between translation layer (MetalANGLE) vs native rewrite
@@ -104,6 +105,7 @@ glClear(GL_COLOR_BUFFER_BIT)
 ### When MetalANGLE Fails
 
 MetalANGLE will NOT work if your code:
+
 - Uses OpenGL ES extensions not in core ES 2/3
 - Relies on compute shaders (GL_COMPUTE_SHADER)
 - Requires precise GL state machine semantics
@@ -218,6 +220,7 @@ class MetalRenderer: NSObject, MTKViewDelegate {
 ### Anti-Pattern 1: Keeping GL State Machine Mentality
 
 ❌ **BAD** — Thinking in GL's implicit state:
+
 ```swift
 // GL mental model: "set state, then draw"
 glBindTexture(GL_TEXTURE_2D, texture)
@@ -228,6 +231,7 @@ glDrawArrays(GL_TRIANGLES, 0, vertexCount)
 ```
 
 ✅ **GOOD** — Metal's explicit model:
+
 ```swift
 // Metal: encode everything explicitly per draw
 let encoder = commandBuffer.makeRenderCommandEncoder(descriptor: rpd)!
@@ -244,6 +248,7 @@ encoder.endEncoding()
 ### Anti-Pattern 2: Ignoring Coordinate System Differences
 
 ❌ **BAD** — Assuming GL coordinates work in Metal:
+
 ```
 OpenGL:
 - Origin: bottom-left
@@ -259,6 +264,7 @@ Metal:
 ```
 
 ✅ **GOOD** — Explicit coordinate handling:
+
 ```metal
 // Option 1: Flip Y in vertex shader
 vertex float4 vertexShader(VertexIn in [[stage_in]]) {
@@ -290,11 +296,13 @@ let texture = try textureLoader.newTexture(URL: url, options: options)
 ### Anti-Pattern 3: No Validation Layer During Development
 
 ❌ **BAD** — Disabling validation for "performance":
+
 ```swift
 // No validation — API misuse silently corrupts or crashes later
 ```
 
 ✅ **GOOD** — Always enable during development:
+
 ```
 In Xcode: Edit Scheme → Run → Diagnostics
 ✓ Metal API Validation
@@ -307,6 +315,7 @@ In Xcode: Edit Scheme → Run → Diagnostics
 ### Anti-Pattern 4: Single Buffer Without Synchronization
 
 ❌ **BAD** — CPU and GPU fight over same buffer:
+
 ```swift
 // Frame N: CPU writes to buffer
 // Frame N: GPU reads from buffer
@@ -315,6 +324,7 @@ buffer.contents().copyMemory(from: data, byteCount: size)
 ```
 
 ✅ **GOOD** — Triple buffering with semaphore:
+
 ```swift
 class TripleBufferedRenderer {
     let inflightSemaphore = DispatchSemaphore(value: 3)
@@ -352,6 +362,7 @@ class TripleBufferedRenderer {
 **Pressure**: "We can optimize later. Users won't notice 20% overhead."
 
 **Why this fails**:
+
 - Translation overhead compounds with complex scenes (visualizers, games)
 - No compute shader support limits future features
 - Technical debt grows — team learns MetalANGLE quirks, not Metal
@@ -368,6 +379,7 @@ class TripleBufferedRenderer {
 **Pressure**: "They're just text files. How hard can shader conversion be?"
 
 **Why this fails**:
+
 - GLSL → MSL isn't 1:1 (precision qualifiers, built-ins, sampling)
 - Each shader needs visual validation, not just compilation
 - Complex shaders need performance profiling
@@ -383,6 +395,7 @@ class TripleBufferedRenderer {
 **Pressure**: "GPU tools are overkill. I know what I'm doing."
 
 **Why this fails**:
+
 - Print statements don't work in shaders
 - Visual bugs require seeing intermediate render targets
 - Performance issues require GPU timeline analysis

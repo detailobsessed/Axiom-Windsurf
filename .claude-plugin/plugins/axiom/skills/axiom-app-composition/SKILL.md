@@ -12,6 +12,7 @@ xcode_version: Xcode 26+
 ## When to Use This Skill
 
 Use this skill when:
+
 - Structuring your @main entry point and root view
 - Managing authentication state (login → onboarding → main)
 - Switching between app-level states without flicker
@@ -76,6 +77,7 @@ What app-level architecture question are you solving?
 > "Apps have discrete states. Model them explicitly with enums, not scattered booleans."
 
 Every non-trivial app has distinct states: loading, unauthenticated, onboarding, authenticated, error recovery. These states should be:
+
 1. **Explicit** — An enum, not multiple booleans
 2. **Validated** — Transitions are checked and logged
 3. **Centralized** — One source of truth
@@ -98,6 +100,7 @@ class AppState {
 ```
 
 **Problems**
+
 - No compile-time guarantee of valid states
 - Easy to forget to update one boolean
 - Testing requires checking all combinations
@@ -323,6 +326,7 @@ class ColorExtractor {
 ```
 
 **Why this matters for app composition**
+
 - App-level state changes (loading → authenticated) should be **synchronous**
 - Heavy work (session validation, data loading) should be **async in the model**
 - This separation makes state machines testable without SwiftUI imports
@@ -355,11 +359,13 @@ struct MyApp: App {
 ```
 
 **What @main does**
+
 - Creates AppStateController
 - Injects it via environment
 - Triggers initialization
 
 **What @main does NOT do**
+
 - Business logic
 - Auth checks
 - Conditional rendering
@@ -395,6 +401,7 @@ struct RootView: View {
 ### Problem: Flash of Wrong Content
 
 When app state changes, you might see a flash of the old screen before the new one appears. This happens when:
+
 - State changes before view is ready
 - No transition animation
 - Loading state too short to perceive
@@ -588,6 +595,7 @@ extension AppStateController {
 From Apple documentation: SceneStorage provides automatic state restoration. The system manages saving and restoring on your behalf.
 
 **Key constraints**
+
 - Keep data lightweight (not full models)
 - Each Scene has its own storage (not shared)
 - Data destroyed when scene is explicitly destroyed
@@ -680,6 +688,7 @@ struct ContentView: View {
 ```
 
 **Key patterns from WWDC**
+
 - Store **IDs only**, not full model objects
 - Use `compactMap` to handle deleted items gracefully
 - Save on every `objectWillChange` for real-time persistence
@@ -752,6 +761,7 @@ struct MyApp: App {
 ```
 
 **Key behaviors from Apple docs**
+
 - If a window with the same value already exists, the system **brings it to front** instead of opening a new one
 - SwiftUI persists the binding value for state restoration
 - Use unique identifier strings for each window group
@@ -1055,6 +1065,7 @@ struct MyApp: App {
 ```
 
 **Problems**
+
 - @main becomes bloated with logic
 - Hard to test without launching app
 - State scattered across multiple @State
@@ -1089,6 +1100,7 @@ struct MyApp: App {
 ```
 
 **Problems**
+
 - Session could have expired
 - User could have been logged out on another device
 - Data could have been deleted
@@ -1129,6 +1141,7 @@ struct ProfileView: View {
 ```
 
 **Problems**
+
 - Circular dependencies
 - Hard to test navigation
 - Changes ripple across modules
@@ -1162,6 +1175,7 @@ class AppCoordinator {
 ```
 
 **Problems**
+
 - Massive file that everyone touches
 - Merge conflicts
 - Single point of failure
@@ -1187,6 +1201,7 @@ class OrderCoordinator { }     // Order flow, history, details
 > "We only have one flow right now. Just show MainView directly, we'll add auth later."
 
 ### Red Flags
+
 - "We'll add X later" → Tech debt that compounds
 - "It's just one flow" → Flows multiply
 - "Keep it simple" → Simplicity now, complexity later
@@ -1205,6 +1220,7 @@ class OrderCoordinator { }     // Order flow, history, details
 ### What to Do
 
 1. Create minimal AppStateController with two states:
+
    ```swift
    enum AppState {
        case loading
@@ -1213,6 +1229,7 @@ class OrderCoordinator { }     // Order flow, history, details
    ```
 
 2. When auth is needed, add states:
+
    ```swift
    enum AppState {
        case loading

@@ -20,6 +20,7 @@ Direct SQLite access using [GRDB.swift](https://github.com/groue/GRDB.swift) —
 ## When to Use GRDB
 
 #### Use raw GRDB when you need
+
 - ✅ Complex SQL joins across 4+ tables
 - ✅ Window functions (ROW_NUMBER, RANK, LAG/LEAD)
 - ✅ Reactive queries with ValueObservation
@@ -29,11 +30,13 @@ Direct SQLite access using [GRDB.swift](https://github.com/groue/GRDB.swift) —
 **Note:** SQLiteData now supports GROUP BY (`.group(by:)`) and HAVING (`.having()`) via the query builder — see the `axiom-sqlitedata-ref` skill.
 
 #### Use SQLiteData instead when
+
 - Type-safe `@Table` models are sufficient
 - CloudKit sync needed
 - Prefer declarative queries over SQL
 
 #### Use SwiftData when
+
 - Simple CRUD with native Apple integration
 - Don't need raw SQL control
 
@@ -44,18 +47,23 @@ Direct SQLite access using [GRDB.swift](https://github.com/groue/GRDB.swift) —
 These are real questions developers ask that this skill is designed to answer:
 
 #### 1. "I need to query messages with their authors and count of reactions in one query. How do I write the JOIN?"
+
 → The skill shows complex JOIN queries with multiple tables and aggregations
 
 #### 2. "I want to observe a filtered list and update the UI whenever notes with a specific tag change."
+
 → The skill covers ValueObservation patterns for reactive query updates
 
 #### 3. "I'm importing thousands of chat records and need custom migration logic. How do I use DatabaseMigrator?"
+
 → The skill explains migration registration, data transforms, and safe rollback patterns
 
 #### 4. "My query is slow (takes 10+ seconds). How do I profile and optimize it?"
+
 → The skill covers EXPLAIN QUERY PLAN, database.trace for profiling, and index creation
 
 #### 5. "I need to fetch tasks grouped by due date with completion counts, ordered by priority. Raw SQL seems easier than type-safe queries."
+
 → The skill demonstrates when GRDB's raw SQL is clearer than type-safe wrappers
 
 ---
@@ -477,6 +485,7 @@ try await database.database.write { db in
 ```
 
 #### Common scenarios
+
 - Complex JOIN queries
 - Custom migrations
 - Bulk SQL operations
@@ -520,16 +529,19 @@ ValueObservation.tracking { db in
 ### Red Flags — When GRDB Queries Slow Down
 
 If you see ANY of these symptoms:
+
 - ❌ Complex JOIN query takes 10+ seconds
 - ❌ ValueObservation runs on every single change (battery drain)
 - ❌ Can't explain why migration ran twice on old version
 
 #### DO NOT
+
 1. Blindly add indexes (don't know which columns help)
 2. Move logic to Swift (premature escape from database)
 3. Over-engineer migrations (distrust the system)
 
 #### DO
+
 1. Profile with `database.trace`
 2. Use `EXPLAIN QUERY PLAN` to understand execution
 3. Trust GRDB's migration versioning system
@@ -567,6 +579,7 @@ try database.write { db in
 ```
 
 #### Time cost
+
 - Profile: 10 min (enable trace, run query, read output)
 - Understand: 5 min (interpret EXPLAIN QUERY PLAN)
 - Fix: 5 min (add index)
@@ -597,6 +610,7 @@ ValueObservation.tracking { db in
 ```
 
 #### Decision framework
+
 - Small datasets (<1000 records): Use plain `.tracking`
 - Medium datasets (1-10k records): Add `.removeDuplicates()` + `.debounce()`
 - Large datasets (10k+ records): Use explicit table dependencies or predicates
@@ -624,43 +638,52 @@ try migrator.migrate(dbQueue)
 ```
 
 #### You don't need defensive SQL (IF NOT EXISTS)
+
 - GRDB tracks which migrations have run
 - Running `migrate()` twice only executes new ones
 - Over-engineering adds complexity without benefit
 
-#### Trust it.
+#### Trust it
 
 ---
 
 ## Common Mistakes
 
 ### ❌ Not using transactions for batch writes
+
 ```swift
 for track in 50000Tracks {
     try dbQueue.write { db in try track.insert(db) }  // 50k transactions!
 }
 ```
+
 **Fix** Single transaction with batches
 
 ### ❌ Synchronous database access on main thread
+
 ```swift
 let tracks = try dbQueue.read { db in try Track.fetchAll(db) }  // Blocks UI
 ```
+
 **Fix** Use async/await or dispatch to background queue
 
 ### ❌ Forgetting to add indexes
+
 ```swift
 // Slow query without index
 try Track.filter(Column("genre") == "Rock").fetchAll(db)
 ```
+
 **Fix** Create indexes on frequently queried columns
 
 ### ❌ N+1 queries
+
 ```swift
 for track in tracks {
     let album = try Album.fetchOne(db, key: track.albumId)  // N queries!
 }
 ```
+
 **Fix** Use JOIN or batch fetch
 
 ---

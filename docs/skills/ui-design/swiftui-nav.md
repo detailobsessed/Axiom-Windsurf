@@ -13,6 +13,7 @@ Navigation architecture patterns for modern SwiftUI. Covers NavigationStack, Nav
 ## When to Use This Skill
 
 Use this skill when you're:
+
 - Choosing navigation architecture (NavigationStack vs NavigationSplitView vs TabView)
 - Implementing programmatic navigation with NavigationPath
 - Setting up deep linking and URL routing
@@ -36,36 +37,43 @@ Questions you can ask Claude that will draw from this skill:
 ## What's Covered
 
 ### Architecture Decision Tree
+
 - NavigationStack vs NavigationSplitView vs TabView
 - Device targets and content hierarchy depth
 - Multiplatform requirements
 
 ### NavigationStack Patterns
+
 - NavigationPath manipulation (push, pop, pop-to-root)
 - Type-safe navigation with navigationDestination(for:)
 - Value-based navigation
 
 ### NavigationSplitView Patterns
+
 - Two-column and three-column layouts
 - Column visibility control
 - Detail placeholder views
 
 ### Deep Linking
+
 - URL parsing and path construction
 - onOpenURL handling and timing issues
 - Universal links integration
 
 ### State Restoration
+
 - Codable NavigationPath persistence
 - SceneStorage for automatic save/restore
 - Crash-resistant restoration patterns
 
 ### iOS 18+ Tab/Sidebar
+
 - Tab role for customization
 - Sidebar integration
 - Adaptive layout patterns
 
 ### Coordinator/Router Patterns
+
 - When coordinators add value vs complexity
 - Router implementation examples
 - Navigation flow separation

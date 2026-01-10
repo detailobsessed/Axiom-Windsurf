@@ -5,6 +5,7 @@ Deploy custom machine learning models on Apple devices with CoreML. Covers model
 ## Overview
 
 CoreML enables on-device machine learning inference across all Apple platforms:
+
 - **Model conversion** - PyTorch/TensorFlow to CoreML format
 - **Model compression** - Quantization, palettization, pruning for smaller models
 - **Stateful models** - KV-cache for efficient LLM inference
@@ -15,6 +16,7 @@ CoreML enables on-device machine learning inference across all Apple platforms:
 ## When to Use This Skill
 
 Use when you need to:
+
 - ☑ Convert PyTorch or TensorFlow models to CoreML
 - ☑ Compress models to fit on device (quantization, palettization)
 - ☑ Deploy large language models with KV-cache

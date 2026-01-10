@@ -50,6 +50,7 @@ CoreML issue
 **Cause**: Model compiled for newer OS than device supports.
 
 **Diagnosis**:
+
 ```python
 # Check model's minimum deployment target
 import coremltools as ct
@@ -67,6 +68,7 @@ print(model.get_spec().specificationVersion)
 | 9 | iOS 18 |
 
 **Fix**: Re-convert with lower deployment target:
+
 ```python
 mlmodel = ct.convert(
     traced,
@@ -85,12 +87,14 @@ mlmodel = ct.convert(
 **Cause**: Unsupported operations for target compute unit.
 
 **Diagnosis**:
+
 1. Open model in Xcode
 2. Create Performance Report
 3. Check "Unsupported" operations
 4. Hover for hints
 
 **Fix**:
+
 ```swift
 // Force CPU-only to bypass unsupported GPU/NE operations
 let config = MLModelConfiguration()
@@ -99,6 +103,7 @@ let model = try MLModel(contentsOf: url, configuration: config)
 ```
 
 **Better fix**: Update model precision or operations during conversion:
+
 ```python
 # Float16 often better supported
 mlmodel = ct.convert(traced, compute_precision=ct.precision.FLOAT16)
@@ -111,6 +116,7 @@ mlmodel = ct.convert(traced, compute_precision=ct.precision.FLOAT16)
 **Symptom**: Model fails to load with unclear error.
 
 **Checklist**:
+
 1. Check file exists and is readable
 2. Check compiled vs source model (runtime needs `.mlmodelc`)
 3. Check available disk space (cache needs room)
@@ -131,18 +137,21 @@ config.parameters = [.reporter: { print($0) }]  // iOS 17+
 **Cause**: Device specialization not cached.
 
 **Diagnosis**:
+
 1. Profile with Core ML Instrument
 2. Look at Load event label:
    - "prepare and cache" = cache miss (slow)
    - "cached" = cache hit (fast)
 
 **Why cache misses**:
+
 - First launch after install
 - System update invalidated cache
 - Low disk space cleared cache
 - Model file was modified
 
 **Mitigation**:
+
 ```swift
 // Warm cache in background at app launch
 Task.detached(priority: .background) {
@@ -159,6 +168,7 @@ Task.detached(priority: .background) {
 **Symptom**: Predictions consistently slow, not just first one.
 
 **Diagnosis**:
+
 1. Create Xcode Performance Report
 2. Check compute unit distribution
 3. Look for high-cost operations
@@ -173,6 +183,7 @@ Task.detached(priority: .background) {
 | Dynamic shapes recompiling | Use fixed/enumerated shapes |
 
 **Profile compute unit usage**:
+
 ```swift
 let plan = try await MLComputePlan.load(contentsOf: modelURL)
 for op in plan.modelStructure.operations {
@@ -190,6 +201,7 @@ for op in plan.modelStructure.operations {
 **Cause**: Different hardware characteristics.
 
 **Diagnosis**:
+
 ```swift
 // Check available compute
 let devices = MLModel.availableComputeDevices
@@ -215,6 +227,7 @@ print(devices)  // Different per device
 **Cause**: Input/output buffers accumulating from concurrent predictions.
 
 **Diagnosis**:
+
 ```
 Instruments → Allocations + Core ML template
 Look for: Many concurrent prediction intervals
@@ -222,6 +235,7 @@ Check: MLMultiArray allocations growing
 ```
 
 **Fix**: Limit concurrent predictions:
+
 ```swift
 actor PredictionLimiter {
     private let maxConcurrent = 2
@@ -247,6 +261,7 @@ actor PredictionLimiter {
 **Cause**: Model too large for device memory.
 
 **Diagnosis**:
+
 ```bash
 # Check model size
 ls -lh Model.mlpackage/Data/com.apple.CoreML/weights/
@@ -269,6 +284,7 @@ ls -lh Model.mlpackage/Data/com.apple.CoreML/weights/
 **Symptom**: Model output degraded after palettization.
 
 **Diagnosis**:
+
 1. What bit depth? (2-bit most likely to fail)
 2. What granularity? (per-tensor loses more than per-grouped-channel)
 
@@ -299,6 +315,7 @@ from coremltools.optimize.torch.palettization import DKMPalettizer
 **Symptom**: Model output degraded after INT8/INT4 quantization.
 
 **Diagnosis**:
+
 1. What bit depth?
 2. What granularity?
 
@@ -327,15 +344,18 @@ quantized = compressor.compress(calibration_loader)
 **Symptom**: Model output degraded after weight pruning.
 
 **Diagnosis**:
+
 1. What sparsity level?
 2. Post-training or training-time?
 
 **Thresholds** (model-dependent):
+
 - 0-30% sparsity: Usually safe
 - 30-50% sparsity: May need calibration
 - 50%+ sparsity: Usually needs training-time
 
 **Fix**:
+
 ```python
 # Use calibration-based pruning
 from coremltools.optimize.torch.pruning import LayerwiseCompressor
@@ -355,6 +375,7 @@ sparse = compressor.compress(calibration_loader)
 **Symptom**: Conversion fails with unsupported operation error.
 
 **Diagnosis**:
+
 ```
 Error: "Op 'custom_op' is not supported for conversion"
 ```
@@ -362,17 +383,20 @@ Error: "Op 'custom_op' is not supported for conversion"
 **Options**:
 
 1. **Check if op is in coremltools**: May need newer version
+
 ```bash
 pip install --upgrade coremltools
 ```
 
-2. **Use composite ops**: Split into supported primitives
+1. **Use composite ops**: Split into supported primitives
+
 ```python
 # Instead of custom_op(x)
 # Use: supported_op1(supported_op2(x))
 ```
 
-3. **Register custom op**: Advanced, requires MIL programming
+1. **Register custom op**: Advanced, requires MIL programming
+
 ```python
 from coremltools.converters.mil import Builder as mb
 
@@ -391,30 +415,35 @@ def custom_op(context, node):
 **Diagnosis checklist**:
 
 1. **Input normalization**: Ensure preprocessing matches
+
 ```python
 # PyTorch often uses ImageNet normalization
 # CoreML may need explicit preprocessing
 ```
 
-2. **Shape ordering**: PyTorch (NCHW) vs CoreML (NHWC for some ops)
+1. **Shape ordering**: PyTorch (NCHW) vs CoreML (NHWC for some ops)
+
 ```python
 # Check shapes in conversion
 ct.convert(..., inputs=[ct.ImageType(shape=(1, 3, 224, 224))])
 ```
 
-3. **Precision differences**: Float16 may differ from Float32
+1. **Precision differences**: Float16 may differ from Float32
+
 ```python
 # Force Float32 to match PyTorch
 ct.convert(..., compute_precision=ct.precision.FLOAT32)
 ```
 
-4. **Random ops**: Dropout, random initialization differ
+1. **Random ops**: Dropout, random initialization differ
+
 ```python
 # Ensure eval mode
 model.eval()
 ```
 
 **Debug**:
+
 ```python
 # Compare outputs layer by layer
 import numpy as np
@@ -432,6 +461,7 @@ print(f"Max diff: {np.max(np.abs(torch_output - coreml_output))}")
 **Wrong approach**: Assume simulator bug, ignore.
 
 **Right approach**:
+
 1. Check model spec version vs device iOS version (Pattern 1a)
 2. Check compute unit availability (Pattern 2c)
 3. Profile on actual device, not simulator
@@ -444,6 +474,7 @@ print(f"Max diff: {np.max(np.abs(torch_output - coreml_output))}")
 **Wrong approach**: Compress to smallest possible size without testing.
 
 **Right approach**:
+
 1. Ship Float16 baseline first
 2. Profile on target devices
 3. Apply compression incrementally with accuracy testing

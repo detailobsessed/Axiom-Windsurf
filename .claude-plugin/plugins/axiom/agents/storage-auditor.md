@@ -58,6 +58,7 @@ You are an expert at detecting file storage mistakes that cause data loss, backu
 ## Your Mission
 
 Run a comprehensive storage audit and report all issues with:
+
 - File:line references for easy fixing
 - Severity ratings (CRITICAL/HIGH/MEDIUM/LOW)
 - Specific fix recommendations
@@ -66,6 +67,7 @@ Run a comprehensive storage audit and report all issues with:
 ## Files to Exclude
 
 Skip these from audit (false positive sources):
+
 - `*Tests.swift` - Test files have different patterns
 - `*Previews.swift` - Preview providers are special cases
 - `*/Pods/*` - Third-party code
@@ -76,11 +78,13 @@ Skip these from audit (false positive sources):
 ## Output Limits
 
 If >50 issues in one category:
+
 - Show top 10 examples
 - Provide total count
 - List top 3 files with most issues
 
 If >100 total issues:
+
 - Summarize by category
 - Show only CRITICAL/HIGH details
 - Always show: Severity counts, top 3 files by issue count
@@ -93,6 +97,7 @@ If >100 total issues:
 **Risk**: iOS aggressively purges tmp/ - users lose data
 
 Files that should NOT be in tmp/:
+
 - Downloads (should be Caches/ with isExcludedFromBackup)
 - User content (should be Documents/)
 - App state (should be Application Support/)
@@ -103,11 +108,13 @@ Files that should NOT be in tmp/:
 **Risk**: User's iCloud quota filled unnecessarily
 
 Should be excluded:
+
 - Downloaded media (can re-download)
 - Cached API responses
 - Generated content (can regenerate)
 
 Should NOT be excluded:
+
 - User-created content
 - App data that can't be regenerated
 
@@ -117,6 +124,7 @@ Should NOT be excluded:
 **Risk**: Sensitive data not encrypted at rest
 
 All files should have explicit protection:
+
 - Sensitive data → `.complete`
 - Most app data → `.completeUntilFirstUserAuthentication`
 - Public caches → `.none`
@@ -124,6 +132,7 @@ All files should have explicit protection:
 ### 4. Wrong Storage Location (HIGH - Various Issues)
 
 **Anti-Patterns**:
+
 - User content in Application Support/ (not visible in Files app)
 - Re-downloadable content in Documents/ (backup bloat)
 - App data in tmp/ (data loss)
@@ -141,6 +150,7 @@ Should use files or database instead.
 ### Step 1: Find All Swift Files
 
 Use Glob tool:
+
 ```
 **/*.swift
 ```
@@ -150,12 +160,14 @@ Use Glob tool:
 Run these grep searches:
 
 **Files Written to tmp/**:
+
 ```bash
 # Look for tmp/ path usage
 tmp/|NSTemporaryDirectory
 ```
 
 **Large Files Without Backup Exclusion**:
+
 ```bash
 # Files written to Documents or Application Support without isExcludedFromBackup
 fileSystemRepresentation.*Documents|Documents.*write|Application Support.*write
@@ -164,6 +176,7 @@ fileSystemRepresentation.*Documents|Documents.*write|Application Support.*write
 Then check if isExcludedFromBackup is set nearby.
 
 **Missing File Protection**:
+
 ```bash
 # File writes without protection specification
 \.write\(to:|Data\(contentsOf:|FileManager.*createFile
@@ -172,12 +185,14 @@ Then check if isExcludedFromBackup is set nearby.
 Then check if .completeFileProtection or FileProtectionType is specified.
 
 **Wrong Storage Locations**:
+
 ```bash
 # Check for hardcoded paths (should use FileManager URLs)
 /Documents/|/Library/|/tmp/
 ```
 
 **UserDefaults Abuse**:
+
 ```bash
 # Large data in UserDefaults
 UserDefaults.*set.*Data\(|UserDefaults.*set.*\[
@@ -188,20 +203,24 @@ Then check file size via Read tool.
 ### Step 3: Categorize by Severity
 
 **CRITICAL** (Data Loss Risk):
+
 - Files written to tmp/ that aren't truly temporary
 - User content in purgeable location
 
 **HIGH** (Major Impact):
+
 - Large files (>1MB) in Documents/ without isExcludedFromBackup
 - Files in wrong location (user content in hidden location)
 - Re-downloadable content in backed-up location
 
 **MEDIUM** (Moderate Impact):
+
 - Missing file protection on sensitive data
 - UserDefaults storing >1MB
 - Layout constants without scaling
 
 **LOW** (Best Practices):
+
 - Could use better directory
 - Could optimize storage usage
 
@@ -234,9 +253,11 @@ Then check file size via Read tool.
 ## HIGH Issues
 
 ### Large Files Missing isExcludedFromBackup
+
 - `src/Cache/ImageCache.swift:67` - Writing images to Documents/ without backup exclusion
   - **Impact**: 500MB of images backed to iCloud (wastes user quota)
   - **Fix**: Either move to Caches/ OR set isExcludedFromBackup:
+
   ```swift
   var resourceValues = URLResourceValues()
   resourceValues.isExcludedFromBackup = true  // Can re-download
@@ -244,9 +265,11 @@ Then check file size via Read tool.
   ```
 
 ### Files in Wrong Location
+
 - `src/Models/UserData.swift:89` - User documents in Application Support/
   - **Impact**: User can't find their files in Files app
   - **Fix**: Move to Documents/ directory:
+
   ```swift
   let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
   ```
@@ -254,17 +277,21 @@ Then check file size via Read tool.
 ## MEDIUM Issues
 
 ### Missing File Protection
+
 - `src/Services/AuthManager.swift:34` - Writing token without file protection
   - **Risk**: Sensitive data not encrypted at rest
   - **Fix**: Specify protection level:
+
   ```swift
   try tokenData.write(to: tokenURL, options: .completeFileProtection)
   ```
 
 ### UserDefaults Abuse
+
 - `src/Settings/SettingsManager.swift:123` - Storing 2MB data in UserDefaults
   - **Impact**: Performance degradation on launch
   - **Fix**: Use file storage instead:
+
   ```swift
   let appSupportURL = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
   let settingsURL = appSupportURL.appendingPathComponent("settings.json")
@@ -299,10 +326,12 @@ Truly temporary (<1 hour lifetime)?
 ## Related Skills
 
 For comprehensive storage guidance:
+
 - Use `/skill axiom:storage` for storage decision framework
 - Use `/skill axiom:storage-diag` for debugging missing files
 - Use `/skill axiom:file-protection-ref` for encryption details
 - Use `/skill axiom:storage-management-ref` for purging policies
+
 ```
 
 ## Audit Guidelines

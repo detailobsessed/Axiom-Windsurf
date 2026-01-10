@@ -15,6 +15,7 @@ Comprehensive SwiftUI gesture patterns with composition, state management, and a
 ## Key Features
 
 ### Gesture Types
+
 - **TapGesture** — Single and multi-tap recognition
 - **DragGesture** — Pan and swipe interactions
 - **LongPressGesture** — Press and hold actions
@@ -22,28 +23,33 @@ Comprehensive SwiftUI gesture patterns with composition, state management, and a
 - **RotationGesture** — Two-finger rotation
 
 ### Gesture Composition
+
 - **Simultaneously** — Multiple gestures at once (drag + pinch)
 - **Sequenced** — One after another (long press → drag)
 - **Exclusively** — Only one wins (double-tap OR single-tap)
 
 ### State Management
+
 - **GestureState** — Temporary state during gesture (auto-resets)
 - **State** — Permanent committed values
 - **Transaction** — Animation customization during gestures
 
 ### Advanced Patterns
+
 - Custom gesture creation conforming to Gesture protocol
 - Velocity and predicted end location
 - Coordinate space handling (local, global, named)
 - Performance optimization (minimize work in .onChanged)
 
 ### Accessibility
+
 - VoiceOver integration with accessibilityAdjustableAction
 - Keyboard alternatives for macOS
 - Touch target size compliance
 - Proper accessibility traits for custom gestures
 
 ### Cross-Platform
+
 - iOS touch gestures
 - macOS mouse and trackpad
 - visionOS spatial gestures
@@ -60,6 +66,7 @@ Comprehensive SwiftUI gesture patterns with composition, state management, and a
 ## Examples
 
 ### Basic Drag with GestureState
+
 ```swift
 @GestureState private var dragOffset = CGSize.zero
 @State private var position = CGSize.zero
@@ -82,6 +89,7 @@ var body: some View {
 ```
 
 ### Composed Gestures (Drag + Pinch)
+
 ```swift
 Image("photo")
   .offset(dragOffset)
@@ -101,6 +109,7 @@ Image("photo")
 ```
 
 ### Accessible Custom Gesture
+
 ```swift
 Image("slider")
   .gesture(

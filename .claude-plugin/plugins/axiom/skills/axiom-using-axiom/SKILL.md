@@ -45,6 +45,7 @@ When multiple Axiom skills could apply, use this priority:
 3. **Implementation details** (ios-integration, axiom-ios-ai, axiom-ios-vision) — These guide specific feature work
 
 Examples:
+
 - "Xcode build failed" → ios-build first (environment)
 - "Add SwiftUI screen" → ios-ui first (architecture), then maybe ios-integration if using system features
 - "App is slow" → ios-performance first (diagnose), then fix the specific domain
@@ -53,6 +54,7 @@ Examples:
 ## iOS Project Detection
 
 Axiom skills apply when:
+
 - Working directory contains `.xcodeproj` or `.xcworkspace`
 - User mentions iOS, Swift, Xcode, SwiftUI, UIKit
 - User asks about Apple frameworks (SwiftData, CloudKit, etc.)
@@ -77,6 +79,7 @@ Axiom uses **router skills** for progressive disclosure:
 ## When Axiom Skills Don't Apply
 
 Skip Axiom skills for:
+
 - Non-iOS/Swift projects (Android, web, backend)
 - Generic programming questions unrelated to Apple platforms
 - Questions about Claude Code itself (use claude-code-guide skill)

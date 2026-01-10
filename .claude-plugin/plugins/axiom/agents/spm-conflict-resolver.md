@@ -45,6 +45,7 @@ You are an expert at diagnosing and resolving Swift Package Manager dependency c
 ## Your Mission
 
 Analyze Package.swift and Package.resolved to:
+
 - Identify version conflicts between packages
 - Detect duplicate symbol issues
 - Find Swift version mismatches
@@ -52,6 +53,7 @@ Analyze Package.swift and Package.resolved to:
 - Fix platform compatibility issues
 
 Report findings with:
+
 - Specific conflict details
 - Resolution options (ranked by preference)
 - Exact commands to run
@@ -60,10 +62,12 @@ Report findings with:
 ## Files to Analyze
 
 **Required**:
+
 - `Package.swift` - Package manifest
 - `Package.resolved` - Resolved versions (if exists)
 
 **Also check**:
+
 - `*.xcodeproj/project.pbxproj` - Xcode project packages
 - `.swiftpm/` - SPM cache/state
 
@@ -75,12 +79,14 @@ Report findings with:
 **Symptom**: `dependency X could not be resolved because...`
 
 **Detection**:
+
 ```bash
 swift package show-dependencies --format json 2>&1 | grep -i "could not be resolved"
 swift package diagnose-api-breaking-changes
 ```
 
 **Resolution Strategy**:
+
 1. Check if newer versions of conflicting packages exist
 2. Widen version range constraints if safe
 3. Fork and patch the stricter package
@@ -102,6 +108,7 @@ swift package diagnose-api-breaking-changes
 **Symptom**: `duplicate symbol _... in: ... and ...`
 
 **Detection**:
+
 ```bash
 # Check for duplicate framework linking
 grep -r "frameworks" *.xcodeproj/project.pbxproj | grep -i "duplicate"
@@ -115,6 +122,7 @@ swift package show-dependencies --format json 2>/dev/null | grep -o '"identity"[
 ```
 
 **Resolution Strategy**:
+
 1. Ensure package is listed only once in Package.swift
 2. Check for packages that bundle the same dependency
 3. Use `package` vs `target` linking appropriately
@@ -135,12 +143,14 @@ swift package show-dependencies --format json 2>/dev/null | grep -o '"identity"[
 **Symptom**: `module was compiled with Swift 5 mode but client is using Swift 6`
 
 **Detection**:
+
 ```bash
 grep -r "swiftLanguageMode" Package.swift
 grep -r "swift-tools-version" Package.swift
 ```
 
 **Resolution Strategy**:
+
 1. Update package to Swift 6 compatible version
 2. Set explicit language mode for problematic targets
 3. Use `.enableExperimentalFeature("StrictConcurrency")` as bridge
@@ -172,6 +182,7 @@ let package = Package(
 **Symptom**: `No such module 'X'` for a dependency of a dependency
 
 **Detection**:
+
 ```bash
 # Check if Package.resolved is in sync
 swift package resolve 2>&1
@@ -181,6 +192,7 @@ swift package show-dependencies
 ```
 
 **Resolution Strategy**:
+
 ```bash
 # Full reset
 rm -rf .build
@@ -194,12 +206,14 @@ swift package resolve
 **Symptom**: `macro target requires Xcode 15+` or sandbox errors
 
 **Detection**:
+
 ```bash
 grep -r "macro" Package.swift
 grep -r ".macro(" Package.swift
 ```
 
 **Resolution Strategy**:
+
 1. Ensure Xcode 15+ for macro support
 2. Trust the macro package in Xcode
 3. Add `--disable-sandbox` for command-line builds if needed
@@ -218,12 +232,14 @@ swift build --disable-sandbox
 **Symptom**: `package requires minimum iOS 17 but target is iOS 16`
 
 **Detection**:
+
 ```bash
 grep -r "platforms:" Package.swift
 grep -r ".iOS\|.macOS\|.watchOS" Package.swift
 ```
 
 **Resolution Strategy**:
+
 1. Update your minimum deployment target
 2. Use older package version compatible with your target
 3. Conditionally include package with platform checks
@@ -261,11 +277,13 @@ swift package diagnose-api-breaking-changes 2>&1 || true
 ### Step 2: Identify Conflicts
 
 **Version conflicts**:
+
 ```bash
 swift package resolve 2>&1 | grep -i "could not be resolved\|conflict\|incompatible"
 ```
 
 **Build failures**:
+
 ```bash
 swift build 2>&1 | head -50
 ```
@@ -314,27 +332,33 @@ cat deps.json | jq '.dependencies[].dependencies[] | .name' | sort | uniq -c | s
    # Check latest versions
    git ls-remote --tags https://github.com/Example/PackageB
    ```
+
    Then update Package.swift:
+
    ```swift
    .package(url: "https://github.com/Example/PackageB", from: "3.0.0")
    ```
 
-2. **Fork and Patch**
+1. **Fork and Patch**
    If no compatible version exists:
+
    ```bash
    git clone https://github.com/Example/PackageB
    # Update its Package.swift to allow Alamofire 5.8+
    # Push to your fork
    ```
+
    ```swift
    .package(url: "https://github.com/YourFork/PackageB", branch: "alamofire-5.8")
    ```
 
-3. **Pin to Specific Versions**
+2. **Pin to Specific Versions**
    Force specific version of shared dependency:
+
    ```swift
    .package(url: "https://github.com/Alamofire/Alamofire", exact: "5.4.4")
    ```
+
    ⚠️ May break features in PackageA
 
 ## HIGH Issues
@@ -345,6 +369,7 @@ cat deps.json | jq '.dependencies[].dependencies[] | .name' | sort | uniq -c | s
 **Issue**: Compiled with Swift 5 mode, your target uses Swift 6
 
 **Resolution**:
+
 ```swift
 // Add to target's swiftSettings
 .target(
@@ -359,6 +384,7 @@ cat deps.json | jq '.dependencies[].dependencies[] | .name' | sort | uniq -c | s
 ```
 
 Or use gradual migration:
+
 ```swift
 .enableExperimentalFeature("StrictConcurrency")
 ```
@@ -398,6 +424,7 @@ MyApp
 ## Verification
 
 After resolution:
+
 ```bash
 # Clean build
 rm -rf .build && swift build
@@ -408,6 +435,7 @@ swift test
 # Check for warnings
 swift build 2>&1 | grep -i warning
 ```
+
 ```
 
 ## When No Issues Found
@@ -432,10 +460,13 @@ No conflicts detected.
   ```bash
   swift package update
   ```
+
 - Check for security advisories:
+
   ```bash
   swift package diagnose-api-breaking-changes
   ```
+
 ```
 
 ## Common SPM Commands Reference

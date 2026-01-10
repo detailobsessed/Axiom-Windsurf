@@ -14,6 +14,7 @@ Systematic diagnostics for file storage issues — files disappearing, access er
 ## Red Flags
 
 If you see:
+
 - Files mysteriously disappear after device restart
 - Files disappear randomly (weeks later)
 - App backup size unexpectedly large (>500 MB)

@@ -24,6 +24,7 @@ user-invocable: false
 ### Example migration
 
 #### Before (BSD Sockets)
+
 ```c
 // BEFORE — Blocking, manual DNS, error-prone
 var hints = addrinfo()
@@ -43,6 +44,7 @@ data.withUnsafeBytes { ptr in
 ```
 
 #### After (NWConnection)
+
 ```swift
 // AFTER — Non-blocking, automatic DNS, type-safe
 let connection = NWConnection(
@@ -66,6 +68,7 @@ connection.start(queue: .main)
 ```
 
 ### Benefits
+
 - 20 lines → 10 lines
 - No manual DNS, no blocking, no unsafe pointers
 - Automatic Happy Eyeballs, proxy support, WiFi Assist
@@ -75,6 +78,7 @@ connection.start(queue: .main)
 ## Migration 2: From NWConnection to NetworkConnection (iOS 26+)
 
 ### Why migrate
+
 - Async/await eliminates callback hell
 - TLV framing and Coder protocol built-in
 - No [weak self] needed (async/await handles cancellation)
@@ -94,6 +98,7 @@ connection.start(queue: .main)
 ### Example migration
 
 #### Before (NWConnection)
+
 ```swift
 // BEFORE — Completion handlers, manual memory management
 let connection = NWConnection(host: "example.com", port: 443, using: .tls)
@@ -138,6 +143,7 @@ func receiveData() {
 ```
 
 #### After (NetworkConnection)
+
 ```swift
 // AFTER — Async/await, automatic memory management
 let connection = NetworkConnection(
@@ -175,6 +181,7 @@ func sendAndReceive() async throws {
 ```
 
 ### Benefits
+
 - 30 lines → 15 lines
 - No callback nesting, no [weak self]
 - Errors propagate naturally with throws
@@ -185,11 +192,13 @@ func sendAndReceive() async throws {
 ## Migration 3: From URLSession StreamTask to NetworkConnection
 
 ### When to migrate
+
 - Need UDP (StreamTask only supports TCP)
 - Need custom protocols beyond TCP/TLS
 - Need low-level control (packet pacing, ECN, service class)
 
 ### When to STAY with URLSession
+
 - Doing HTTP/HTTPS (URLSession optimized for this)
 - Need WebSocket support
 - Need built-in caching, cookie handling
@@ -197,6 +206,7 @@ func sendAndReceive() async throws {
 ### Example migration
 
 #### Before (URLSession StreamTask)
+
 ```swift
 // BEFORE — URLSession for TCP/TLS stream
 let task = URLSession.shared.streamTask(withHostName: "example.com", port: 443)
@@ -221,6 +231,7 @@ task.readData(ofMinLength: 10, maxLength: 10, timeout: 10) { data, atEOF, error 
 ```
 
 #### After (NetworkConnection)
+
 ```swift
 // AFTER — NetworkConnection for TCP/TLS
 let connection = NetworkConnection(

@@ -58,6 +58,7 @@ You are an expert at detecting TextKit 1 fallback triggers and deprecated text l
 ## Your Mission
 
 Run a comprehensive TextKit audit and report all issues with:
+
 - File:line references for easy fixing
 - Severity ratings (CRITICAL/HIGH/MEDIUM)
 - Specific violation types
@@ -66,6 +67,7 @@ Run a comprehensive TextKit audit and report all issues with:
 ## Files to Exclude
 
 Skip these from audit (false positive sources):
+
 - `*Tests.swift` - Test files have different patterns
 - `*Previews.swift` - Preview providers are special cases
 - `*/Pods/*` - Third-party code
@@ -76,11 +78,13 @@ Skip these from audit (false positive sources):
 ## Output Limits
 
 If >50 issues in one category:
+
 - Show top 10 examples
 - Provide total count
 - List top 3 files with most issues
 
 If >100 total issues:
+
 - Summarize by category
 - Show only CRITICAL/HIGH details
 - Always show: Severity counts, top 3 files by issue count
@@ -88,31 +92,37 @@ If >100 total issues:
 ## What You Check
 
 ### 1. TextKit 1 Fallback Triggers (CRITICAL)
+
 **Pattern**: Direct `.layoutManager` access without checking `.textLayoutManager` first
 **Issue**: One-way fallback to TextKit 1, loses Writing Tools, incorrect complex script handling
 **Fix**: Check `textLayoutManager` first, only fall back for old OS versions
 
 ### 2. NSLayoutManager Usage (CRITICAL)
+
 **Pattern**: Using `NSLayoutManager` class or delegate
 **Issue**: TextKit 1 only, no Writing Tools, deprecated paradigm
 **Fix**: Migrate to `NSTextLayoutManager` (TextKit 2)
 
 ### 3. Glyph API Usage (CRITICAL)
+
 **Pattern**: `numberOfGlyphs`, `glyphRange`, `glyphIndex`, `rectForGlyph`, `characterIndex(forGlyphAt:)`
 **Issue**: Incorrect for complex scripts (Arabic, Kannada, Thai), data corruption risk
 **Fix**: Use `NSTextLayoutFragment` and `NSTextLineFragment` for measurement
 
 ### 4. NSRange with TextKit 2 (HIGH)
+
 **Pattern**: Using NSRange instead of NSTextRange/NSTextLocation with TextKit 2 APIs
 **Issue**: Wrong paradigm, breaks with structured documents
 **Fix**: Use `NSTextLocation` and `NSTextRange` for TextKit 2
 
 ### 5. Missing Writing Tools Integration (MEDIUM)
+
 **Pattern**: UITextView/NSTextView without `writingToolsBehavior` property
 **Issue**: No Writing Tools support (iOS 18+)
 **Fix**: Set `.writingToolsBehavior = .default` for full experience
 
 ### 6. Missing Writing Tools State Checks (MEDIUM)
+
 **Pattern**: Text mutations without checking `isWritingToolsActive`
 **Issue**: Can interfere with Writing Tools operation
 **Fix**: Check `isWritingToolsActive` before modifying text
@@ -122,11 +132,13 @@ If >100 total issues:
 ### Step 1: Find All Swift Files
 
 Use Glob tool to find Swift files:
+
 - Pattern: `**/*.swift`
 
 ### Step 2: Search for TextKit Anti-Patterns
 
 **Direct layoutManager Access** (Fallback Trigger):
+
 ```bash
 # Direct access without textLayoutManager check
 grep -rn "\.layoutManager\b" --include="*.swift" | grep -v "textLayoutManager"
@@ -137,6 +149,7 @@ grep -rn "textLayoutManager" --include="*.swift"
 ```
 
 **NSLayoutManager Usage** (TextKit 1):
+
 ```bash
 # NSLayoutManager class usage
 grep -rn "NSLayoutManager" --include="*.swift"
@@ -146,6 +159,7 @@ grep -rn ": NSLayoutManagerDelegate" --include="*.swift"
 ```
 
 **Glyph APIs** (Deprecated):
+
 ```bash
 # Glyph count queries
 grep -rn "numberOfGlyphs" --include="*.swift"
@@ -166,6 +180,7 @@ grep -rn "boundingRectForGlyphRange" --include="*.swift"
 ```
 
 **NSRange with TextKit 2**:
+
 ```bash
 # NSRange used with TextKit 2 APIs
 grep -rn "NSTextLayoutManager.*NSRange" --include="*.swift"
@@ -173,6 +188,7 @@ grep -rn "textLayoutManager.*NSRange" --include="*.swift"
 ```
 
 **Missing Writing Tools Integration**:
+
 ```bash
 # Find text views
 grep -rn "UITextView\|NSTextView" --include="*.swift"
@@ -187,14 +203,17 @@ grep -rn "isWritingToolsActive" --include="*.swift"
 ### Step 3: Categorize by Severity
 
 **CRITICAL** (Breaks Writing Tools, incorrect complex script handling):
+
 - Direct `.layoutManager` access (fallback trigger)
 - NSLayoutManager usage (TextKit 1 only)
 - Glyph APIs (data corruption with Arabic, Kannada, etc.)
 
 **HIGH** (Wrong paradigm):
+
 - NSRange with TextKit 2 APIs (should use NSTextRange)
 
 **MEDIUM** (Missing modern features):
+
 - Missing `writingToolsBehavior` property
 - Missing `isWritingToolsActive` checks
 
@@ -231,9 +250,11 @@ grep -rn "isWritingToolsActive" --include="*.swift"
   ```
 
 ### NSLayoutManager Usage (TextKit 1 Only)
+
 - `src/Helpers/TextMeasure.swift:67` - NSLayoutManager class used
   - **Risk**: No Writing Tools, incorrect handling of Arabic/Kannada text
   - **Fix**: Migrate to NSTextLayoutManager
+
   ```swift
   // TextKit 2 replacement for line counting
   var lineCount = 0
@@ -247,10 +268,12 @@ grep -rn "isWritingToolsActive" --include="*.swift"
   ```
 
 ### Glyph API Usage (Data Corruption Risk)
+
 - `src/Helpers/LineCounter.swift:89` - `numberOfGlyphs` used
   - **Risk**: Incorrect count for complex scripts (Arabic: 1 char = 2+ glyphs, Kannada: 1 char splits)
   - **Why broken**: Glyph ≠ character for ligatures, combining marks, right-to-left text
   - **Fix**: Use TextKit 2 fragment enumeration
+
   ```swift
   // TextKit 2 - no glyph APIs
   textLayoutManager.enumerateTextLayoutFragments(...) { fragment in
@@ -261,9 +284,11 @@ grep -rn "isWritingToolsActive" --include="*.swift"
 ## HIGH Issues
 
 ### NSRange with TextKit 2 APIs
+
 - `src/Views/SelectionHandler.swift:123` - NSRange used with NSTextLayoutManager
   - **Risk**: Wrong paradigm, breaks with structured documents
   - **Fix**: Convert to NSTextRange via NSTextContentManager
+
   ```swift
   // Convert NSRange → NSTextRange
   let startLocation = textContentManager.location(
@@ -280,18 +305,22 @@ grep -rn "isWritingToolsActive" --include="*.swift"
 ## MEDIUM Issues
 
 ### Missing Writing Tools Integration
+
 - `src/Views/NotesEditor.swift:34` - UITextView without writingToolsBehavior property
   - **Impact**: No Writing Tools support (iOS 18+)
   - **Fix**: Add Writing Tools configuration
+
   ```swift
   textView.writingToolsBehavior = .default  // Full experience
   textView.writingToolsResultOptions = [.richText, .list]
   ```
 
 ### Missing Writing Tools State Checks
+
 - `src/Services/SyncService.swift:201` - Text mutations without isWritingToolsActive check
   - **Impact**: Can interfere with Writing Tools operation
   - **Fix**: Check before modifying text
+
   ```swift
   func syncChanges() {
       guard !textView.isWritingToolsActive else { return }
@@ -302,11 +331,13 @@ grep -rn "isWritingToolsActive" --include="*.swift"
 ## TextKit Version Assessment
 
 **Current State**: [Describe which version is in use]
+
 - TextKit 2: [List TextKit 2 usage]
 - TextKit 1: [List TextKit 1 usage]
 - Mixed: [Describe if both are used]
 
 **Recommendation**:
+
 - If iOS 16+ only: Migrate fully to TextKit 2
 - If supporting iOS 15-: Use TextKit 2 with TextKit 1 fallback pattern
 - Writing Tools requires TextKit 2 (iOS 18+)
@@ -321,6 +352,7 @@ grep -rn "isWritingToolsActive" --include="*.swift"
 ## Testing Recommendations
 
 After fixes:
+
 ```bash
 # Test with complex scripts
 1. Enter Arabic text: "مرحبا"
@@ -341,6 +373,7 @@ After fixes:
 ## For Detailed TextKit 2 Guidance
 
 Use `/skill axiom:textkit-ref` for complete TextKit 2 architecture reference, migration patterns from TextKit 1, Writing Tools integration guide, and SwiftUI TextEditor + AttributedString patterns.
+
 ```
 
 ## Audit Guidelines

@@ -10,6 +10,7 @@ Quick automated scan to identify deprecated networking APIs and anti-patterns in
 ## What It Scans
 
 ### Deprecated APIs
+
 | Pattern | Risk | Replacement |
 |---------|------|-------------|
 | SCNetworkReachability | Race condition | NWConnection waiting state |
@@ -19,6 +20,7 @@ Quick automated scan to identify deprecated networking APIs and anti-patterns in
 | getaddrinfo() | Blocking operation | NWConnection (automatic) |
 
 ### Anti-Patterns
+
 | Pattern | Risk | Fix |
 |---------|------|-----|
 | Reachability check before connect | Race condition | Use waitsForConnectivity |

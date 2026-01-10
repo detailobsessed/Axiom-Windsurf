@@ -16,6 +16,7 @@ version: 1.0.0
 ## When to Use This Skill
 
 ✅ **Use this skill when**:
+
 - Starting a new project and deciding concurrency strategy
 - Debugging Swift 6 concurrency errors (actor isolation, data races, Sendable warnings)
 - Deciding when to introduce async/await vs concurrency
@@ -28,6 +29,7 @@ version: 1.0.0
 - UI feels unresponsive and profiling shows main thread bottleneck
 
 ❌ **Do NOT use this skill for**:
+
 - General Swift syntax (use Swift documentation)
 - SwiftUI-specific patterns (use `axiom-swiftui-debugging` or `axiom-swiftui-performance`)
 - API-specific patterns (use API documentation)
@@ -46,6 +48,7 @@ Single-Threaded → Asynchronous → Concurrent → Actors
 ```
 
 **When to advance**:
+
 1. **Stay single-threaded** if UI is responsive and operations are fast
 2. **Add async/await** when high-latency operations (network, file I/O) block UI
 3. **Add concurrency** when CPU-intensive work (image processing, parsing) freezes UI
@@ -78,11 +81,13 @@ class ImageModel {
 ```
 
 **Main Actor Mode** (Xcode 26+):
+
 - Enabled by default for new projects
 - All code protected by `@MainActor` unless explicitly marked otherwise
 - Access shared state safely without worrying about concurrent access
 
 **Build Setting** (Xcode 26+):
+
 ```
 Build Settings → Swift Compiler — Language
 → "Default Actor Isolation" = Main Actor
@@ -122,6 +127,7 @@ func fetchAndDisplayImage(url: URL) async throws {
 ```
 
 **What happens**:
+
 1. Function starts on main thread
 2. `await` suspends function without blocking main thread
 3. URLSession fetches data on background thread (library handles this)
@@ -161,11 +167,13 @@ Main Thread Timeline:
 ```
 
 **Benefits**:
+
 - Main thread never sits idle
 - Tasks make progress as soon as possible
 - No concurrency yet—still single-threaded!
 
 **When to use tasks**:
+
 - High-latency operations (network, file I/O)
 - Library APIs handle background work for you (URLSession, FileManager)
 - Your own code stays on main thread
@@ -208,6 +216,7 @@ func decodeImage(_ data: Data) async -> Image {
 ```
 
 **What `@concurrent` does**:
+
 - Function always switches to background thread pool
 - Compiler highlights main actor data access (shows what you need to fix)
 - Cannot access `@MainActor` properties without `await`
@@ -230,11 +239,13 @@ func decodeImage(_ data: Data) -> Image {
 ```
 
 **When to use `nonisolated`**:
+
 - Library APIs where **caller decides** where work happens
 - Small operations that might be OK on main thread
 - General-purpose code used in many contexts
 
 **When to use `@concurrent`**:
+
 - Operations that **should always** run on background (image processing, parsing)
 - Performance-critical work that shouldn't block UI
 
@@ -314,6 +325,7 @@ Background Pool: [Task A] → [Task B] → [Task A resumes]
 ```
 
 **Key points**:
+
 - System manages thread pool size (1-2 threads on Watch, many on Mac)
 - Task can resume on different thread than it started
 - You never specify which thread—system optimizes automatically
@@ -384,6 +396,7 @@ class ImageModel {
 ```
 
 **What changed**:
+
 - `NetworkManager` is now an `actor` instead of `@MainActor class`
 - Network state isolated in its own actor
 - Background code can access network manager without hopping to main actor
@@ -392,11 +405,13 @@ class ImageModel {
 ### When to Use Actors
 
 ✅ **Use actors for**:
+
 - Non-UI subsystems with independent state (network manager, cache, database)
 - Data that's causing main actor contention
 - Separating concerns from UI code
 
 ❌ **Do NOT use actors for**:
+
 - UI-facing classes (ViewModels, View Controllers) → Use `@MainActor`
 - Model classes used by UI → Keep `@MainActor` or non-Sendable
 - Every class in your app (actors add complexity)
@@ -515,6 +530,7 @@ Keep model classes `@MainActor` or non-Sendable to prevent concurrent access.
 ### Sendable Checking
 
 Happens automatically when:
+
 - Passing data into/out of actors
 - Passing data into/out of tasks
 - Crossing actor boundaries with `await`
@@ -843,6 +859,7 @@ Build Settings → Swift Compiler — Concurrency
 ```
 
 **What this enables**:
+
 - Main actor mode (all code @MainActor by default)
 - Compile-time data race prevention
 - Progressive concurrency adoption
@@ -903,26 +920,31 @@ class MyViewModel: ObservableObject {
 ## Code Review Checklist
 
 ### Before Adding Concurrency
+
 - [ ] Profiled and confirmed UI unresponsiveness
 - [ ] Identified specific slow operations (network, CPU, contention)
 - [ ] Started with simplest solution (async → concurrent → actors)
 
 ### Async/Await
+
 - [ ] Used for high-latency operations only
 - [ ] Task creation in response to events
 - [ ] Error handling with do-catch
 
 ### Background Work
+
 - [ ] `@concurrent` for always-background work (Swift 6.2+)
 - [ ] `nonisolated` for library APIs
 - [ ] No blocking operations on main actor
 
 ### Sendable
+
 - [ ] Value types for data crossing actors
 - [ ] Classes stay @MainActor or non-Sendable
 - [ ] No concurrent modification of shared classes
 
 ### Actors
+
 - [ ] Only for non-UI subsystems
 - [ ] UI code stays @MainActor
 - [ ] Model classes stay @MainActor or non-Sendable

@@ -5,6 +5,7 @@ Implement speech-to-text with Apple's new SpeechAnalyzer API (iOS 26+). Powers N
 ## Overview
 
 SpeechAnalyzer is Apple's next-generation speech-to-text API:
+
 - **On-device processing** - Private, no server required
 - **Long-form audio** - Optimized for meetings, lectures, conversations
 - **Distant audio** - Works well with speakers across the room
@@ -15,6 +16,7 @@ SpeechAnalyzer is Apple's next-generation speech-to-text API:
 ## When to Use This Skill
 
 Use when you need to:
+
 - ☑ Transcribe live audio (microphone)
 - ☑ Transcribe audio files
 - ☑ Build Notes-like or Voice Memos-like features

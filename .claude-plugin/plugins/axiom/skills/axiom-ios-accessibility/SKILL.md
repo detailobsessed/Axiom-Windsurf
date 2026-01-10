@@ -11,6 +11,7 @@ user-invocable: false
 ## When to Use
 
 Use this router when:
+
 - Fixing VoiceOver issues
 - Implementing Dynamic Type
 - Checking color contrast
@@ -23,6 +24,7 @@ Use this router when:
 ### Accessibility Issues
 
 **All accessibility work** → `/skill axiom-accessibility-diag`
+
 - VoiceOver labels and hints
 - Dynamic Type scaling
 - Color contrast (WCAG)
@@ -42,6 +44,7 @@ User asks about accessibility
 ## Critical Pattern
 
 **accessibility-diag** covers:
+
 - 7 critical accessibility issues
 - WCAG compliance levels (A, AA, AAA)
 - Accessibility Inspector workflows

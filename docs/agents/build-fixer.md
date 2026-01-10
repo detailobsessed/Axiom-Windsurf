@@ -5,6 +5,7 @@ Automatically diagnoses and fixes Xcode build failures using environment-first d
 ## How to Use This Agent
 
 **Natural language (automatic triggering):**
+
 - "My build is failing"
 - "BUILD FAILED but no error details"
 - "Xcode says 'No such module'"
@@ -12,6 +13,7 @@ Automatically diagnoses and fixes Xcode build failures using environment-first d
 - "Getting 'Unable to boot simulator' error"
 
 **Explicit command:**
+
 ```bash
 /axiom:fix-build
 ```
@@ -19,11 +21,13 @@ Automatically diagnoses and fixes Xcode build failures using environment-first d
 ## What It Checks
 
 ### Environment Diagnostics (Mandatory)
+
 1. **Zombie xcodebuild processes** — 10+ processes = stuck builds
 2. **Derived Data size** — >10GB = stale cache
 3. **Simulator state** — Stuck in Booting/Shutting Down
 
 ### Common Issues Fixed
+
 - Zombie processes → `killall xcodebuild`
 - Stale Derived Data → Clean and rebuild
 - Stuck simulators → `xcrun simctl shutdown all`
@@ -35,6 +39,7 @@ Automatically diagnoses and fixes Xcode build failures using environment-first d
 **Core Principle**: 80% of "mysterious" Xcode issues are environment problems, not code bugs.
 
 **Workflow**:
+
 1. Run 3 mandatory diagnostic checks (30 seconds)
 2. Identify specific issue type
 3. Apply appropriate fix automatically
@@ -81,4 +86,5 @@ Estimated 30-45 minutes of manual debugging avoided
 ## Related Skills
 
 For detailed understanding of environment-first debugging:
+
 - **xcode-debugging** skill — Step-by-step diagnostic workflows

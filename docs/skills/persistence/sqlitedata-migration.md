@@ -14,6 +14,7 @@ Guide for migrating from SwiftData to SQLiteData, including decision framework, 
 ## When to Migrate
 
 ### Migrate to SQLiteData When
+
 - ✅ Need CloudKit record sharing (SwiftData only syncs, no sharing)
 - ✅ Have 50k+ records with performance concerns
 - ✅ Want value types (structs) over reference types (classes)
@@ -21,6 +22,7 @@ Guide for migrating from SwiftData to SQLiteData, including decision framework, 
 - ✅ Prefer explicit over magic behavior
 
 ### Stay with SwiftData When
+
 - Simple CRUD with native Apple integration
 - Already working well with @Model classes
 - Don't need CloudKit record sharing
@@ -31,6 +33,7 @@ Guide for migrating from SwiftData to SQLiteData, including decision framework, 
 ### Model Definition
 
 **SwiftData**
+
 ```swift
 @Model
 class Task {
@@ -47,6 +50,7 @@ class Task {
 ```
 
 **SQLiteData**
+
 ```swift
 @Table
 struct Task: Identifiable, Sendable {
@@ -60,12 +64,14 @@ struct Task: Identifiable, Sendable {
 ### Queries
 
 **SwiftData**
+
 ```swift
 @Query(filter: #Predicate { !$0.isComplete })
 var incompleteTasks: [Task]
 ```
 
 **SQLiteData**
+
 ```swift
 @FetchAll(Task.where { !$0.isComplete })
 var incompleteTasks: [Task]
@@ -74,6 +80,7 @@ var incompleteTasks: [Task]
 ### Relationships
 
 **SwiftData**
+
 ```swift
 @Model
 class Task {
@@ -83,6 +90,7 @@ class Task {
 ```
 
 **SQLiteData**
+
 ```swift
 @Table
 struct Task: Identifiable, Sendable {
@@ -100,12 +108,14 @@ struct Subtask: Identifiable, Sendable {
 ## Migration Strategy
 
 ### Gradual Migration
+
 1. Add SQLiteData alongside SwiftData
 2. Migrate one model at a time
 3. Keep both running during transition
 4. Remove SwiftData when complete
 
 ### Data Migration
+
 ```swift
 func migrateToSQLiteData() async throws {
     // Fetch from SwiftData
@@ -131,6 +141,7 @@ func migrateToSQLiteData() async throws {
 **SwiftData limitation**: Can only sync, cannot share records
 
 **SQLiteData advantage**:
+
 ```swift
 // Full CloudKit sharing support
 let share = CKShare(rootRecord: record)

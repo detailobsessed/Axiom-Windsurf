@@ -16,18 +16,23 @@ Safe database schema evolution for production apps with user data. **Core princi
 These are real questions developers ask that this skill is designed to answer:
 
 #### 1. "I need to add a new column to store user preferences, but the app is already live with user data. How do I do this safely?"
+
 → The skill covers safe additive patterns for adding columns without losing existing data, including idempotency checks
 
 #### 2. "I'm getting 'cannot add NOT NULL column' errors when I try to migrate. What does this mean and how do I fix it?"
+
 → The skill explains why NOT NULL columns fail with existing rows, and shows the safe pattern (nullable first, backfill later)
 
 #### 3. "I need to change a column from text to integer. Can I just ALTER the column type?"
+
 → The skill demonstrates the safe pattern: add new column → migrate data → deprecate old (NEVER delete)
 
 #### 4. "I'm adding a foreign key relationship between tables. How do I add the relationship without breaking existing data?"
+
 → The skill covers safe foreign key patterns: add column → populate data → add index (SQLite limitations explained)
 
 #### 5. "Users are reporting crashes after the last update. I changed a migration but the app is already in production. What do I do?"
+
 → The skill explains migrations are immutable after shipping; shows how to create a new migration to fix the issue rather than modifying the old one
 
 ---
@@ -42,7 +47,7 @@ These are real questions developers ask that this skill is designed to answer:
 ❌ **NEVER add NOT NULL column** without DEFAULT value
 ❌ **NEVER delete columns** (SQLite doesn't support DROP COLUMN safely)
 
-#### If you're tempted to do any of these, STOP and use the safe patterns below.
+#### If you're tempted to do any of these, STOP and use the safe patterns below
 
 ## Mandatory Rules
 
@@ -79,6 +84,7 @@ func migration00X_AddNewColumn() throws {
 ```
 
 #### Why this works
+
 - Nullable columns don't require DEFAULT
 - Existing rows get NULL automatically
 - No data transformation needed
@@ -233,6 +239,7 @@ func migration012_AddIndexes() throws {
 ```
 
 **Test 2** Fresh install (run all migrations, verify final schema)
+
 ```swift
 @Test func freshInstallCreatesCorrectSchema() async throws {
     let db = try Database(inMemory: true)
@@ -253,6 +260,7 @@ func migration012_AddIndexes() throws {
 ```
 
 **Test 3** Idempotency (run migrations twice, should not throw)
+
 ```swift
 @Test func migrationsAreIdempotent() async throws {
     let db = try Database(inMemory: true)
@@ -270,6 +278,7 @@ func migration012_AddIndexes() throws {
 ```
 
 #### Manual testing (before TestFlight)
+
 1. Install v(n-1) build on device → add real user data
 2. Install v(n) build (with new migration)
 3. Verify: App launches, data visible, no crashes
@@ -307,12 +316,14 @@ What are you trying to do?
 ## Common Mistakes
 
 ❌ **Adding NOT NULL without DEFAULT**
+
 ```swift
 // ❌ Fails on existing data
 ALTER TABLE albums ADD COLUMN rating INTEGER NOT NULL
 ```
 
 ✅ **Correct: Add as nullable first**
+
 ```swift
 ALTER TABLE albums ADD COLUMN rating INTEGER  // NULL allowed
 // Backfill in separate migration if needed

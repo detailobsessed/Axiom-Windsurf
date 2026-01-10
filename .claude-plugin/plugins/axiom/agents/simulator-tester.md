@@ -60,12 +60,15 @@ xcrun simctl boot "iPhone 16 Pro"
 ## Capabilities
 
 ### 1. Screenshot Capture
+
 ```bash
 xcrun simctl io booted screenshot /tmp/screenshot-$(date +%s).png
 ```
+
 **Use for**: Visual fixes, layout issues, error states, documentation
 
 ### 2. Video Recording
+
 ```bash
 # Start recording in background
 xcrun simctl io booted recordVideo /tmp/recording.mov &
@@ -77,16 +80,20 @@ sleep 2  # Wait for recording to start
 # Stop recording
 kill -INT $RECORDING_PID
 ```
+
 **Use for**: Animation issues, complex user flows, reproducing crashes
 
 ### 3. Location Simulation
+
 ```bash
 xcrun simctl location booted set 37.7749 -122.4194  # San Francisco
 xcrun simctl location booted clear  # Clear location
 ```
+
 **Common coords**: SF `37.7749 -122.4194`, NYC `40.7128 -74.0060`, London `51.5074 -0.1278`
 
 ### 4. Push Notification Testing
+
 ```bash
 # Create payload
 cat > /tmp/push.json << 'EOF'
@@ -98,6 +105,7 @@ xcrun simctl push booted com.example.YourApp /tmp/push.json
 ```
 
 ### 5. Permission Management
+
 ```bash
 # Grant permissions
 xcrun simctl privacy booted grant location-always com.example.YourApp
@@ -108,15 +116,18 @@ xcrun simctl privacy booted grant camera com.example.YourApp
 xcrun simctl privacy booted revoke location com.example.YourApp
 xcrun simctl privacy booted reset all com.example.YourApp
 ```
+
 **Available**: `location-always`, `location-when-in-use`, `photos`, `camera`, `microphone`, `contacts`, `calendar`
 
 ### 6. Deep Link Navigation
+
 ```bash
 xcrun simctl openurl booted myapp://settings/profile
 xcrun simctl openurl booted "https://example.com/product/123"
 ```
 
 ### 7. App Lifecycle
+
 ```bash
 xcrun simctl launch booted com.example.YourApp
 xcrun simctl terminate booted com.example.YourApp
@@ -124,12 +135,14 @@ xcrun simctl install booted /path/to/YourApp.app
 ```
 
 ### 8. Status Bar Override (for screenshots)
+
 ```bash
 xcrun simctl status_bar booted override --time "9:41" --batteryLevel 100 --cellularBars 4
 xcrun simctl status_bar booted clear
 ```
 
 ### 9. Log Capture
+
 ```bash
 # Stream logs for specific app
 xcrun simctl spawn booted log stream --predicate 'subsystem == "com.example.YourApp"' --style compact

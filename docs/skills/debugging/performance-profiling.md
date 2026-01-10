@@ -11,6 +11,7 @@ Decision trees to choose the right Instruments tool and interpret results correc
 ## When to Use This Skill
 
 Use this skill when you're:
+
 - App feels slow (UI lags, loads take 5+ seconds)
 - Memory grows over time in Xcode memory gauge
 - Battery drains fast (device gets hot)
@@ -51,28 +52,33 @@ App performance problem?
 ```
 
 ### Time Profiler Deep Dive
+
 - Self Time vs Total Time (critical distinction)
 - Call tree navigation
 - Identifying hot spots
 - Common misinterpretations
 
 ### Allocations Deep Dive
+
 - Object creation tracking
 - Growth patterns (leak vs cache)
 - Heap snapshots
 - Mark Generation technique
 
 ### Core Data Deep Dive
+
 - N+1 query detection with SQL logging
 - Prefetching patterns
 - Batch operation optimization
 
 ### Energy Impact
+
 - CPU/GPU/Network subsystem analysis
 - Background activity auditing
 - Location services impact
 
 ### Pressure Scenarios
+
 - Deadline pressure handling
 - Manager authority pressure
 - Misinterpretation prevention

@@ -44,6 +44,7 @@ You are an expert at migrating iOS apps to modern iOS 17/18+ patterns.
 ## Your Mission
 
 Scan the codebase for legacy patterns and provide migration paths:
+
 - `ObservableObject` → `@Observable`
 - `@StateObject` → `@State` with Observable
 - `@ObservedObject` → Direct property or `@Bindable`
@@ -52,6 +53,7 @@ Scan the codebase for legacy patterns and provide migration paths:
 - Completion handlers → async/await
 
 Report findings with:
+
 - File:line references
 - Priority (HIGH/MEDIUM/LOW based on benefit)
 - Migration code examples
@@ -71,6 +73,7 @@ Report findings with:
 **Requirement**: iOS 17+
 
 **Detection**:
+
 ```
 Grep: class.*ObservableObject
 Grep: : ObservableObject
@@ -99,6 +102,7 @@ class ContentViewModel {
 ```
 
 **Migration steps**:
+
 1. Replace `: ObservableObject` with `@Observable` macro
 2. Remove all `@Published` property wrappers
 3. Add `@ObservationIgnored` to properties that shouldn't trigger updates
@@ -111,6 +115,7 @@ class ContentViewModel {
 **Requirement**: iOS 17+ with @Observable model
 
 **Detection**:
+
 ```
 Grep: @StateObject
 ```
@@ -140,6 +145,7 @@ struct ContentView: View {
 **Requirement**: iOS 17+ with @Observable model
 
 **Detection**:
+
 ```
 Grep: @ObservedObject
 ```
@@ -174,6 +180,7 @@ struct ItemEditorView: View {
 ```
 
 **Decision tree**:
+
 - Need binding (`$item.property`)? → Use `@Bindable`
 - Just reading properties? → Use plain property (no wrapper)
 
@@ -184,6 +191,7 @@ struct ItemEditorView: View {
 **Requirement**: iOS 17+ with @Observable model
 
 **Detection**:
+
 ```
 Grep: @EnvironmentObject
 Grep: \.environmentObject\(
@@ -230,6 +238,7 @@ struct SettingsEditorView: View {
 **Requirement**: iOS 17+
 
 **Detection**:
+
 ```
 Grep: \.onChange\(of:.*perform:
 ```
@@ -258,6 +267,7 @@ Grep: \.onChange\(of:.*perform:
 **Requirement**: iOS 15+ (widely adopted in iOS 17+)
 
 **Detection**:
+
 ```
 Grep: completion:\s*@escaping
 Grep: completionHandler:
@@ -293,6 +303,7 @@ func fetchUser(id: String) async throws -> User {
 **Requirement**: iOS 17+
 
 **Detection**:
+
 ```
 Grep: withAnimation.*\{
 ```
@@ -323,22 +334,26 @@ Glob: **/*.swift
 ### Step 2: Detect Legacy Patterns
 
 **ObservableObject**:
+
 ```
 Grep: ObservableObject
 Grep: @Published
 ```
 
 **Property Wrappers**:
+
 ```
 Grep: @StateObject|@ObservedObject|@EnvironmentObject
 ```
 
 **Deprecated Modifiers**:
+
 ```
 Grep: onChange\(of:.*perform:
 ```
 
 **Completion Handlers**:
+
 ```
 Grep: completion:\s*@escaping
 Grep: completionHandler:
@@ -347,14 +362,17 @@ Grep: completionHandler:
 ### Step 3: Categorize by Priority
 
 **HIGH Priority** (significant benefits):
+
 - ObservableObject → @Observable
 - Property wrapper migrations
 
 **MEDIUM Priority** (code quality):
+
 - Deprecated modifiers
 - async/await adoption
 
 **LOW Priority** (minor improvements):
+
 - Animation syntax
 - Minor API updates
 
@@ -397,7 +415,7 @@ Grep: completionHandler:
    }
    ```
 
-2. `Models/UserSettings.swift:8`
+1. `Models/UserSettings.swift:8`
    [Similar migration...]
 
 #### Views to Update After Model Migration
@@ -411,6 +429,7 @@ Grep: completionHandler:
 ### @EnvironmentObject → @Environment
 
 - `Views/RootView.swift:45`
+
   ```swift
   // Current
   .environmentObject(settings)
@@ -420,6 +439,7 @@ Grep: completionHandler:
   ```
 
 - `Views/SettingsView.swift:12`
+
   ```swift
   // Current
   @EnvironmentObject var settings: AppSettings
@@ -433,6 +453,7 @@ Grep: completionHandler:
 ### Deprecated onChange Modifier
 
 - `Views/SearchView.swift:34`
+
   ```swift
   // Deprecated
   .onChange(of: query) { newValue in
@@ -474,8 +495,10 @@ Grep: completionHandler:
 ⚠️ **Deployment Target**: Full migration requires iOS 17+
 
 If you need to support iOS 16 or earlier:
+
 - Keep `ObservableObject` for those models
 - Use conditional compilation:
+
   ```swift
   #if os(iOS) && swift(>=5.9)
   @Observable
@@ -488,10 +511,12 @@ If you need to support iOS 16 or earlier:
 ## Verification
 
 After migration:
+
 1. Build and fix any compiler errors
 2. Test view updates (properties should still trigger UI refresh)
 3. Test bindings (TextField, Toggle still work)
 4. Test environment injection
+
 ```
 
 ## When No Migration Needed
@@ -548,12 +573,14 @@ Is view using @EnvironmentObject?
 ## False Positives to Avoid
 
 **Not issues**:
+
 - Third-party SDK types using ObservableObject
 - Models that intentionally support iOS 14-16
 - Combine publishers (not the same as @Published)
 - Already migrated code using @Observable
 
 **Check before reporting**:
+
 - Verify file is in your project, not dependencies
 - Check deployment target constraints
 - Confirm model is actually used in SwiftUI views

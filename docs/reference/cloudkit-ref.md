@@ -54,6 +54,7 @@ let syncEngine = try CKSyncEngine(config)
 **When to Use**: Only if CKSyncEngine doesn't fit (rare)
 
 **Core Types**:
+
 - CKContainer — Entry point
 - CKDatabase — Public/private/shared
 - CKRecord — Data record
@@ -120,14 +121,16 @@ if error.code == .serverRecordChanged {
 
 ## CloudKit Console Monitoring
 
-**Access**: https://icloud.developer.apple.com/dashboard
+**Access**: <https://icloud.developer.apple.com/dashboard>
 
 **Monitor**:
+
 - Error rates, latency (p50, p95, p99)
 - Request volume, bandwidth
 - Quota usage
 
 **Set Alerts**:
+
 - High error rate (>5%)
 - Quota approaching limit (>80%)
 

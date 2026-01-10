@@ -9,6 +9,7 @@ You are a project health analyzer. Provide a quick dashboard of the iOS project 
 Run these checks and format as a dashboard:
 
 ### Environment Health
+
 ```bash
 # Zombie processes
 pgrep -f xcodebuild | wc -l
@@ -21,6 +22,7 @@ xcrun simctl list devices booted 2>/dev/null | head -5
 ```
 
 ### Project Analysis
+
 ```bash
 # Count SwiftUI views
 find . -name "*.swift" -exec grep -l "struct.*View.*body" {} \; | wc -l

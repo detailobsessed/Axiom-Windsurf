@@ -20,6 +20,7 @@ Unified audit command with two modes: **Smart mode** analyzes your project and s
 ## Smart Mode
 
 When run without arguments, analyzes your project and recommends relevant audits based on:
+
 - Project type (SwiftUI vs UIKit)
 - Data models (Core Data, SwiftData)
 - Framework imports (CloudKit, Network.framework)
@@ -29,6 +30,7 @@ When run without arguments, analyzes your project and recommends relevant audits
 ## Available Audit Areas
 
 ### UI & Design
+
 | Area | What It Checks |
 |------|----------------|
 | `accessibility` | VoiceOver, Dynamic Type, WCAG compliance |
@@ -38,6 +40,7 @@ When run without arguments, analyzes your project and recommends relevant audits
 | `axiom-swiftui-performance` | Expensive operations in view bodies |
 
 ### Code Quality
+
 | Area | What It Checks |
 |------|----------------|
 | `concurrency` | Swift 6 data races, @MainActor violations |
@@ -45,6 +48,7 @@ When run without arguments, analyzes your project and recommends relevant audits
 | `axiom-codable` | Manual JSON building, error swallowing |
 
 ### Persistence & Storage
+
 | Area | What It Checks |
 |------|----------------|
 | `axiom-core-data` | Thread violations, N+1 queries |
@@ -52,6 +56,7 @@ When run without arguments, analyzes your project and recommends relevant audits
 | `axiom-storage` | File protection, backup exclusions |
 
 ### Integration
+
 | Area | What It Checks |
 |------|----------------|
 | `axiom-networking` | Deprecated APIs, anti-patterns |

@@ -29,6 +29,7 @@ Need speech-to-text?
 ```
 
 **SpeechAnalyzer advantages**:
+
 - Better for long-form and conversational audio
 - Works well with distant speakers (meetings)
 - On-device, private
@@ -40,6 +41,7 @@ Need speech-to-text?
 ## Red Flags
 
 Use this skill when you see:
+
 - "Live transcription"
 - "Transcribe audio"
 - "Speech-to-text"
@@ -82,6 +84,7 @@ func transcribe(file: URL, locale: Locale) async throws -> AttributedString {
 ```
 
 **Key points**:
+
 - `analyzeSequence(from:)` reads file and feeds audio to analyzer
 - `finalizeAndFinish(through:)` ensures all results are finalized
 - Results are `AttributedString` with timing metadata
@@ -436,12 +439,15 @@ try await ensureModel(for: transcriber)
 ## Options Reference
 
 ### TranscriptionOptions
+
 - Default: None (standard transcription)
 
 ### ReportingOptions
+
 - `.volatileResults`: Enable real-time approximate results
 
 ### AttributeOptions
+
 - `.audioTimeRange`: Include CMTimeRange for each text segment
 
 ## Platform Availability

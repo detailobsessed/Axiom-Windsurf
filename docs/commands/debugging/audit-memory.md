@@ -20,6 +20,7 @@ Scan your Swift codebase for the 6 most common memory leak patterns that cause c
 ## When to Use
 
 Run this command when:
+
 - App memory grows progressively during use
 - Seeing multiple instances of same view controller in Instruments
 - Crashes with "Memory limit exceeded" errors
@@ -31,6 +32,7 @@ Run this command when:
 ### 🔴 Critical (Crashes in Minutes)
 
 #### Timer Leaks
+
 ```swift
 // ❌ LEAKS: Timer never stops
 Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
@@ -48,6 +50,7 @@ deinit {
 ### 🟡 High Priority (Leaks Over Time)
 
 #### Observer Leaks
+
 ```swift
 // ❌ LEAKS: Observer never removed
 NotificationCenter.default.addObserver(
@@ -64,6 +67,7 @@ deinit {
 ```
 
 #### Closure Capture Leaks
+
 ```swift
 // ❌ LEAKS: Closure array captures self strongly
 var callbacks: [(Int) -> Void] = []
@@ -78,6 +82,7 @@ callbacks.append { [weak self] value in
 ```
 
 #### Delegate Cycles
+
 ```swift
 // ❌ LEAKS: Parent holds child, child holds parent
 class Parent {
@@ -96,6 +101,7 @@ class Child {
 ### 🟢 Medium Priority (Accumulation)
 
 #### View Callback Leaks
+
 ```swift
 // ❌ LEAKS: Completion retains view controller
 present(picker, animated: true) { [self] in
@@ -109,6 +115,7 @@ present(picker, animated: true) { [weak self] in
 ```
 
 #### PhotoKit Accumulation
+
 ```swift
 // ❌ LEAKS: Images cached indefinitely
 imageManager.startCachingImages(for: assets, ...)
@@ -128,6 +135,7 @@ deinit {
 ```
 
 The command will:
+
 1. Find all Swift files in your project
 2. Scan for the 6 leak patterns above
 3. Report findings with `file:line` references
@@ -168,6 +176,7 @@ For detailed fix patterns, use the [memory-debugging](/skills/debugging/memory-d
 ```
 
 The skill provides:
+
 - Complete fix patterns for all 6 leak types
 - Instruments profiling workflows
 - Debug reproduction strategies
@@ -176,11 +185,13 @@ The skill provides:
 ## Real-World Impact
 
 #### Before audit
+
 - 2-3 hours with Instruments finding leaks
 - Crashes discovered in production
 - Non-reproducible memory issues
 
 #### After audit
+
 - 2-5 minutes to identify leak candidates
 - Catch issues before Instruments needed
 - Proactive leak prevention

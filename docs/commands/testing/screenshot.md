@@ -62,6 +62,7 @@ For advanced simulator testing (location, push notifications, video recording, e
 ```
 
 Or invoke the simulator-tester agent with natural language:
+
 - "Test my app with location simulation"
 - "Send a test push notification"
 - "Record a video of the app"

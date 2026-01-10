@@ -10,6 +10,7 @@ Complete API reference for Network.framework. Covers NWConnection (iOS 12-25), N
 ## When to Use This Reference
 
 Use this reference when you need:
+
 - NWConnection state machine and patterns
 - NetworkConnection async/await APIs (iOS 26+)
 - TLV (Type-Length-Value) message framing
@@ -33,6 +34,7 @@ Questions you can ask Claude that will draw from this reference:
 ## What's Covered
 
 ### NWConnection (iOS 12-25)
+
 - Connection creation with endpoints
 - State machine and stateUpdateHandler
 - Completion-based send/receive
@@ -40,6 +42,7 @@ Questions you can ask Claude that will draw from this reference:
 - UDP batching
 
 ### NetworkConnection (iOS 26+)
+
 - Declarative protocol stacks
 - async/await send/receive
 - TLV built-in framing
@@ -47,12 +50,14 @@ Questions you can ask Claude that will draw from this reference:
 - State property observation
 
 ### Server Patterns
+
 - NWListener (iOS 12-25)
 - NetworkListener (iOS 26+)
 - Service discovery with Browser
 - Wi-Fi Aware peer-to-peer
 
 ### Advanced Features
+
 - Smart connection establishment (Happy Eyeballs)
 - Multipath TCP
 - TCP Fast Open

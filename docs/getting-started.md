@@ -28,6 +28,7 @@ Or, enable auto-updates for `axiom-marketplace` and restart Claude Code twice �
 ### Debugging Something?
 
 Tell Claude what's happening:
+
 - "My build is failing with [error]" → Claude uses xcode-debugging
 - "My app has a memory leak" → Claude uses memory-debugging
 - "SwiftUI view isn't updating" → Claude uses swiftui-debugging
@@ -35,6 +36,7 @@ Tell Claude what's happening:
 ### Building Something New?
 
 Ask about the feature:
+
 - "How do I implement Liquid Glass?" → Claude uses liquid-glass
 - "Help me add deep linking" → Claude uses swiftui-nav
 - "I need to add in-app purchases" → Claude uses in-app-purchases
@@ -42,6 +44,7 @@ Ask about the feature:
 ### Want a Code Review?
 
 Run audit commands:
+
 ```bash
 /axiom:audit              # Smart mode — suggests relevant audits
 /axiom:audit concurrency  # Check Swift 6 violations
@@ -52,24 +55,29 @@ Run audit commands:
 ## Finding Skills by Category
 
 ### Debugging & Performance
+
 - **xcode-debugging** — BUILD FAILED, simulator issues, environment diagnostics
 - **memory-debugging** — Memory growth, retain cycles, leak detection
 - **swiftui-debugging** — View update issues, preview crashes
 - **performance-profiling** — Instruments decision trees
 
 ### UI & Design
+
 - **liquid-glass** — iOS 26 material design system
 - **swiftui-nav** — NavigationStack, deep linking, state restoration
 - **hig** — Human Interface Guidelines quick decisions
 
 ### Data & Persistence
+
 - **swiftdata** — @Model, @Query, CloudKit integration
 - **database-migration** — Safe schema evolution
 
 ### Concurrency
+
 - **swift-concurrency** — Swift 6 strict concurrency, @MainActor, Sendable
 
 ### Networking
+
 - **networking** — Network.framework patterns, URLSession
 
 ## Skill Naming

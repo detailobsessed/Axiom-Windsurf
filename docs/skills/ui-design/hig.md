@@ -13,6 +13,7 @@ Quick reference for Apple HIG decisions. Covers background colors, typography, c
 ## When to Use This Skill
 
 Use this skill when you're:
+
 - Making visual design decisions (colors, backgrounds, typography)
 - Reviewing UI for HIG compliance
 - Answering "Should I use a dark background?"
@@ -38,22 +39,26 @@ Questions you can ask Claude that will draw from this skill:
 ## What's Covered
 
 ### Background Colors
+
 - When to use permanent dark appearance (media-focused apps)
 - System backgrounds (systemBackground, systemGroupedBackground)
 - Respecting user preference vs enforcing appearance
 
 ### Colors
+
 - Semantic colors (label, secondaryLabel, etc.)
 - System backgrounds hierarchy
 - Color Set creation for custom colors
 - Light/dark/high contrast variants
 
 ### Typography
+
 - Font weight recommendations (avoid Ultralight/Thin/Light)
 - Preferred weights: Regular, Medium, Semibold, Bold
 - Dynamic Type support
 
 ### Touch Targets
+
 - Minimum 44x44pt tappable area
 - Spacing between targets
 

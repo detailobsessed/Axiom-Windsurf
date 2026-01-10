@@ -16,6 +16,7 @@ apple_platforms: iOS 17+, iPadOS 17+, macOS Sonoma+
 ## When to Use This Skill
 
 ✅ **Use this skill when**:
+
 - Starting a new project and choosing storage approach
 - Asking "where should I store this data?"
 - Deciding between SwiftData, Core Data, SQLite, or files
@@ -26,12 +27,14 @@ apple_platforms: iOS 17+, iPadOS 17+, macOS Sonoma+
 - Debugging "files disappeared" or "data not syncing"
 
 ❌ **Do NOT use this skill for**:
+
 - SwiftData implementation details (use `axiom-swiftdata` skill)
 - SQLite/GRDB specifics (use `axiom-sqlitedata` or `axiom-grdb` skills)
 - CloudKit sync implementation (use `axiom-cloudkit-ref` skill)
 - File protection APIs (use `axiom-file-protection-ref` skill)
 
 **Related Skills**:
+
 - Existing database skills: `axiom-swiftdata`, `axiom-sqlitedata`, `axiom-grdb`
 - New file skills: `axiom-file-protection-ref`, `axiom-storage-management-ref`, `axiom-storage-diag`
 - New cloud skills: `axiom-cloudkit-ref`, `axiom-icloud-drive-ref`, `axiom-cloud-sync-diag`
@@ -41,6 +44,7 @@ apple_platforms: iOS 17+, iPadOS 17+, macOS Sonoma+
 > **"Choose the right tool for your data shape. Then choose the right location."**
 
 Storage decisions have two dimensions:
+
 1. **Format**: How is data structured? (Queryable records vs files)
 2. **Location**: Where is it stored? (Local vs cloud, which directory)
 
@@ -92,6 +96,7 @@ class Task {
 ```
 
 **Why SwiftData**:
+
 - Modern Swift-native API (no Objective-C)
 - Type-safe queries
 - Built-in CloudKit sync support
@@ -99,6 +104,7 @@ class Task {
 - **Use skill**: `axiom-swiftdata` for implementation details
 
 **When NOT to use SwiftData**:
+
 - Need advanced SQLite features (FTS5, complex joins)
 - Existing Core Data app (migration overhead)
 - Ultra-performance-critical (direct SQLite is faster)
@@ -114,6 +120,7 @@ let results = try db.prepare("SELECT * FROM users WHERE name MATCH ?", "John")
 ```
 
 **Use SQLiteData when**:
+
 - Need full-text search (FTS5)
 - Custom SQL queries and indices
 - Maximum performance (direct SQLite)
@@ -121,6 +128,7 @@ let results = try db.prepare("SELECT * FROM users WHERE name MATCH ?", "John")
 - **Use skill**: `axiom-sqlitedata` for modern SQLite patterns
 
 **Use GRDB when**:
+
 - Need reactive queries (ValueObservation)
 - Complex database operations
 - Type-safe query builders
@@ -136,6 +144,7 @@ import CoreData
 ```
 
 **Only use Core Data if**:
+
 - Maintaining existing Core Data app
 - Can't upgrade to iOS 17 minimum deployment
 
@@ -197,6 +206,7 @@ func saveUserDocument(_ data: Data, filename: String) throws {
 ```
 
 **Key rules**:
+
 - ✅ DO store: User-created documents, exported files, user-visible content
 - ❌ DON'T store: Downloaded data that can be re-fetched, caches, temp files
 - ⚠️ WARNING: Everything here is backed up to iCloud. Large re-downloadable files will bloat backups and may get your app rejected.
@@ -228,6 +238,7 @@ func getAppDataURL() -> URL {
 ```
 
 **Use for**:
+
 - SwiftData/SQLite database files
 - User preferences
 - Downloaded assets that must persist
@@ -256,6 +267,7 @@ func cacheDownloadedImage(data: Data, for url: URL) throws {
 ```
 
 **Key rules**:
+
 - ✅ The system CAN and WILL delete files here under storage pressure
 - ✅ Always have a way to re-download or regenerate
 - ❌ Don't store anything that can't be recreated
@@ -282,6 +294,7 @@ func processImageWithTempFile(image: UIImage) throws {
 ```
 
 **Key rules**:
+
 - System can delete files here AT ANY TIME (even while app is running)
 - Always clean up after yourself
 - Don't rely on files persisting between app launches
@@ -370,6 +383,7 @@ func saveToICloud(_ data: Data, filename: String) throws {
 ```
 
 **When to use iCloud Drive**:
+
 - User-created documents that sync
 - File-based collaboration
 - Simple file sync (like Dropbox)
@@ -388,6 +402,7 @@ store.synchronize()
 ```
 
 **Limitations**:
+
 - Max 1 MB total storage
 - Max 1024 keys
 - Max 1 MB per value
@@ -495,16 +510,19 @@ try data.write(to: iCloudDocumentsURL.appendingPathComponent("doc.pdf"))
 ## Debugging: Data Missing or Not Syncing?
 
 **Files disappeared**:
+
 - Check if stored in Caches or tmp (system purged them)
 - Check file protection level (may be inaccessible when locked)
 - **Use skill**: `axiom-storage-diag`
 
 **Backup too large**:
+
 - Check if re-downloadable content is in Documents (should be in Caches)
 - Check if `isExcludedFromBackup` is set on large files
 - **Use skill**: `axiom-storage-management-ref`
 
 **Data not syncing**:
+
 - CloudKit: Check CKSyncEngine status, account availability
   - **Use skill**: `axiom-cloud-sync-diag`
 - iCloud Drive: Check ubiquitous container entitlements, file coordinator
@@ -517,18 +535,21 @@ try data.write(to: iCloudDocumentsURL.appendingPathComponent("doc.pdf"))
 When changing storage approach:
 
 **Database to Database** (e.g., Core Data → SwiftData):
+
 - [ ] Create SwiftData models matching Core Data entities
 - [ ] Write migration code to copy data
 - [ ] Test with production-size datasets
 - [ ] Keep old database for rollback
 
 **Files to Database**:
+
 - [ ] Identify all JSON/plist files storing structured data
 - [ ] Create SwiftData models
 - [ ] Write one-time migration on first launch
 - [ ] Verify all data migrated, then delete old files
 
 **Local to Cloud**:
+
 - [ ] Ensure proper entitlements (CloudKit/iCloud)
 - [ ] Handle initial upload carefully (bandwidth)
 - [ ] Test conflict resolution
@@ -539,6 +560,7 @@ When changing storage approach:
 **Last Updated**: 2025-12-12
 **Skill Type**: Discipline
 **Related WWDC Sessions**:
+
 - WWDC 2023-10187: Meet SwiftData
 - WWDC 2023-10188: Sync to iCloud with CKSyncEngine
 - WWDC 2024-10137: What's new in SwiftData

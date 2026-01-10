@@ -238,6 +238,7 @@ let pastDue = try Reminder
 | Reusable columns | `@Selection` groups | Manual repetition |
 
 **SwiftData equivalent (more verbose):**
+
 ```swift
 @Model class Attachment { var isActive: Bool }
 @Model class Link: Attachment { var url: URL }
@@ -396,11 +397,13 @@ struct PlayersView: View {
 ### When to Use @Fetch vs @FetchAll/@FetchOne
 
 **Use `@FetchAll` / `@FetchOne` when:**
+
 - Fetching a single table
 - Simple queries with one result type
 - Standard CRUD operations
 
 **Use `@Fetch` when:**
+
 - Need multiple pieces of data from one or more tables
 - Want to combine query results into a custom type
 - Performing aggregations alongside detail fetches
@@ -469,6 +472,7 @@ Button("Search") {
 ```
 
 **Key Benefits:**
+
 - Single database read transaction (atomic, consistent)
 - Automatic observation (updates when any table changes)
 - Type-safe result structure
@@ -730,6 +734,7 @@ print("Deleted \(deleted.count) archived items")
 ```
 
 **When to use RETURNING:**
+
 - Get auto-generated IDs without a second query
 - Audit deleted records before removal
 - Verify updated values match expectations
@@ -905,6 +910,7 @@ let uniqueEmails = try With {
 ```
 
 **When to use CTEs:**
+
 - Break complex queries into readable parts
 - Reuse a subquery multiple times
 - Improve query plan for complex joins
@@ -1187,6 +1193,7 @@ let activeHighVolume = try Store
 ```
 
 **When to use:**
+
 - `.where()` — Filter individual rows before grouping
 - `.having()` — Filter groups after aggregation based on aggregate values
 
@@ -1265,6 +1272,7 @@ migrator.registerMigration("Create table with dynamic defaults") { db in
 ```
 
 **⚠️ Safety:**
+
 - `\(value)` → Automatically escaped, prevents SQL injection
 - `\(raw: value)` → Inserted literally, use ONLY for identifiers you control
 - Never use `\(raw: userInput)` — this creates SQL injection vulnerability
@@ -1324,12 +1332,14 @@ migrator.registerMigration("Add notes column") { db in
 ### When to Use #sql for Schema
 
 **Use #sql when:**
+
 - Creating tables in migrations
 - Adding indexes, triggers, views
 - Complex DDL that query builder doesn't support
 - Need full control over SQLite STRICT tables
 
 **Don't use #sql for:**
+
 - Regular queries (use query builder: `Item.where(...)`)
 - Simple inserts/updates/deletes (use `.insert()`, `.update()`, `.delete()`)
 - Anything available in type-safe query builder
@@ -1432,6 +1442,7 @@ try database.write { db in
 ```
 
 **Generated SQL:**
+
 ```sql
 CREATE TEMPORARY VIEW "reminderWithLists"
 ("reminderTitle", "remindersListTitle")
@@ -1457,6 +1468,7 @@ let results = try ReminderWithList
 ```
 
 **Generated SQL:**
+
 ```sql
 SELECT "reminderWithLists"."reminderTitle",
        "reminderWithLists"."remindersListTitle"
@@ -1503,6 +1515,7 @@ try ReminderWithList.insert {
 ```
 
 **Key concepts:**
+
 - `INSTEAD OF` triggers intercept operations on the view
 - You define how to reroute to the real tables
 - The rerouting logic is application-specific (create new? find existing? fail?)
@@ -1540,11 +1553,13 @@ migrator.registerMigration("Create view") { db in
 ```
 
 **When to use permanent views:**
+
 - Query is used across app restarts
 - View definition rarely changes
 - Performance benefit from persistent query plan
 
 **When to use temporary views:**
+
 - Query varies by runtime conditions
 - Testing different view definitions
 - View needs to be dropped/recreated dynamically
@@ -1573,6 +1588,7 @@ func mode(priority priorities: some Sequence<Reminder.Priority?>) -> Reminder.Pr
 ```
 
 **Key points:**
+
 - Takes `some Sequence<T?>` as input (receives all values from the grouped rows)
 - Returns the aggregated result
 - The macro generates a `$mode` function for use in queries
@@ -1608,6 +1624,7 @@ let results = try RemindersList
 ```
 
 **Without custom aggregate (raw SQL):**
+
 ```sql
 -- This messy subquery is what @DatabaseFunction replaces
 SELECT
@@ -1698,6 +1715,7 @@ func batchUpsert(_ items: [Item], in db: Database) throws {
 ```
 
 **Why this is faster:**
+
 - Statement compiled once, reused for all rows
 - No Swift type-checking overhead per row
 - `cachedStatement` reuses prepared statements across calls
@@ -1748,6 +1766,7 @@ func batchUpsert(_ items: [Item], in db: Database) throws {
 ```
 
 **SQLite variable limits:**
+
 - iOS 14+: 32,766 variables (SQLite 3.32+)
 - iOS 13 and earlier: 999 variables
 - Query at runtime: `sqlite3_limit(db.sqliteConnection, SQLITE_LIMIT_VARIABLE_NUMBER, -1)`
@@ -1763,6 +1782,7 @@ func batchUpsert(_ items: [Item], in db: Database) throws {
 **Note:** Throughput varies by device, row size, and index count. Profile your workload.
 
 **Trade-offs:**
+
 - Type-safe: Best DX, compile-time checks, slowest
 - Cached statement: Good balance, manual column maintenance
 - Multi-row: Fastest, most complex, requires variable limit handling
@@ -1853,6 +1873,7 @@ let customerOnlyEmails = try Customer.select(\.email)
 ```
 
 **Use cases:**
+
 - Combine data from multiple tables with same structure
 - Find common or unique values across tables
 - Build "all activity" feeds from different event types

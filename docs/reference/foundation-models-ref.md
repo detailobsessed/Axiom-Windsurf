@@ -14,6 +14,7 @@ Comprehensive guide to Apple Intelligence based on WWDC 2025 sessions 286, 259, 
 ## What This Reference Covers
 
 ### LanguageModelSession
+
 - Session creation and configuration
 - Text generation with respond()
 - Streaming with respond(stream:)
@@ -21,6 +22,7 @@ Comprehensive guide to Apple Intelligence based on WWDC 2025 sessions 286, 259, 
 - Generation options (temperature, sampling)
 
 ### @Generable Structured Output
+
 - Automatic Swift type generation
 - @Guide constraints and enums
 - Nested generable types
@@ -28,18 +30,21 @@ Comprehensive guide to Apple Intelligence based on WWDC 2025 sessions 286, 259, 
 - Array generation
 
 ### Streaming
+
 - AsyncSequence patterns
 - PartiallyGenerated for progressive UI
 - Error handling mid-stream
 - Cancellation
 
 ### Tool Calling
+
 - Tool protocol implementation
 - Parameter passing
 - Tool result handling
 - Multi-turn conversations
 
 ### Dynamic Schemas
+
 - Runtime schema construction
 - Conditional field inclusion
 - Validation patterns
@@ -47,6 +52,7 @@ Comprehensive guide to Apple Intelligence based on WWDC 2025 sessions 286, 259, 
 ## When to Use This Reference
 
 Use this reference when:
+
 - Implementing on-device AI features
 - Defining @Generable output types
 - Adding streaming responses to UI
@@ -118,6 +124,7 @@ struct SearchTool: Tool {
 ## Complete API Coverage
 
 This reference includes:
+
 - All 26 WWDC 2025 code examples with annotations
 - Complete LanguageModelSession API
 - @Generable macro with all options
@@ -168,6 +175,7 @@ do {
 This is a **reference skill** — comprehensive API guide without mandatory workflows.
 
 #### Reference includes
+
 - Complete Foundation Models API (iOS 26+)
 - All WWDC 2025 code examples
 - @Generable and @Guide documentation

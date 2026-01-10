@@ -116,6 +116,7 @@ Grid(alignment: .leading, horizontalSpacing: 10, verticalSpacing: 10) {
 ```
 
 **Modifiers**:
+
 - `gridCellColumns(_:)` — Span multiple columns
 - `gridColumnAlignment(_:)` — Override column alignment
 

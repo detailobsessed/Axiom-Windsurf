@@ -12,6 +12,7 @@ Advanced diagnostic workflows for SwiftUI issues that persist after basic troubl
 ## Symptoms This Diagnoses
 
 Use when you're experiencing:
+
 - View not updating after basic troubleshooting
 - Self._printChanges() shows unexpected update patterns
 - Intermittent issues ("works sometimes")
@@ -43,6 +44,7 @@ var body: some View {
 ```
 
 **Output interpretation:**
+
 - `@self changed` → View value or environment changed
 - `propertyName changed` → That specific state triggered update
 - Nothing logged → Body not being called at all
@@ -50,6 +52,7 @@ var body: some View {
 ### Pattern D2: SwiftUI Instrument
 
 For complex cases, use Instruments 26:
+
 1. Launch Instruments with SwiftUI template (Cmd-I)
 2. Record while reproducing issue
 3. Check "Long View Body Updates" lane for expensive views
@@ -58,6 +61,7 @@ For complex cases, use Instruments 26:
 ### Pattern D3: View Identity Investigation
 
 For state that resets unexpectedly:
+
 - Check for views inside `if/else` conditionals
 - Search for `.id()` modifiers with changing values
 - Verify ForEach uses unique, stable identifiers
@@ -65,6 +69,7 @@ For state that resets unexpectedly:
 ### Pattern D4: Environment Dependency Check
 
 For cascading updates:
+
 - Search for `.environment()` modifiers
 - Check if frequently-changing values are in environment
 - Consider using direct parameters instead

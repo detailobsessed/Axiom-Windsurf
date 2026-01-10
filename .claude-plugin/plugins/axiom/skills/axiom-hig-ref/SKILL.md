@@ -32,6 +32,7 @@ The UI should not distract from essential content. Use subtle backgrounds, reced
 From WWDC25: "A systematic approach means designing with intention at every level, ensuring that all elements, from the tiniest control to the largest surface, are considered in relation to the whole."
 
 #### Related Skills
+
 - Use `axiom-hig` for quick decisions and checklists
 - Use `axiom-liquid-glass` for iOS 26 material implementation
 - Use `axiom-liquid-glass-ref` for iOS 26 app-wide adoption
@@ -113,6 +114,7 @@ Color(.tertiarySystemGroupedBackground)
 ```
 
 **Usage:**
+
 ```swift
 // Standard list
 List {
@@ -141,6 +143,7 @@ There are actually **two sets** of background colors for layering interfaces:
 In Light Mode, simple drop shadows create visual separation. In Dark Mode, drop shadows are less effective, so the system uses **lighter colors for elevated content**.
 
 **Example:** iPad multitasking:
+
 - Mail app alone → base color set
 - Contacts in slide-over → elevated colors (lighter, stands out)
 - Both side-by-side → both use elevated colors for contrast around splitter
@@ -232,6 +235,7 @@ Color("BrandAccent")
 ### System Fonts
 
 **San Francisco (SF):** The system sans-serif font family.
+
 - SF Pro: General use
 - SF Compact: watchOS and space-constrained layouts
 - SF Mono: Code and monospaced text
@@ -249,6 +253,7 @@ Color("BrandAccent")
 **Why:** Light weights have legibility issues, especially at small sizes, in bright lighting, or for users with visual impairments.
 
 **Hierarchy:**
+
 ```swift
 // Headers - Bold weight for prominence
 Text("Header")
@@ -290,6 +295,7 @@ Use built-in text styles for automatic hierarchy and Dynamic Type support:
 **Requirement:** Apps must support text scaling of at least **200%** (iOS, iPadOS) or **140%** (watchOS).
 
 **Implementation:**
+
 ```swift
 // ✅ CORRECT - Scales automatically
 Text("Hello")
@@ -301,6 +307,7 @@ Text("Hello")
 ```
 
 **Layout considerations:**
+
 - Reduce multicolumn layouts at larger sizes
 - Minimize text truncation
 - Use stacked layouts instead of inline at large sizes
@@ -311,6 +318,7 @@ Text("Hello")
 ### Custom Fonts
 
 When using custom fonts:
+
 - Ensure legibility at various distances and conditions
 - Implement Dynamic Type support
 - Respond to Bold Text accessibility setting
@@ -375,6 +383,7 @@ Calculate radius by subtracting padding from parent's radius:
 **Hardware ↔ Software harmony:** Apple's hardware features consistent bezel curvature. The same precision now guides UI, with curvature, size, and proportion aligning to create unified rhythm between what you hold and what you see.
 
 **Example of concentricity:**
+
 ```
 Window (rounded corners)
   ├─ Sheet (concentric to window)
@@ -385,16 +394,19 @@ Window (rounded corners)
 ### Platform-Specific Guidance
 
 **iOS:**
+
 - **Capsules** for buttons, switches, grouped lists
 - Creates hierarchy and focus in touch-friendly layouts
 
 **macOS:**
+
 - **Mini, Small, Medium controls** → Rounded rectangles (dense layouts, inspector panels)
 - **Large, X-Large controls** → Capsules (spacious areas, emphasis via Liquid Glass)
 
 ### Optical Centering
 
 To preserve optical balance, views are:
+
 - Mathematically centered when it makes sense
 - Subtly offset when optical weight requires it
 
@@ -416,6 +428,7 @@ Materials allow background content to show through, creating visual depth and hi
 4. **Thick** — Most separation from background
 
 **Choosing thickness:**
+
 - Content needs more contrast → thicker material
 - Simpler content → thin/ultra-thin material
 
@@ -469,6 +482,7 @@ VStack {
 ### Visual Hierarchy
 
 **Place items to convey their relative importance:**
+
 - Important content → top and leading side
 - Secondary content → below or trailing
 - Tertiary content → separate views or progressive disclosure
@@ -478,6 +492,7 @@ VStack {
 ### Grouping & Organization
 
 Group related items using:
+
 - Negative space (whitespace)
 - Colors and materials
 - Separator lines
@@ -501,6 +516,7 @@ VStack {
 ### Safe Areas & Layout Guides
 
 **Safe Areas:** Rectangular regions unobstructed by:
+
 - Status bar
 - Navigation bar
 - Tab bar
@@ -508,6 +524,7 @@ VStack {
 - Device features (Dynamic Island, notch, home indicator)
 
 **Layout Guides:** Define rectangular regions for positioning and spacing content with:
+
 - Predefined margins
 - Text width optimization
 - Reading width constraints
@@ -529,6 +546,7 @@ VStack {
 "Align components with one another to make them easier to scan."
 
 **Grid alignment:**
+
 - Text baselines align
 - Controls align on common grid
 - Spacing is consistent and rhythmic
@@ -536,6 +554,7 @@ VStack {
 ### Adaptability Requirements
 
 Design layouts that:
+
 - "Adapt gracefully to context changes while remaining recognizably consistent"
 - Support Dynamic Type text-size changes
 - Work across multiple devices, orientations, and localizations
@@ -550,6 +569,7 @@ Design layouts that:
 #### Text & Legibility
 
 **Requirements:**
+
 - Support text enlargement of at least **200%** (140% for watchOS)
 - Implement Dynamic Type for systemwide text adjustment
 - Use font weights that enhance readability (avoid Light weights with custom fonts)
@@ -557,11 +577,13 @@ Design layouts that:
 #### Color Contrast
 
 **WCAG Level AA standards:**
+
 - Normal text (14pt+): **4.5:1 minimum**
 - Small text (<14pt): **7:1 recommended**
 - Large text (18pt+ regular, 14pt+ bold): 3:1 acceptable
 
 **Implementation:**
+
 ```swift
 // ✅ Use semantic colors (automatic contrast)
 Text("Label").foregroundStyle(.primary)
@@ -580,12 +602,14 @@ Provide higher contrast color schemes when "Increase Contrast" accessibility set
 **Critical:** "Convey information with more than color alone" to support colorblind users.
 
 **Solutions:**
+
 - Use distinct shapes or icons alongside color
 - Add text labels
 - Employ system-defined colors with accessible variants
 - Test with Color Blindness simulators
 
 **Example:**
+
 ```swift
 // ❌ Only color indicates status
 Circle().fill(isActive ? .green : .red)
@@ -616,6 +640,7 @@ Button {
 #### Media Alternatives
 
 For video/audio content, provide:
+
 - Captions for dialogue
 - Subtitles
 - Audio descriptions for visual-only information
@@ -624,22 +649,26 @@ For video/audio content, provide:
 #### Audio Cues
 
 Pair audio signals with:
+
 - Haptic feedback
 - Visual indicators
 
 ### Mobility Accessibility
 
 **Touch targets:**
+
 - Minimum: **44x44 points**
 - Spacing: 12-24 points padding around controls
 
 **Gestures:**
+
 - Use simple gestures
 - Offer alternatives (buttons alongside gestures)
 - Support Voice Control
 - Enable keyboard navigation
 
 **Assistive technologies:**
+
 - VoiceOver
 - Switch Control
 - Full Keyboard Access
@@ -655,6 +684,7 @@ Pair audio signals with:
 #### Motion & Visual Effects
 
 **Respect "Reduce Motion":**
+
 - Minimize animations
 - Avoid excessive flashing lights
 - Support "Dim Flashing Lights"
@@ -678,6 +708,7 @@ Offer adjustable difficulty levels.
 ### visionOS Specific
 
 Prioritize comfort:
+
 - Maintain horizontal layouts
 - Reduce animation speed
 - Avoid head-anchored content (prevents assistive technology use)
@@ -701,6 +732,7 @@ Prioritize comfort:
 #### Realistic Motion
 
 Design animations aligned with user expectations and gestures. Feedback should be:
+
 - "Brief and precise"
 - Lightweight
 - Effectively conveying information without distraction
@@ -744,6 +776,7 @@ SwiftUI provides animation capabilities; WatchKit offers `WKInterfaceImage` for 
 ### SF Symbols
 
 **Advantages:**
+
 - **5,000+ symbols** included with system (SF Symbols 5)
 - Match San Francisco font visual characteristics
 - Can be typed inline with text
@@ -755,6 +788,7 @@ SwiftUI provides animation capabilities; WatchKit offers `WKInterfaceImage` for 
 - Automatic light/dark adaptation
 
 **Usage:**
+
 ```swift
 Label("Settings", systemImage: "gear")
 
@@ -769,6 +803,7 @@ Image(systemName: "star.fill")
 **Simplification & Recognition:** Create "recognizable, axiom-highly simplified design[s]" to avoid confusion. Icons work best with familiar visual metaphors directly connected to their actions or content.
 
 **Visual Consistency:** Maintain uniform:
+
 - Size
 - Detail level
 - Stroke thickness
@@ -789,11 +824,13 @@ Image(systemName: "star.fill")
 From WWDC25: "A pencil might suggest annotate, and a checkmark can look like confirm—making actions like Select or Edit easy to misread. **When there's no clear shorthand, a text label is always the better choice.**"
 
 **Use icons when:**
+
 - Symbol has clear, universal meaning (share, trash, settings)
 - Space is constrained
 - Icon aids quick scanning
 
 **Use text when:**
+
 - Action has no clear symbol
 - Multiple similar actions exist
 - Clarity is more important than space
@@ -820,6 +857,7 @@ Image(systemName: "star.fill")
 ### Standard Gestures
 
 Basic gestures supported across all platforms (though precise movements vary by device):
+
 - Tap
 - Swipe
 - Drag
@@ -851,6 +889,7 @@ Button("Tap") { }
 ### Custom Gesture Guidelines
 
 Custom gestures should only be implemented when necessary and must be:
+
 - **Discoverable** — Users can find them
 - **Straightforward to perform** — Easy to execute
 - **Distinct from other gestures** — No conflicts
@@ -863,6 +902,7 @@ Custom gestures should only be implemented when necessary and must be:
 **Critical:** "Give people more than one way to interact with your app." Never assume users can perform specific gestures.
 
 **Provide alternatives:**
+
 - Voice control
 - Keyboard navigation
 - Button alternatives to gestures
@@ -895,16 +935,19 @@ Custom gestures should only be implemented when necessary and must be:
 #### Best Practices
 
 **Minimize branding:**
+
 - Avoid logos
 - No splash screens
 - No artistic flourishes
 - Purpose: Enhance perception of quick startup, not showcase brand
 
 **No text:**
+
 - Launch screen content cannot be localized
 - Avoid text entirely
 
 **Match appearance:**
+
 - Respect device orientation
 - Adapt to light/dark mode
 
@@ -920,12 +963,14 @@ Onboarding is a **separate experience** that follows the launch phase. Provides 
 **When to use:** Only when you have meaningful context to communicate to new users.
 
 **What onboarding can include:**
+
 - Branding and splash screens
 - Educational content
 - Permission requests
 - Account setup
 
 **Timeline:**
+
 1. Launch — System displays launch screen, transitions to first screen
 2. Onboarding (optional) — Can include branding and education
 3. Continued use — "Restore the previous state when your app restarts so people can continue where they left off"
@@ -937,12 +982,14 @@ Onboarding is a **separate experience** that follows the launch phase. Provides 
 ### iOS
 
 **Device characteristics:**
+
 - Medium-size, axiom-high-resolution display
 - One or two-handed interaction
 - Portrait/landscape switching
 - Viewing distance: 1-2 feet
 
 **Input methods:**
+
 - Multi-Touch gestures
 - Virtual keyboards
 - Voice control
@@ -950,15 +997,18 @@ Onboarding is a **separate experience** that follows the launch phase. Provides 
 - Spatial interactions
 
 **Design patterns:**
+
 - Swiping for back navigation
 - List actions positioned in middle or bottom areas
 - Multiple simultaneous apps
 - Frequent app switching
 
 **Content hierarchy:**
+
 - "Limit the number of onscreen controls while making secondary details and actions discoverable with minimal interaction"
 
 **System integration:**
+
 - Widgets
 - Home Screen quick actions
 - Spotlight search
@@ -968,6 +1018,7 @@ Onboarding is a **separate experience** that follows the launch phase. Provides 
 ### iPadOS
 
 **Extends iOS with:**
+
 - Larger display (more content simultaneously)
 - Sidebar-adaptable layouts
 - Split view multitasking
@@ -976,6 +1027,7 @@ Onboarding is a **separate experience** that follows the launch phase. Provides 
 - Menu bar (swiping down from top)
 
 **Design considerations:**
+
 - Don't just scale iOS layouts
 - Leverage sidebars for navigation
 - Support split view
@@ -984,6 +1036,7 @@ Onboarding is a **separate experience** that follows the launch phase. Provides 
 ### macOS
 
 **Characteristics:**
+
 - Large, axiom-high-resolution display
 - Pointer-first interactions
 - Keyboard-centric workflows
@@ -991,6 +1044,7 @@ Onboarding is a **separate experience** that follows the launch phase. Provides 
 - Menu bar for commands
 
 **Design patterns:**
+
 - Dense layouts acceptable
 - Smaller controls (vs iOS)
 - Window chrome and controls
@@ -998,18 +1052,21 @@ Onboarding is a **separate experience** that follows the launch phase. Provides 
 - Keyboard shortcuts essential
 
 **Control sizes:**
+
 - Mini, Small, Medium → Rounded rectangles
 - Large, X-Large → Capsules (iOS 26+)
 
 ### watchOS
 
 **Constraints:**
+
 - Very small display
 - Glanceable interfaces
 - Minimal interaction time
 - Always-on consideration
 
 **Design principles:**
+
 - Full-bleed content
 - Minimal padding
 - Digital Crown interactions
@@ -1018,12 +1075,14 @@ Onboarding is a **separate experience** that follows the launch phase. Provides 
 ### tvOS
 
 **Characteristics:**
+
 - Large display
 - 10-foot viewing distance
 - Focus-based navigation
 - Gestural remote
 
 **Design requirements:**
+
 - Large touch targets
 - Focus states clear and prominent
 - Limited text input
@@ -1032,12 +1091,14 @@ Onboarding is a **separate experience** that follows the launch phase. Provides 
 ### visionOS
 
 **Unique aspects:**
+
 - Spatial computing
 - Glass materials
 - 3D layouts
 - Depth and layering
 
 **Design principles:**
+
 - Comfortable viewing depth
 - Avoid head-anchored content
 - Center important content in field of view
@@ -1050,6 +1111,7 @@ Onboarding is a **separate experience** that follows the launch phase. Provides 
 ### Language & Communication
 
 **Welcoming language requirements:**
+
 - Use plain, direct, and respectful tone
 - Don't suggest exclusivity based on education level
 - Address people directly with "you/your" rather than "the user"
@@ -1063,10 +1125,12 @@ Onboarding is a **separate experience** that follows the launch phase. Provides 
 ### Visual Representation
 
 **Portraying human diversity:**
+
 - Feature people demonstrating range of racial backgrounds, body types, ages, physical capabilities
 - Avoid stereotypical representations in occupations and behaviors
 
 **Avoiding assumptions:**
+
 - Don't assume narrow definitions of family structures
 - Don't assume universal experiences
 - Replace culture-specific security questions with more universal experiences
@@ -1074,6 +1138,7 @@ Onboarding is a **separate experience** that follows the launch phase. Provides 
 ### Gender Identity & Pronouns
 
 **Best practices:**
+
 - Avoid unnecessary gender references in copy
 - Provide inclusive options: "nonbinary," "self-identify," "decline to state"
 - Use nongendered imagery
@@ -1082,20 +1147,24 @@ Onboarding is a **separate experience** that follows the launch phase. Provides 
 ### Accessibility & Disability
 
 **Recognize:**
+
 - Disabilities exist on spectrums
 - Temporary/situational disabilities affect everyone
 
 **Include:**
+
 - People with disabilities in diversity representations
 - Adopt people-first approach in writing ("person with disability" vs "disabled person")
 
 ### Localization & Global Considerations
 
 **Prepare software for:**
+
 - Internationalization
 - Translation into multiple languages
 
 **Cultural color awareness:**
+
 - Colors carry culture-specific meanings
 - White represents death in some cultures, purity in others
 - Red signifies danger in some cultures, positive meanings elsewhere
@@ -1111,6 +1180,7 @@ Onboarding is a **separate experience** that follows the launch phase. Provides 
 **Voice & Tone:** Maintain consistent brand personality through written communication.
 
 **Visual Elements:**
+
 - Consider accent color for UI components
 - Custom font if strongly associated with brand (but system fonts work better for body copy due to legibility)
 
@@ -1129,12 +1199,14 @@ Onboarding is a **separate experience** that follows the launch phase. Provides 
 ### Appropriate Branding
 
 **Do:**
+
 - Use your brand's accent color as app tint color
 - Include branding in onboarding (not launch screen)
 - Use brand voice in copy
 - Feature brand in content, not chrome
 
 **Don't:**
+
 - Display logo in navigation bar
 - Override system backgrounds with brand colors
 - Add splash screens
@@ -1153,12 +1225,14 @@ Apple trademarks cannot appear in your app name or images—consult Apple's offi
 **Symptom:** App Store rejection for accessibility violations, or colors don't meet WCAG standards.
 
 **Diagnosis:**
+
 1. Test with Xcode Accessibility Inspector
 2. Use online contrast calculators
 3. Check in both Light and Dark modes
 4. Test with Increase Contrast enabled
 
 **Solution:**
+
 ```swift
 // ❌ PROBLEM: Custom gray fails contrast
 Text("Label").foregroundStyle(.gray) // May fail 4.5:1 requirement
@@ -1176,6 +1250,7 @@ Text("Label").foregroundStyle(Color(red: 0.25, green: 0.25, blue: 0.25))
 **Symptom:** Users report difficult tapping, App Store accessibility rejection.
 
 **Diagnosis:**
+
 ```swift
 // Check button size
 Button("Tap") { }
@@ -1183,6 +1258,7 @@ Button("Tap") { }
 ```
 
 **Solution:**
+
 ```swift
 // ✅ Expand touch target to minimum 44x44
 Button("Tap") { }
@@ -1198,11 +1274,13 @@ Button("Tap") { }
 **Symptom:** Colors look wrong in Dark Mode, insufficient contrast.
 
 **Diagnosis:**
+
 - Hardcoded colors that don't adapt
 - Custom colors without dark variants
 - Not testing in both appearance modes
 
 **Solution:**
+
 ```swift
 // ❌ PROBLEM: Hardcoded white text
 Text("Label").foregroundStyle(.white)
@@ -1222,12 +1300,14 @@ Text("Label").foregroundStyle(Color("BrandText"))
 **Symptom:** Text hard to read, especially at small sizes or in bright lighting.
 
 **Diagnosis:**
+
 ```swift
 Text("Headline")
     .font(.system(size: 17, weight: .ultralight)) // ❌ Too light
 ```
 
 **Solution:**
+
 ```swift
 // ✅ Use Regular minimum
 Text("Headline")
@@ -1243,12 +1323,14 @@ Text("Headline")
 **Symptom:** Text doesn't scale when user increases text size in Settings.
 
 **Diagnosis:**
+
 ```swift
 // ❌ Fixed size doesn't scale
 Text("Label").font(.system(size: 17))
 ```
 
 **Solution:**
+
 ```swift
 // ✅ Use text styles for automatic scaling
 Text("Label").font(.body)
@@ -1262,10 +1344,12 @@ Text("Label").font(.custom("CustomFont", size: 17, relativeTo: .body))
 **Symptom:** Users with motion sensitivity experience discomfort.
 
 **Diagnosis:**
+
 - Animations always play regardless of setting
 - No alternative for motion-sensitive users
 
 **Solution:**
+
 ```swift
 // ✅ Check Reduce Motion setting
 @Environment(\.accessibilityReduceMotion) var reduceMotion
@@ -1284,6 +1368,7 @@ var body: some View {
 **Symptom:** VoiceOver announces unhelpful information like "Button" instead of action.
 
 **Diagnosis:**
+
 ```swift
 // ❌ Image button without label
 Button {
@@ -1295,6 +1380,7 @@ Button {
 ```
 
 **Solution:**
+
 ```swift
 // ✅ Add accessibility label
 Button {
@@ -1311,6 +1397,7 @@ Button {
 **Symptom:** Colorblind users can't distinguish status.
 
 **Diagnosis:**
+
 ```swift
 // ❌ Only color indicates state
 Circle()
@@ -1318,6 +1405,7 @@ Circle()
 ```
 
 **Solution:**
+
 ```swift
 // ✅ Use shape + color + text
 HStack {
@@ -1332,10 +1420,12 @@ HStack {
 **Symptom:** App Store rejects launch screen with logo or text.
 
 **Diagnosis:**
+
 - Launch screen contains branding elements
 - Launch screen has text that can't be localized
 
 **Solution:**
+
 ```swift
 // ❌ Launch screen with logo (rejected)
 // Launch.storyboard contains app logo
@@ -1352,10 +1442,12 @@ HStack {
 **Symptom:** Users confused by app-specific dark mode setting, double settings.
 
 **Diagnosis:**
+
 - App has its own Light/Dark toggle
 - Conflicts with system Settings → Display & Brightness
 
 **Solution:**
+
 ```swift
 // ❌ App-specific appearance toggle
 .preferredColorScheme(userPreference == .dark ? .dark : .light)

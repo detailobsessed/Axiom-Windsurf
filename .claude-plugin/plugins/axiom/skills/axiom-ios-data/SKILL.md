@@ -11,6 +11,7 @@ user-invocable: false
 ## When to Use
 
 Use this router when working with:
+
 - Databases (SwiftData, Core Data, GRDB, SQLiteData)
 - Schema migrations
 - CloudKit sync
@@ -86,6 +87,7 @@ User asks about data/storage
 **ALWAYS invoke `/skill axiom-database-migration` when adding/modifying database columns.**
 
 This prevents:
+
 - "FOREIGN KEY constraint failed" errors
 - "no such column" crashes
 - Data loss from unsafe migrations

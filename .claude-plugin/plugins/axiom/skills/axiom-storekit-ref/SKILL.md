@@ -16,22 +16,26 @@ StoreKit 2 is Apple's modern in-app purchase framework with async/await APIs, au
 ### Product Types Supported
 
 **Consumable**:
+
 - Products that can be purchased multiple times
 - Examples: coins, hints, temporary boosts
 - Do NOT restore on new devices
 
 **Non-Consumable**:
+
 - Products purchased once, owned forever
 - Examples: premium features, level packs, remove ads
 - MUST restore on new devices
 
 **Auto-Renewable Subscription**:
+
 - Subscriptions that renew automatically
 - Organized into subscription groups
 - MUST restore on new devices
 - Support: free trials, intro offers, promotional offers, win-back offers
 
 **Non-Renewing Subscription**:
+
 - Fixed duration subscriptions (no auto-renewal)
 - Examples: seasonal passes
 - MUST restore on new devices
@@ -50,6 +54,7 @@ StoreKit 2 is Apple's modern in-app purchase framework with async/await APIs, au
 ## When to Use This Reference
 
 Use this reference when:
+
 - Implementing in-app purchases with StoreKit 2
 - Understanding new iOS 18.4 fields (appTransactionID, offerPeriod, etc.)
 - Looking up specific API signatures and parameters
@@ -59,6 +64,7 @@ Use this reference when:
 - Integrating with App Store Server APIs
 
 **Related Skills**:
+
 - `axiom-in-app-purchases` — Discipline skill with testing-first workflow, architecture patterns
 - (Future: `iap-auditor` agent for auditing existing IAP code)
 - (Future: `iap-implementation` agent for implementing IAP from scratch)
@@ -74,6 +80,7 @@ Use this reference when:
 ### Loading Products
 
 **Basic Loading**:
+
 ```swift
 import StoreKit
 
@@ -89,6 +96,7 @@ let products = try await Product.products(for: productIDs)
 #### From WWDC 2021-10114
 
 **Handling Missing Products**:
+
 ```swift
 let products = try await Product.products(for: productIDs)
 
@@ -105,6 +113,7 @@ if !missingIDs.isEmpty {
 ### Product Properties
 
 **Basic Properties**:
+
 ```swift
 let product: Product
 
@@ -117,6 +126,7 @@ product.type // .nonConsumable
 ```
 
 **Product Type Enum**:
+
 ```swift
 switch product.type {
 case .consumable:
@@ -135,6 +145,7 @@ case .nonRenewing:
 ### Subscription-Specific Properties
 
 **Check if Product is Subscription**:
+
 ```swift
 if let subscriptionInfo = product.subscription {
     // Product is auto-renewable subscription
@@ -144,6 +155,7 @@ if let subscriptionInfo = product.subscription {
 ```
 
 **Subscription Period**:
+
 ```swift
 let period = product.subscription?.subscriptionPeriod
 
@@ -162,6 +174,7 @@ default:
 ```
 
 **Introductory Offer**:
+
 ```swift
 if let introOffer = product.subscription?.introductoryOffer {
     print("Free trial: \(introOffer.period.value) \(introOffer.period.unit)")
@@ -181,6 +194,7 @@ if let introOffer = product.subscription?.introductoryOffer {
 ```
 
 **Promotional Offers**:
+
 ```swift
 let offers = product.subscription?.promotionalOffers ?? []
 
@@ -194,6 +208,7 @@ for offer in offers {
 ### Purchase Methods
 
 **Purchase with UI Context (iOS 18.2+)**:
+
 ```swift
 let product: Product
 let scene: UIWindowScene
@@ -204,6 +219,7 @@ let result = try await product.purchase(confirmIn: scene)
 #### From WWDC 2025-241:9:32
 
 **Purchase with Options**:
+
 ```swift
 let accountToken = UUID()
 
@@ -218,6 +234,7 @@ let result = try await product.purchase(
 #### From WWDC 2025-241:11:01
 
 **Purchase with Promotional Offer (JWS Format)**:
+
 ```swift
 let jwsSignature: String // From your server
 
@@ -232,6 +249,7 @@ let result = try await product.purchase(
 #### From WWDC 2025-241:10:55
 
 **Purchase with Custom Intro Eligibility**:
+
 ```swift
 let jwsSignature: String // From your server
 
@@ -246,6 +264,7 @@ let result = try await product.purchase(
 #### From WWDC 2025-241:10:42
 
 **SwiftUI Purchase (Using Environment)**:
+
 ```swift
 struct ProductView: View {
     let product: Product
@@ -271,6 +290,7 @@ struct ProductView: View {
 ### PurchaseResult
 
 **Handling Purchase Results**:
+
 ```swift
 let result = try await product.purchase(confirmIn: scene)
 
@@ -313,6 +333,7 @@ case .pending:
 ### New Fields (iOS 18.4)
 
 **appTransactionID**:
+
 ```swift
 let transaction: Transaction
 let appTransactionID = transaction.appTransactionID
@@ -322,6 +343,7 @@ let appTransactionID = transaction.appTransactionID
 #### From WWDC 2025-241:4:13
 
 **offerPeriod**:
+
 ```swift
 if let offerPeriod = transaction.offer?.period {
     print("Offer duration: \(offerPeriod)")
@@ -332,6 +354,7 @@ if let offerPeriod = transaction.offer?.period {
 #### From WWDC 2025-249:3:11
 
 **advancedCommerceInfo**:
+
 ```swift
 if let advancedInfo = transaction.advancedCommerceInfo {
     // Only present for Advanced Commerce API purchases
@@ -344,6 +367,7 @@ if let advancedInfo = transaction.advancedCommerceInfo {
 ### Essential Properties
 
 **Basic Fields**:
+
 ```swift
 let transaction: Transaction
 
@@ -356,6 +380,7 @@ transaction.appAccountToken // UUID set at purchase time (if provided)
 ```
 
 **Subscription Fields**:
+
 ```swift
 transaction.expirationDate // When subscription expires
 transaction.isUpgraded // true if user upgraded to higher tier
@@ -364,6 +389,7 @@ transaction.revocationReason // .developerIssue or .other
 ```
 
 **Offer Fields**:
+
 ```swift
 if let offer = transaction.offer {
     offer.type // .introductory or .promotional or .code
@@ -377,6 +403,7 @@ if let offer = transaction.offer {
 ### Current Entitlements
 
 **Get All Current Entitlements**:
+
 ```swift
 var purchasedProductIDs: Set<String> = []
 
@@ -395,6 +422,7 @@ for await result in Transaction.currentEntitlements {
 #### From WWDC 2025-241
 
 **Get Entitlements for Specific Product (iOS 18.4+)**:
+
 ```swift
 let productID = "com.app.premium"
 
@@ -410,6 +438,7 @@ for await result in Transaction.currentEntitlements(for: productID) {
 #### From WWDC 2025-241:3:31
 
 **Deprecated API (iOS 18.4)**:
+
 ```swift
 // ❌ Deprecated in iOS 18.4
 let entitlement = await Transaction.currentEntitlement(for: productID)
@@ -425,6 +454,7 @@ for await result in Transaction.currentEntitlements(for: productID) {
 ### Transaction History
 
 **Get All Transactions**:
+
 ```swift
 for await result in Transaction.all {
     guard let transaction = try? result.payloadValue else {
@@ -436,6 +466,7 @@ for await result in Transaction.all {
 ```
 
 **Get Transactions for Product**:
+
 ```swift
 for await result in Transaction.all(matching: productID) {
     guard let transaction = try? result.payloadValue else {
@@ -449,6 +480,7 @@ for await result in Transaction.all(matching: productID) {
 ### Transaction Listener
 
 **Listen for Real-Time Updates (REQUIRED)**:
+
 ```swift
 func listenForTransactions() -> Task<Void, Never> {
     Task.detached {
@@ -478,6 +510,7 @@ func handleTransaction(_ result: VerificationResult<Transaction>) async {
 #### From WWDC 2021-10114
 
 **Transaction Sources**:
+
 - In-app purchases
 - Purchases from App Store (promoted IAP)
 - Offer code redemptions
@@ -489,6 +522,7 @@ func handleTransaction(_ result: VerificationResult<Transaction>) async {
 ### Verification
 
 **VerificationResult**:
+
 ```swift
 let result: VerificationResult<Transaction>
 
@@ -507,6 +541,7 @@ case .unverified(let transaction, let error):
 ```
 
 **What Verification Checks**:
+
 - Transaction signed by App Store (not fraudulent)
 - Transaction belongs to this app (bundle ID match)
 - Transaction belongs to this device
@@ -514,17 +549,20 @@ case .unverified(let transaction, let error):
 ### Finishing Transactions
 
 **Always Call finish()**:
+
 ```swift
 await transaction.finish()
 ```
 
 **When to finish**:
+
 - ✅ After granting entitlement to user
 - ✅ After storing transaction receipt/ID
 - ✅ Even for unverified transactions (to clear queue)
 - ✅ Even for refunded transactions
 
 **What happens if you don't finish**:
+
 - Transaction redelivered on next app launch
 - `Transaction.updates` re-emits transaction
 - Queue builds up over time
@@ -540,6 +578,7 @@ await transaction.finish()
 ### New Fields (iOS 18.4)
 
 **appTransactionID**:
+
 ```swift
 let appTransaction = try await AppTransaction.shared
 
@@ -557,6 +596,7 @@ case .unverified(_, let error):
 #### From WWDC 2025-241:1:42
 
 **originalPlatform**:
+
 ```swift
 if let appTransaction = try? await AppTransaction.shared.payloadValue {
     let platform = appTransaction.originalPlatform
@@ -596,6 +636,7 @@ appTransaction.deviceVerificationNonce // Nonce for verification
 ### Use Cases
 
 **Check App Version**:
+
 ```swift
 if let appTransaction = try? await AppTransaction.shared.payloadValue {
     if appTransaction.appVersion != currentVersion {
@@ -607,6 +648,7 @@ if let appTransaction = try? await AppTransaction.shared.payloadValue {
 #### From WWDC 2025-241:0:51
 
 **Business Model Migration**:
+
 ```swift
 // Moving from paid app to free app with IAP
 if appTransaction.originalPlatform == .iOS,
@@ -629,6 +671,7 @@ if appTransaction.originalPlatform == .iOS,
 ### New Fields (iOS 18.4)
 
 **appTransactionID**:
+
 ```swift
 let renewalInfo: RenewalInfo
 let appTransactionID = renewalInfo.appTransactionID
@@ -637,6 +680,7 @@ let appTransactionID = renewalInfo.appTransactionID
 #### From WWDC 2025-241:6:40
 
 **offerPeriod**:
+
 ```swift
 if let offerPeriod = renewalInfo.offerPeriod {
     print("Next renewal offer period: \(offerPeriod)")
@@ -647,6 +691,7 @@ if let offerPeriod = renewalInfo.offerPeriod {
 #### From WWDC 2025-249:3:11
 
 **appAccountToken**:
+
 ```swift
 if let token = renewalInfo.appAccountToken {
     // UUID associating subscription with your server account
@@ -656,6 +701,7 @@ if let token = renewalInfo.appAccountToken {
 #### From WWDC 2025-241:6:56
 
 **advancedCommerceInfo**:
+
 ```swift
 if let advancedInfo = renewalInfo.advancedCommerceInfo {
     // Only for Advanced Commerce API subscriptions
@@ -667,6 +713,7 @@ if let advancedInfo = renewalInfo.advancedCommerceInfo {
 ### Essential Properties
 
 **Renewal State**:
+
 ```swift
 let renewalInfo: RenewalInfo
 
@@ -676,6 +723,7 @@ renewalInfo.expirationReason // Why subscription expired (if expired)
 ```
 
 **Expiration Reasons**:
+
 ```swift
 switch renewalInfo.expirationReason {
 case .autoRenewDisabled:
@@ -696,6 +744,7 @@ case .unknown:
 #### From WWDC 2025-241:5:38
 
 **Grace Period**:
+
 ```swift
 if let gracePeriodExpiration = renewalInfo.gracePeriodExpirationDate {
     // Subscription in grace period - billing issue
@@ -704,6 +753,7 @@ if let gracePeriodExpiration = renewalInfo.gracePeriodExpirationDate {
 ```
 
 **Price Increase Consent**:
+
 ```swift
 if let consentStatus = renewalInfo.priceIncreaseStatus {
     switch consentStatus {
@@ -720,6 +770,7 @@ if let consentStatus = renewalInfo.priceIncreaseStatus {
 ### Accessing RenewalInfo
 
 **From SubscriptionStatus**:
+
 ```swift
 let statuses = try await Product.SubscriptionInfo.status(for: groupID)
 
@@ -744,6 +795,7 @@ for status in statuses {
 ### Subscription States
 
 **State Enum**:
+
 ```swift
 let status: Product.SubscriptionInfo.Status
 
@@ -773,6 +825,7 @@ case .revoked:
 ### Getting Subscription Status
 
 **For Subscription Group**:
+
 ```swift
 let groupID = "pro_tier"
 
@@ -787,6 +840,7 @@ let activeStatus = statuses
 #### From WWDC 2025-241:6:22
 
 **For Specific Transaction (iOS 18.4+)**:
+
 ```swift
 let transactionID = transaction.id
 
@@ -796,6 +850,7 @@ let status = try await Product.SubscriptionInfo.status(for: transactionID)
 #### From WWDC 2025-241:6:40
 
 **Listen for Status Updates**:
+
 ```swift
 for await statuses in Product.SubscriptionInfo.Status.updates(for: groupID) {
     // Process updated statuses
@@ -822,6 +877,7 @@ status.renewalInfo // VerificationResult<RenewalInfo>
 ### ProductView (iOS 17+)
 
 **Basic Usage**:
+
 ```swift
 import StoreKit
 
@@ -837,6 +893,7 @@ struct ContentView: View {
 #### From WWDC 2023-10013
 
 **With Loaded Product**:
+
 ```swift
 struct ContentView: View {
     let product: Product
@@ -848,6 +905,7 @@ struct ContentView: View {
 ```
 
 **Custom Icon**:
+
 ```swift
 ProductView(id: productID) {
     Image(systemName: "star.fill")
@@ -856,6 +914,7 @@ ProductView(id: productID) {
 ```
 
 **Control Styles**:
+
 ```swift
 ProductView(id: productID)
     .productViewStyle(.regular)  // Default
@@ -870,6 +929,7 @@ ProductView(id: productID)
 ### StoreView (iOS 17+)
 
 **Basic Store**:
+
 ```swift
 struct ContentView: View {
     let productIDs = [
@@ -887,6 +947,7 @@ struct ContentView: View {
 #### From WWDC 2023-10013
 
 **With Loaded Products**:
+
 ```swift
 struct ContentView: View {
     let products: [Product]
@@ -900,6 +961,7 @@ struct ContentView: View {
 ### SubscriptionStoreView (iOS 17+)
 
 **Basic Subscription Store**:
+
 ```swift
 struct SubscriptionView: View {
     let groupID = "pro_tier"
@@ -921,6 +983,7 @@ struct SubscriptionView: View {
 #### From WWDC 2023-10013
 
 **Control Style**:
+
 ```swift
 SubscriptionStoreView(groupID: groupID) {
     // Marketing content
@@ -936,6 +999,7 @@ SubscriptionStoreView(groupID: groupID) {
 ### SubscriptionOfferView (iOS 18.4+)
 
 **Basic Offer View**:
+
 ```swift
 struct ContentView: View {
     let productID = "com.app.pro_monthly"
@@ -949,6 +1013,7 @@ struct ContentView: View {
 #### From WWDC 2025-241:14:27
 
 **With Promotional Icon**:
+
 ```swift
 SubscriptionOfferView(
     id: productID,
@@ -957,6 +1022,7 @@ SubscriptionOfferView(
 ```
 
 **With Custom Icon**:
+
 ```swift
 SubscriptionOfferView(id: productID) {
     Image("custom-icon")
@@ -971,6 +1037,7 @@ SubscriptionOfferView(id: productID) {
 #### From WWDC 2025-241:15:14
 
 **With Detail Action**:
+
 ```swift
 @State private var showStore = false
 
@@ -988,6 +1055,7 @@ var body: some View {
 #### From WWDC 2025-241:15:38
 
 **Visible Relationship**:
+
 ```swift
 // Only show if customer can upgrade
 SubscriptionOfferView(
@@ -1023,6 +1091,7 @@ SubscriptionOfferView(
 #### From WWDC 2025-241:17:44
 
 **With App Icon**:
+
 ```swift
 SubscriptionOfferView(
     groupID: groupID,
@@ -1036,6 +1105,7 @@ SubscriptionOfferView(
 ### Offer Modifiers
 
 **Promotional Offer (JWS)**:
+
 ```swift
 SubscriptionStoreView(groupID: groupID)
     .subscriptionPromotionalOffer(
@@ -1063,6 +1133,7 @@ SubscriptionStoreView(groupID: groupID)
 ### Overview
 
 Offer codes now support all product types (previously subscription-only):
+
 - Consumables
 - Non-consumables
 - Non-renewing subscriptions
@@ -1071,6 +1142,7 @@ Offer codes now support all product types (previously subscription-only):
 ### Redeem in App
 
 **UIKit**:
+
 ```swift
 func showOfferCodeSheet() {
     guard let scene = view.window?.windowScene else { return }
@@ -1082,6 +1154,7 @@ func showOfferCodeSheet() {
 #### From WWDC 2025-241:7:38
 
 **SwiftUI**:
+
 ```swift
 .offerCodeRedemption(isPresented: $showRedeemSheet)
 ```
@@ -1089,6 +1162,7 @@ func showOfferCodeSheet() {
 ### Payment Mode
 
 **New: .oneTime**:
+
 ```swift
 let transaction: Transaction
 
@@ -1111,6 +1185,7 @@ if let offer = transaction.offer {
 #### From WWDC 2025-241:8:17
 
 **Legacy Access (iOS 15-17.1)**:
+
 ```swift
 if let offerMode = transaction.offerPaymentModeStringRepresentation {
     // String representation for older OS versions
@@ -1131,6 +1206,7 @@ Open-source library for signing IAP requests and decoding server API responses. 
 ### Create Promotional Offer Signature
 
 **Swift Example**:
+
 ```swift
 import AppStoreServerLibrary
 
@@ -1168,6 +1244,7 @@ return signature // Compact JWS string
 #### From WWDC 2025-241:12:44, 2025-249
 
 **Server Endpoint Example**:
+
 ```swift
 app.get("promo-offer") { req async throws -> String in
     let productID = try req.query.get(String.self, at: "productID")
@@ -1192,11 +1269,13 @@ app.get("promo-offer") { req async throws -> String in
 ### Set App Account Token
 
 **Endpoint**:
+
 ```
 PATCH /inApps/v1/transactions/{originalTransactionId}
 ```
 
 **Request Body**:
+
 ```json
 {
   "appAccountToken": "550e8400-e29b-41d4-a716-446655440000"
@@ -1204,6 +1283,7 @@ PATCH /inApps/v1/transactions/{originalTransactionId}
 ```
 
 **Usage**:
+
 - Set appAccountToken for purchases made outside your app (offer codes, App Store)
 - Update appAccountToken when account ownership changes
 - Associates transaction with customer account on your server
@@ -1213,11 +1293,13 @@ PATCH /inApps/v1/transactions/{originalTransactionId}
 ### Get App Transaction Info
 
 **Endpoint**:
+
 ```
 GET /inApps/v2/appTransaction/{transactionId}
 ```
 
 **Response**:
+
 ```json
 {
   "signedAppTransactionInfo": "eyJhbGc..."
@@ -1225,6 +1307,7 @@ GET /inApps/v2/appTransaction/{transactionId}
 ```
 
 **Usage**:
+
 - Get app download information on server
 - Check app version, platform, environment
 - Available later in 2025
@@ -1234,11 +1317,13 @@ GET /inApps/v2/appTransaction/{transactionId}
 ### Send Consumption Information V2
 
 **Endpoint**:
+
 ```
 PUT /inApps/v2/transactions/consumption/{transactionId}
 ```
 
 **Request Body**:
+
 ```json
 {
   "customerConsented": true,
@@ -1250,6 +1335,7 @@ PUT /inApps/v2/transactions/consumption/{transactionId}
 ```
 
 **Fields**:
+
 - `customerConsented` (required): User consented to send consumption data
 - `sampleContentProvided` (optional): Sample provided before purchase
 - `deliveryStatus` (required): "DELIVERED" or various UNDELIVERED statuses
@@ -1257,6 +1343,7 @@ PUT /inApps/v2/transactions/consumption/{transactionId}
 - `consumptionPercentage` (optional): 0-100000 (millipercent, e.g., 25000 = 25%)
 
 **Prorated Refund**:
+
 - New in 2025
 - Supports partial consumption (consumables, non-consumables, non-renewing)
 - For auto-renewable subscriptions, App Store calculates based on time remaining
@@ -1266,6 +1353,7 @@ PUT /inApps/v2/transactions/consumption/{transactionId}
 ### Refund Notifications
 
 **REFUND Notification**:
+
 ```json
 {
   "notificationType": "REFUND",
@@ -1278,6 +1366,7 @@ PUT /inApps/v2/transactions/consumption/{transactionId}
 ```
 
 **revocationType Values**:
+
 - `REFUND_FULL`: 100% refund - revoke all access
 - `REFUND_PRORATED`: Partial refund - revoke proportional access
 - `FAMILY_REVOKE`: Family Sharing removed - revoke access
@@ -1291,6 +1380,7 @@ PUT /inApps/v2/transactions/consumption/{transactionId}
 ### Family Sharing
 
 **Detect Family Shared Transactions**:
+
 ```swift
 // appAccountToken is NOT available for family shared transactions
 let transaction: Transaction
@@ -1302,6 +1392,7 @@ if transaction.appAccountToken == nil {
 ```
 
 **Subscription Status for Family Sharing**:
+
 ```swift
 // Each family member has unique appTransactionID
 // Use appTransactionID to identify individual family members
@@ -1312,6 +1403,7 @@ if transaction.appAccountToken == nil {
 ### Refunds
 
 **Handle Refund**:
+
 ```swift
 func handleTransaction(_ transaction: Transaction) async {
     if let revocationDate = transaction.revocationDate {
@@ -1336,6 +1428,7 @@ func handleTransaction(_ transaction: Transaction) async {
 ### Advanced Commerce API
 
 **Check if Transaction Uses Advanced Commerce**:
+
 ```swift
 if transaction.advancedCommerceInfo != nil {
     // Transaction from Advanced Commerce API
@@ -1350,6 +1443,7 @@ if transaction.advancedCommerceInfo != nil {
 ### Win-Back Offers
 
 **Show Win-Back for Expired Subscription**:
+
 ```swift
 let renewalInfo: RenewalInfo
 
@@ -1372,15 +1466,18 @@ if renewalInfo.expirationReason == .didNotConsentToPriceIncrease {
 ### StoreKit Configuration File
 
 **Create**:
+
 1. Xcode → File → New → StoreKit Configuration File
 2. Add products (consumables, non-consumables, subscriptions)
 3. Configure prices, images, descriptions
 
 **Enable in Scheme**:
+
 1. Scheme → Edit Scheme → Run → Options
 2. StoreKit Configuration: Select .storekit file
 
 **Test Scenarios**:
+
 - Successful purchases
 - Cancelled purchases
 - Subscription renewals (accelerated time)
@@ -1392,11 +1489,13 @@ if renewalInfo.expirationReason == .didNotConsentToPriceIncrease {
 ### Sandbox Testing
 
 **Create Sandbox Account**:
+
 1. App Store Connect → Users and Access → Sandbox Testers
 2. Create test Apple ID
 3. Sign in on device Settings → App Store → Sandbox Account
 
 **Clear Purchase History**:
+
 - Settings → App Store → Sandbox Account → Clear Purchase History
 
 ---
@@ -1406,6 +1505,7 @@ if renewalInfo.expirationReason == .didNotConsentToPriceIncrease {
 ### Key Changes
 
 **Delegates → Async/Await**:
+
 ```swift
 // StoreKit 1
 class StoreObserver: NSObject, SKPaymentTransactionObserver {
@@ -1421,6 +1521,7 @@ for await result in Transaction.updates {
 ```
 
 **Receipt → Transaction**:
+
 ```swift
 // StoreKit 1
 let receiptURL = Bundle.main.appStoreReceiptURL
@@ -1431,6 +1532,7 @@ let transaction: Transaction // Automatically verified!
 ```
 
 **Products → Product.products(for:)**:
+
 ```swift
 // StoreKit 1
 let request = SKProductsRequest(productIdentifiers: Set(productIDs))
@@ -1456,17 +1558,20 @@ let products = try await Product.products(for: productIDs)
 ## Quick Reference
 
 ### Product Types
+
 - `.consumable` - Can purchase multiple times (coins, boosts)
 - `.nonConsumable` - Purchase once, own forever (premium, level packs)
 - `.autoRenewable` - Auto-renewing subscriptions
 - `.nonRenewing` - Fixed duration subscriptions
 
 ### Transaction States
+
 - `success` - Purchase completed
 - `userCancelled` - User tapped cancel
 - `pending` - Requires action (Ask to Buy)
 
 ### Subscription States
+
 - `.subscribed` - Active subscription
 - `.expired` - Subscription ended
 - `.inGracePeriod` - Billing issue, access maintained
@@ -1474,6 +1579,7 @@ let products = try await Product.products(for: productIDs)
 - `.revoked` - Family Sharing removed
 
 ### Essential Calls
+
 ```swift
 // Load products
 try await Product.products(for: productIDs)

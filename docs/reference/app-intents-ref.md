@@ -10,6 +10,7 @@ Complete API reference for App Intents framework. Covers AppIntent protocol, App
 ## When to Use This Reference
 
 Use this reference when you need:
+
 - AppIntent and AppEntity protocol implementation
 - Parameter types and validation patterns
 - Entity queries for Siri disambiguation
@@ -34,35 +35,41 @@ Questions you can ask Claude that will draw from this reference:
 ## What's Covered
 
 ### Core Protocols
+
 - AppIntent definition and perform()
 - AppEntity with display representations
 - EntityQuery for finding entities
 - Parameter types and validation
 
 ### Siri Integration
+
 - Voice command handling
 - Disambiguation prompts
 - Confirmation dialogs
 - Error messages for voice
 
 ### Apple Intelligence
+
 - Smart suggestions
 - Contextual actions
 - Proactive recommendations
 - System integration
 
 ### Shortcuts App
+
 - Action discovery
 - Parameter customization
 - Multi-step workflows
 - Background execution
 
 ### Spotlight Search
+
 - Intent indexing
 - Search result actions
 - Deep linking patterns
 
 ### Debugging
+
 - Intent testing in Xcode
 - Shortcuts app debugging
 - Siri transcript logging

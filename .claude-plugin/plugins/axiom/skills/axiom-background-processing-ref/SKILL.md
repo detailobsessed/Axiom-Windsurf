@@ -67,6 +67,7 @@ func application(
 ```
 
 **Parameters**:
+
 - `forTaskWithIdentifier`: Must match Info.plist exactly (case-sensitive)
 - `using`: DispatchQueue for handler callback; nil = system creates one
 - `launchHandler`: Called when task is launched; receives BGTask subclass
@@ -77,6 +78,7 @@ From WWDC 2019-707:
 > "You do this by registering a launch handler **before your application finishes launching**"
 
 Register in:
+
 - ✅ `application(_:didFinishLaunchingWithOptions:)` before `return true`
 - ❌ Not in viewDidLoad, button handlers, or async callbacks
 

@@ -13,6 +13,7 @@ Complete reference for converting OpenGL/DirectX code to Metal.
 ## When to Use This Reference
 
 Use this reference when:
+
 - Converting GLSL shaders to Metal Shading Language (MSL)
 - Converting HLSL shaders to MSL
 - Looking up GL/D3D API equivalents in Metal
@@ -75,10 +76,10 @@ Use this reference when:
 | GLSL | MSL | Notes |
 |------|-----|-------|
 | `texture(sampler, uv)` | `tex.sample(sampler, uv)` | Method on texture |
-| `textureLod(sampler, uv, lod)` | `tex.sample(sampler, uv, level(lod))` | |
+| `textureLoad(sampler, uv, load)` | `tex.sample(sampler, uv, level(load))` | |
 | `textureGrad(sampler, uv, ddx, ddy)` | `tex.sample(sampler, uv, gradient2d(ddx, ddy))` | |
-| `texelFetch(sampler, coord, lod)` | `tex.read(coord, lod)` | Integer coords |
-| `textureSize(sampler, lod)` | `tex.get_width(lod)`, `tex.get_height(lod)` | Separate calls |
+| `texelFetch(sampler, coord, load)` | `tex.read(coord, load)` | Integer coords |
+| `textureSize(sampler, load)` | `tex.get_width(load)`, `tex.get_height(load)` | Separate calls |
 | `dFdx(v)` | `dfdx(v)` | |
 | `dFdy(v)` | `dfdy(v)` | |
 | `fwidth(v)` | `fwidth(v)` | Same |
@@ -94,6 +95,7 @@ Use this reference when:
 ### Shader Structure Conversion
 
 **GLSL Vertex Shader**:
+
 ```glsl
 #version 300 es
 precision highp float;
@@ -112,6 +114,7 @@ void main() {
 ```
 
 **MSL Vertex Shader**:
+
 ```metal
 #include <metal_stdlib>
 using namespace metal;
@@ -142,6 +145,7 @@ vertex VertexOut vertexShader(
 ```
 
 **GLSL Fragment Shader**:
+
 ```glsl
 #version 300 es
 precision highp float;
@@ -157,6 +161,7 @@ void main() {
 ```
 
 **MSL Fragment Shader**:
+
 ```metal
 fragment float4 fragmentShader(
     VertexOut in [[stage_in]],
@@ -183,10 +188,12 @@ GLSL precision qualifiers have no direct MSL equivalent — MSL uses explicit ty
 ### Buffer Alignment (Critical)
 
 **GLSL/C assumes**:
+
 - `vec3`: 12 bytes, any alignment
 - `vec4`: 16 bytes
 
 **MSL requires**:
+
 - `float3`: 12 bytes storage, **16-byte aligned**
 - `float4`: 16 bytes storage, 16-byte aligned
 
@@ -203,6 +210,7 @@ struct Uniforms {
 ```
 
 Or use packed types in MSL (slower):
+
 ```metal
 struct VertexPacked {
     packed_float3 position;  // 12 bytes, no padding
@@ -259,7 +267,7 @@ struct VertexPacked {
 | HLSL | MSL | Notes |
 |------|-----|-------|
 | `tex.Sample(samp, uv)` | `tex.sample(samp, uv)` | Lowercase |
-| `tex.SampleLevel(samp, uv, lod)` | `tex.sample(samp, uv, level(lod))` | |
+| `tex.SampleLevel(samp, uv, load)` | `tex.sample(samp, uv, level(load))` | |
 | `tex.SampleGrad(samp, uv, ddx, ddy)` | `tex.sample(samp, uv, gradient2d(ddx, ddy))` | |
 | `tex.Load(coord)` | `tex.read(coord.xy, coord.z)` | Split coord |
 | `mul(a, b)` | `a * b` | Operator |
@@ -276,6 +284,7 @@ struct VertexPacked {
 Apple's official tool for converting DXIL (compiled HLSL) to Metal libraries.
 
 **Requirements**:
+
 - macOS 13+ with Xcode 15+
 - OR Windows 10+ with VS 2019+
 - Target devices: Argument Buffers Tier 2 (macOS 14+, iOS 17+)

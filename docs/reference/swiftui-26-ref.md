@@ -10,6 +10,7 @@ Complete API reference for iOS 26 SwiftUI features. Covers Liquid Glass design s
 ## When to Use This Reference
 
 Use this reference when you need:
+
 - Liquid Glass APIs and toolbar patterns
 - Performance improvements in iOS 26
 - @Animatable macro for custom animation
@@ -34,6 +35,7 @@ Questions you can ask Claude that will draw from this reference:
 ## What's Covered
 
 ### Liquid Glass Design
+
 - .glassBackgroundEffect() modifier
 - Toolbar spacers and roles
 - Bottom-aligned search fields
@@ -41,6 +43,7 @@ Questions you can ask Claude that will draw from this reference:
 - Material-aware backgrounds
 
 ### Performance Improvements
+
 - 6x faster simple lists
 - 16x faster complex lists
 - Nested ScrollView optimization
@@ -48,29 +51,34 @@ Questions you can ask Claude that will draw from this reference:
 - Cause & Effect Graph
 
 ### @Animatable Macro
+
 - Automatic animatableData synthesis
 - @AnimatableIgnored for excluded properties
 - Custom animation interpolation
 
 ### WebView Integration
+
 - WebView for URL content
 - WebPage for custom HTML
 - Navigation and load status handling
 - JavaScript interaction
 
 ### Rich Text Editing
+
 - TextEditor with AttributedString
 - .textFormatting() modifier
 - Character-level styling
 - Markdown export
 
 ### 3D Charts
+
 - Chart3D container
 - BarMark3D, LineMark3D, PointMark3D
 - Perspective options
 - Data visualization in 3D
 
 ### Scene Bridging
+
 - UIKit ↔ SwiftUI transitions
 - .sceneBridge() modifier
 - Shared state management

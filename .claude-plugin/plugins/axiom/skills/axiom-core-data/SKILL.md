@@ -15,6 +15,7 @@ related: [core-data-diag, axiom-swiftdata, axiom-database-migration]
 **Core principle**: Core Data is a mature object graph and persistence framework. Use it when needing features SwiftData doesn't support, or when targeting older iOS versions.
 
 **When to use Core Data vs SwiftData**:
+
 - **SwiftData** (iOS 17+) — New apps, simpler API, Swift-native
 - **Core Data** — iOS 16 and earlier, advanced features, existing codebases
 
@@ -287,6 +288,7 @@ request.returnsObjectsAsFaults = true  // Default, memory efficient
 ### Lightweight Migration (Automatic)
 
 Handled automatically for:
+
 - Adding optional attributes
 - Removing attributes
 - Renaming (with renaming identifier)

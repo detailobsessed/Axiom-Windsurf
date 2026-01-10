@@ -13,6 +13,7 @@ Comprehensive API reference for Apple's widget and extension ecosystem. Covers W
 ## When to Use This Reference
 
 Use this reference when you need:
+
 - Complete API signatures for WidgetKit or ActivityKit
 - Timeline configuration options and refresh policies
 - Live Activity data limits and update patterns
@@ -36,6 +37,7 @@ Questions you can ask Claude that will draw from this reference:
 ## What's Covered
 
 ### Standard Widgets (iOS 14+)
+
 - Widget protocol and WidgetConfiguration
 - TimelineProvider: getTimeline, getSnapshot, placeholder
 - TimelineReloadPolicy: atEnd, after, never
@@ -43,12 +45,14 @@ Questions you can ask Claude that will draw from this reference:
 - WidgetCenter for reloads and configuration
 
 ### Interactive Widgets (iOS 17+)
+
 - Button and Toggle in widget views
 - App Intent integration with perform()
 - Configuration intents
 - WidgetCenter.shared.reloadAllTimelines()
 
 ### Live Activities (iOS 16.1+)
+
 - ActivityAttributes definition
 - Dynamic Island layouts (compact, minimal, expanded)
 - 4KB content state limit
@@ -56,28 +60,33 @@ Questions you can ask Claude that will draw from this reference:
 - ActivityKit request and update APIs
 
 ### Control Center Controls (iOS 18+)
+
 - Control protocol
 - ValueProvider for async state
 - ControlWidgetButton and ControlWidgetToggle
 - Optimistic UI patterns
 
 ### App Groups & Data Sharing
+
 - Entitlement configuration
 - UserDefaults(suiteName:) patterns
 - Container URLs for file sharing
 - Background refresh coordination
 
 ### Platform Variations
+
 - watchOS widget considerations
 - visionOS widget support
 - macOS desktop widgets
 
 ### Troubleshooting
+
 - Common failure patterns
 - Debug logging techniques
 - Memory limit issues
 
 ### Expert Review Checklist
+
 - 50+ item checklist for widget code review
 - Timeline efficiency validation
 - Data sharing verification

@@ -54,6 +54,7 @@ struct User: Codable {
 ```
 
 **Requirements**:
+
 - All stored properties must conform to Codable
 - Properties use standard Swift types or other Codable types
 - No custom initialization logic needed
@@ -121,6 +122,7 @@ enum Command: Codable {
 ### When Synthesis Breaks
 
 Automatic synthesis fails when:
+
 1. **Computed properties** - Only stored properties are encoded
 2. **Non-Codable properties** - Custom types without Codable conformance
 3. **Property wrappers** - `@Published`, `@State` (except `@AppStorage` with Codable types)
@@ -644,11 +646,13 @@ do {
 **Pressure**: "We can debug it later, just make it work now."
 
 **Why You'll Rationalize**:
+
 - "It's only failing on 1% of requests"
 - "We can add logging later"
 - "Customers won't notice"
 
 **What Actually Happens**:
+
 - Silent data loss for that 1%
 - No logs, so you can't debug in production
 - Customer complaints 3 months later
@@ -686,11 +690,13 @@ do {
 **Pressure**: "It works for me, QA must be doing something wrong."
 
 **Why You'll Rationalize**:
+
 - "My tests pass locally"
 - "The server is probably sending bad data"
 - "It's their device settings"
 
 **What Actually Happens**:
+
 - Server sends dates without timezone: `"2024-12-14T10:00:00"`
 - Your device (PST) interprets as 10:00 PST
 - QA device (CET) interprets as 10:00 CET
@@ -743,11 +749,13 @@ decoder.dateDecodingStrategy = .custom { decoder in
 **Pressure**: "Can't you just make that field optional? We need this shipped."
 
 **Why You'll Rationalize**:
+
 - "It's faster than fixing the API"
 - "We can make it non-optional later"
 - "Users won't notice"
 
 **What Actually Happens**:
+
 - Field is actually required for the feature
 - You add `user.email ?? ""` everywhere
 - 3 months later: production crash because `email` was nil
@@ -775,6 +783,7 @@ do {
 ```
 
 **Common Outcomes**:
+
 1. **API is wrong**: Field should be there → File bug, get hotfix
 2. **Model is wrong**: Field is optional in some flows → Use proper optionality with clear documentation
 3. **Structural mismatch**: Field is nested → Use nested container

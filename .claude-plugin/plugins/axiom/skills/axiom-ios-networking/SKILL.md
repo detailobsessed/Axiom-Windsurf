@@ -11,6 +11,7 @@ user-invocable: false
 ## When to Use
 
 Use this router when:
+
 - Implementing network requests (URLSession)
 - Using Network.framework or NetworkConnection
 - Debugging connection failures
@@ -40,6 +41,7 @@ Do NOT capitulate to sunk cost pressure. The correct approach is:
 ### Network Implementation
 
 **Networking patterns** → `/skill axiom-networking`
+
 - URLSession with structured concurrency
 - Network.framework migration
 - Modern networking patterns
@@ -48,6 +50,7 @@ Do NOT capitulate to sunk cost pressure. The correct approach is:
 **Network.framework reference** → `/skill axiom-network-framework-ref`
 **Legacy iOS 12-25 patterns** → `/skill axiom-networking-legacy`
 **Migration guides** → `/skill axiom-networking-migration`
+
 - NWConnection (iOS 12-25)
 - NetworkConnection (iOS 26+)
 - TCP connections
@@ -57,6 +60,7 @@ Do NOT capitulate to sunk cost pressure. The correct approach is:
 ### Network Debugging
 
 **Connection issues** → `/skill axiom-networking-diag`
+
 - Connection timeouts
 - TLS handshake failures
 - Data not arriving
@@ -80,16 +84,19 @@ User asks about networking
 ## Critical Patterns
 
 **Networking** (networking):
+
 - URLSession with structured concurrency
 - Socket migration to Network.framework
 - Deprecated API replacement
 
 **Network Framework Reference** (network-framework-ref):
+
 - NWConnection for iOS 12-25
 - NetworkConnection for iOS 26+
 - Connection lifecycle management
 
 **Networking Diagnostics** (networking-diag):
+
 - Connection timeout diagnosis
 - TLS debugging
 - Network stack inspection

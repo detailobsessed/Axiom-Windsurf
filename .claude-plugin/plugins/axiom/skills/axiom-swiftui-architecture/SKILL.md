@@ -12,6 +12,7 @@ xcode_version: Xcode 26+
 ## When to Use This Skill
 
 Use this skill when:
+
 - You have logic in your SwiftUI view files and want to extract it
 - Choosing between MVVM, TCA, vanilla SwiftUI patterns, or Coordinator
 - Refactoring views to separate concerns
@@ -70,6 +71,7 @@ What's driving your architecture choice?
 > — Apple Developer Documentation
 
 Apple's modern SwiftUI patterns (WWDC 2023-2025) center on:
+
 1. **@Observable** for data models (replaces ObservableObject)
 2. **State-as-Bridge** for async boundaries (WWDC 2025)
 3. **Three property wrappers**: @State, @Environment, @Bindable
@@ -144,6 +146,7 @@ struct ColorExtractorView: View {
 ```
 
 **Benefits**:
+
 - UI logic stays synchronous (animations work correctly)
 - Async code lives in the model (testable without SwiftUI)
 - Clear boundary between time-sensitive UI and long-running work
@@ -259,6 +262,7 @@ struct DonutMenu: View {
 ```
 
 **How it works** (WWDC 2023/10149):
+
 - SwiftUI tracks which properties are accessed during `body` execution
 - Only those properties trigger view updates when changed
 - Granular dependency tracking = better performance
@@ -296,12 +300,14 @@ struct PetListView: View {
 ```
 
 **When to use a ViewModel adapter**:
+
 - Filtering, sorting, grouping for display
 - Formatting for presentation (but NOT heavy computation)
 - View-specific state that doesn't belong in domain model
 - Bridging between domain model and SwiftUI conventions
 
 **When NOT to use a ViewModel**:
+
 - Simple views that just display model data
 - Logic that belongs in the domain model
 - Over-extraction just for "pattern purity"
@@ -320,6 +326,7 @@ MVVM (Model-View-ViewModel) is appropriate when:
 ✅ **You're migrating from UIKit** — Familiar mental model
 
 ❌ **Avoid MVVM when**:
+
 - Views are simple (just displaying data)
 - You're starting fresh with SwiftUI (Apple's patterns are simpler)
 - You're creating unnecessary abstraction layers
@@ -504,6 +511,7 @@ TCA is a third-party architecture from Point-Free. Consider it when:
 ✅ **You value Redux-like patterns** — Unidirectional data flow
 
 ❌ **Avoid TCA when**:
+
 - Small app or prototype (too much overhead)
 - Team unfamiliar with functional programming
 - You need rapid iteration (boilerplate slows development)
@@ -727,6 +735,7 @@ You can combine Coordinators with any architecture:
 Run this checklist on your views:
 
 **View body contains:**
+
 - DateFormatter, NumberFormatter creation
 - Calculations or data transformations
 - API calls or async operations
@@ -923,6 +932,7 @@ struct ProductListView: View {
 ```
 
 **Why it's wrong**:
+
 - `formatter` created on every render (performance)
 - `sorted` computed on every render (performance)
 - Business logic (`sorted`) lives in view (not testable)
@@ -984,6 +994,7 @@ struct ColorExtractorView: View {
 ```
 
 **Why it's wrong**:
+
 - `await` creates suspension point
 - `isLoading = false` might happen after frame deadline
 - Animation timing is unpredictable
@@ -1072,6 +1083,7 @@ class AppViewModel {
 ```
 
 **Why it's wrong**:
+
 - Violates Single Responsibility Principle
 - Hard to test
 - Poor performance (changes anywhere update all views)
@@ -1091,6 +1103,7 @@ class AppViewModel {
 Before merging SwiftUI code, verify:
 
 ### Views
+
 - View bodies contain ONLY UI code (Text, Button, List, etc.)
 - No formatters created in view body
 - No calculations or transformations in view body
@@ -1098,23 +1111,27 @@ Before merging SwiftUI code, verify:
 - No business rules in view body
 
 ### Logic Separation
+
 - Business logic is in models (testable without SwiftUI)
 - Presentation logic is in ViewModels or computed properties
 - Side effects are in services or model methods
 - Heavy computations are cached or computed once
 
 ### Property Wrappers
+
 - @State for view-owned models
 - @Environment for app-wide models
 - @Bindable when bindings are needed
 - No wrapper when just reading
 
 ### Animations & Async
+
 - State changes for animations are synchronous
 - Async boundaries use State-as-Bridge pattern
 - No `await` between `withAnimation { }` blocks
 
 ### Testability
+
 - Can test business logic without importing SwiftUI
 - Can test ViewModels without rendering views
 - Navigation logic is isolated (if using Coordinators)
@@ -1132,6 +1149,7 @@ Before merging SwiftUI code, verify:
 ### Red Flags
 
 If you hear:
+
 - ❌ "We'll refactor later" (tech debt that never gets paid)
 - ❌ "It's just one view" (views multiply)
 - ❌ "We don't have time for architecture" (costs more later)
@@ -1139,6 +1157,7 @@ If you hear:
 ### Time Cost Comparison
 
 **Option A: Put logic in view**
+
 - Write feature in view: 2 hours
 - Realize it's untestable: 1 hour
 - Try to test it anyway: 2 hours
@@ -1146,6 +1165,7 @@ If you hear:
 - **Total: 5 hours, 0 tests**
 
 **Option B: Extract logic properly**
+
 - Create model/ViewModel: 30 min
 - Write feature with separation: 2 hours
 - Write tests: 1 hour
@@ -1163,6 +1183,7 @@ If you hear:
 > "If we're truly out of time, I can extract 80% now and mark the remaining 20% as tech debt with a ticket. But let's not skip extraction entirely."
 
 **Step 4**: Document if pressured to proceed
+
 ```swift
 // TODO: TECH DEBT - Extract business logic to ViewModel
 // Ticket: PROJ-123
@@ -1174,6 +1195,7 @@ If you hear:
 ### When to Accept
 
 Only skip extraction if:
+
 1. This is a throwaway prototype (deleted next week)
 2. You have explicit time budget for refactoring (scheduled ticket)
 3. The view will never grow beyond 20 lines
@@ -1198,6 +1220,7 @@ Ask these questions:
 | Do you have complex side effects (sockets, timers)? | ✅ | ~ |
 
 **Recommendation matrix**:
+
 - 4+ checks for TCA → Use TCA
 - 4+ checks for Vanilla → Use Vanilla
 - Tie → Start with Vanilla, migrate to TCA if needed
@@ -1221,22 +1244,26 @@ Ask these questions:
 You don't have to refactor everything at once:
 
 **Week 1**: Extract 1 view
+
 - Pick the most painful view (lots of logic)
 - Extract to ViewModel
 - Write tests
 - **Time**: 4 hours
 
 **Week 2**: Extract 2 views
+
 - Now you have a pattern to follow
 - Faster than week 1
 - **Time**: 6 hours
 
 **Week 3**: New features use proper architecture
+
 - Don't refactor old code yet
 - All NEW code follows the pattern
 - **Time**: 0 hours (same as before)
 
 **Month 2**: Gradually refactor as you touch files
+
 - Refactor when fixing bugs in old views
 - Refactor when adding features to old views
 - **Time**: Amortized over feature work
@@ -1244,6 +1271,7 @@ You don't have to refactor everything at once:
 ### How to Push Back
 
 > "I'm not proposing we stop feature work for 2 weeks. I'm proposing:
+>
 > 1. Week 1: Extract our worst view (the OrdersView with 500 lines)
 > 2. Week 2: Extract 2 more problematic views
 > 3. Going forward: All NEW features use proper architecture
@@ -1337,6 +1365,7 @@ struct OrderListView: View {
 ```
 
 **Problems**:
+
 - 200+ lines in one file
 - Formatters created every render (performance)
 - Business logic untestable
@@ -1491,6 +1520,7 @@ final class OrderViewModelTests: XCTestCase {
 ```
 
 **Benefits**:
+
 - View: 40 lines (was 200)
 - ViewModel: Fully testable without SwiftUI
 - Model: Pure business logic

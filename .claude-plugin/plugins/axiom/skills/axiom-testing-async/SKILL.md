@@ -12,6 +12,7 @@ Modern patterns for testing async/await code with Swift Testing framework.
 ## When to Use
 
 ✅ **Use when:**
+
 - Writing tests for async functions
 - Testing callback-based APIs with Swift Testing
 - Migrating async XCTests to Swift Testing
@@ -19,6 +20,7 @@ Modern patterns for testing async/await code with Swift Testing framework.
 - Need to verify events fire expected number of times
 
 ❌ **Don't use when:**
+
 - XCTest-only project (use XCTestExpectation)
 - UI automation tests (use XCUITest)
 - Performance testing with metrics (use XCTest)

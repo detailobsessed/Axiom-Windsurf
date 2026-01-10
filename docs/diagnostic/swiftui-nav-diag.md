@@ -12,6 +12,7 @@ Systematic troubleshooting for SwiftUI navigation problems. Covers NavigationSta
 ## Symptoms This Diagnoses
 
 Use when you're experiencing:
+
 - Navigation tap does nothing (link present but doesn't push)
 - Back button pops to wrong screen or root
 - Deep link opens app but shows wrong screen
@@ -47,6 +48,7 @@ Claude guides you through systematic diagnosis:
 ### Step 2: Mandatory First Checks
 
 Before changing code:
+
 1. Add `onChange(of: path.count)` logging
 2. Verify NavigationLink is inside NavigationStack hierarchy
 3. Check @State path location (must be stable, not recreated)
@@ -55,6 +57,7 @@ Before changing code:
 ### Step 3: Apply Targeted Pattern
 
 Claude provides specific fix patterns based on your symptom:
+
 - **Pattern 1a-1e**: Link/destination issues
 - **Pattern 2a-2e**: Unexpected pop issues
 - **Pattern 3a-3d**: Deep linking issues

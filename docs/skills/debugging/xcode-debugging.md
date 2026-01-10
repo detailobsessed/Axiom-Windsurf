@@ -10,6 +10,7 @@ Environment-first diagnostics for mysterious Xcode issues. Prevents 30+ minute r
 ## When to Use This Skill
 
 Use this skill when you're:
+
 - Getting BUILD FAILED with no clear error
 - Tests passed yesterday, failing today with no code changes
 - Build succeeds but old code executes
@@ -34,6 +35,7 @@ Questions you can ask Claude that will draw from this skill:
 ## What's Covered
 
 ### Red Flags (Check Environment First)
+
 - "It works on my machine but not CI"
 - "Tests passed yesterday, failing today"
 - "Build succeeds but old code executes"
@@ -42,18 +44,21 @@ Questions you can ask Claude that will draw from this skill:
 - Multiple zombie xcodebuild processes
 
 ### Environment Diagnostics
+
 - Derived Data state and cleanup
 - Simulator health checks with simctl
 - Zombie process detection and cleanup
 - SPM cache verification
 
 ### Recovery Commands
+
 - Safe Derived Data deletion
 - Simulator reset and recovery
 - Process cleanup without reboot
 - SPM cache refresh
 
 ### Time Cost Transparency
+
 - 2-5 minutes: Derived Data cleanup
 - 5-10 minutes: Full environment reset
 - 30+ minutes: Debugging code when problem is environment

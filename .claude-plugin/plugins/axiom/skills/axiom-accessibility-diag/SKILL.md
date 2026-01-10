@@ -34,6 +34,7 @@ Systematic accessibility diagnosis and remediation for iOS/macOS apps. Covers th
 **WCAG** 4.1.2 Name, Role, Value (Level A)
 
 #### Common violations
+
 ```swift
 // ❌ WRONG - No label (VoiceOver says "Button")
 Button(action: addToCart) {
@@ -58,11 +59,13 @@ Button(action: addToCart) {
 ```
 
 #### When to use hints
+
 - Action is not obvious from label ("Add to cart" is obvious, no hint needed)
 - Multi-step interaction ("Swipe right to confirm, left to cancel")
 - State change ("Double-tap to toggle notifications on or off")
 
 #### Decorative elements
+
 ```swift
 // ✅ CORRECT - Hide decorative images from VoiceOver
 Image("decorative-pattern")
@@ -79,6 +82,7 @@ HStack {
 ```
 
 #### Testing
+
 - Enable VoiceOver: Cmd+F5 (simulator) or triple-click side button (device)
 - Navigate: Swipe right/left to move between elements
 - Listen: Does VoiceOver announce purpose clearly?
@@ -93,6 +97,7 @@ HStack {
 **WCAG** 1.4.4 Resize Text (Level AA - support 200% scaling without loss of content/functionality)
 
 #### Common violations
+
 ```swift
 // ❌ WRONG - Fixed size, won't scale
 Text("Price: $19.99")
@@ -121,6 +126,7 @@ label.adjustsFontForContentSizeCategory = true
 ```
 
 #### Custom sizes that scale with Dynamic Type
+
 ```swift
 // ❌ WRONG - Fixed size, won't scale
 Text("Price: $19.99")
@@ -143,22 +149,26 @@ Text("Headline")
 ```
 
 **How `relativeTo:` works**
+
 - Base size: Your exact pixel size (24pt, 60pt, etc.)
 - Scales with: The text style you specify (`.title2`, `.largeTitle`, etc.)
 - Result: When user increases text size in Settings, your custom size grows proportionally
 
 **Example**
+
 - `.title2` base: ~22pt → Your custom: 24pt (1.09x larger)
 - User increases to "Extra Large" text
 - `.title2` grows to ~28pt → Your custom grows to ~30.5pt (maintains 1.09x ratio)
 
 **Fix hierarchy (best to worst)**
+
 1. **Best**: Use semantic styles (`.title`, `.body`, `.caption`)
 2. **Good**: Use `.system(size:).relativeTo()` for required custom sizes
 3. **Acceptable**: Custom font with `.dynamicTypeSize()` modifier
 4. **Unacceptable**: Fixed sizes that never scale
 
 #### SwiftUI text styles
+
 - `.largeTitle` - 34pt (scales to 44pt at accessibility sizes)
 - `.title` - 28pt
 - `.title2` - 22pt
@@ -172,6 +182,7 @@ Text("Headline")
 - `.caption2` - 11pt
 
 #### Layout considerations
+
 ```swift
 // ❌ WRONG - Fixed frame breaks with large text
 Text("Long product description...")
@@ -193,7 +204,9 @@ HStack {
 ```
 
 #### Testing
+
 1. Xcode Preview: Environment override
+
    ```swift
    .environment(\.sizeCategory, .accessibilityExtraExtraExtraLarge)
    ```
@@ -211,6 +224,7 @@ HStack {
 **Problem** Low contrast text is unreadable for users with vision disabilities or in bright sunlight.
 
 #### WCAG
+
 - **1.4.3 Contrast (Minimum)** — Level AA
   - Normal text (< 18pt): 4.5:1 contrast ratio
   - Large text (≥ 18pt or ≥ 14pt bold): 3:1 contrast ratio
@@ -219,6 +233,7 @@ HStack {
   - Large text: 4.5:1 contrast ratio
 
 #### Common violations
+
 ```swift
 // ❌ WRONG - Low contrast (1.8:1 - fails WCAG)
 Text("Warning")
@@ -241,6 +256,7 @@ Text("Secondary")
 ```
 
 #### Differentiate Without Color
+
 ```swift
 // ❌ WRONG - Color alone indicates status
 Circle()
@@ -260,12 +276,14 @@ if UIAccessibility.shouldDifferentiateWithoutColor {
 ```
 
 #### Testing
+
 1. Use Color Contrast Analyzer tool (free download)
 2. Screenshot your UI, measure text vs background
 3. Check both light and dark mode
 4. Settings → Accessibility → Display & Text Size → Increase Contrast (test with this ON)
 
 #### Quick reference
+
 - Black (#000000) on White (#FFFFFF): 21:1 ✅ AAA
 - Dark Gray (#595959) on White: 7:1 ✅ AAA
 - Medium Gray (#767676) on White: 4.5:1 ✅ AA
@@ -282,6 +300,7 @@ if UIAccessibility.shouldDifferentiateWithoutColor {
 **Apple HIG** 44x44pt minimum for all tappable elements
 
 #### Common violations
+
 ```swift
 // ❌ WRONG - Too small (24x24pt)
 Button("×") {
@@ -313,6 +332,7 @@ button.contentEdgeInsets = UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12
 ```
 
 #### Spacing between targets
+
 ```swift
 // ❌ WRONG - Targets too close (hard to tap accurately)
 HStack(spacing: 4) {
@@ -328,6 +348,7 @@ HStack(spacing: 12) {
 ```
 
 #### Testing
+
 1. Accessibility Inspector: Xcode → Open Developer Tool → Accessibility Inspector
 2. Select "Audit" tab → Run audit → Check for "Small Text" and "Hit Region" warnings
 3. Manual: Tap with one finger (not stylus) — can you hit it reliably without mistakes?
@@ -341,6 +362,7 @@ HStack(spacing: 12) {
 **WCAG** 2.1.1 Keyboard (Level A - all functionality available via keyboard)
 
 #### Common violations
+
 ```swift
 // ❌ WRONG - Custom gesture without keyboard alternative
 .onTapGesture {
@@ -371,6 +393,7 @@ struct CustomButton: View {
 ```
 
 #### Focus management
+
 ```swift
 // ✅ CORRECT - Set initial focus
 .focusSection() // Group related controls
@@ -385,6 +408,7 @@ Button("Next") {
 ```
 
 #### Testing (iPadOS/macOS)
+
 1. Connect keyboard to iPad or use Mac
 2. Press Tab - does focus move to interactive elements?
 3. Press Space/Return - does focused element activate?
@@ -400,6 +424,7 @@ Button("Next") {
 **WCAG** 2.3.3 Animation from Interactions (Level AAA - motion animation can be disabled)
 
 #### Common violations
+
 ```swift
 // ❌ WRONG - Always animates (can cause nausea)
 .onAppear {
@@ -442,6 +467,7 @@ if UIAccessibility.isReduceMotionEnabled {
 ```
 
 #### SwiftUI modifier
+
 ```swift
 // ✅ CORRECT - Automatic support
 .animation(.spring(), value: isExpanded)
@@ -453,6 +479,7 @@ if UIAccessibility.isReduceMotionEnabled {
 ```
 
 #### Testing
+
 1. Settings → Accessibility → Motion → Reduce Motion (toggle ON)
 2. Navigate app - are animations reduced or eliminated?
 3. Test: Transitions, scrolling effects, parallax, particle effects
@@ -607,10 +634,12 @@ Xcode → Open Developer Tool → Accessibility Inspector
 ## VoiceOver Testing Checklist
 
 ### Enable VoiceOver
+
 - **Simulator** Cmd+F5 or Settings → Accessibility → VoiceOver
 - **Device** Triple-click side button (if enabled in Settings)
 
 ### Navigation Testing
+
 1. ☐ Swipe right/left - moves logically through UI elements
 2. ☐ Each element announces purpose clearly
 3. ☐ No unlabeled elements (except decorative)
@@ -618,6 +647,7 @@ Xcode → Open Developer Tool → Accessibility Inspector
 5. ☐ Container navigation works (swipe left/right with 3 fingers)
 
 ### Interaction Testing
+
 1. ☐ Double-tap activates buttons
 2. ☐ Swipe up/down adjusts sliders/pickers (with `.accessibilityAdjustableAction`)
 3. ☐ Custom gestures have VoiceOver equivalents
@@ -625,6 +655,7 @@ Xcode → Open Developer Tool → Accessibility Inspector
 5. ☐ State changes are announced
 
 ### Content Testing
+
 1. ☐ Images have descriptive labels or are hidden
 2. ☐ Error messages are announced
 3. ☐ Loading states are announced
@@ -651,6 +682,7 @@ Xcode → Open Developer Tool → Accessibility Inspector
 ### App Store Connect Metadata
 
 When submitting:
+
 1. Accessibility → Select features your app supports:
    - ☑ VoiceOver
    - ☑ Dynamic Type
@@ -658,6 +690,7 @@ When submitting:
    - ☑ Reduce Motion (if supported)
 
 2. Test Notes: Document accessibility testing
+
    ```
    Accessibility Testing Completed:
    - VoiceOver: All screens tested with VoiceOver enabled
@@ -691,6 +724,7 @@ When submitting:
 ### The Problem
 
 Under design review pressure, you'll face requests to:
+
 - "Those VoiceOver labels make the code messy - can we skip them?"
 - "Dynamic Type breaks our carefully designed layout - let's lock font sizes"
 - "The high contrast requirement ruins our brand aesthetic"
@@ -732,12 +766,14 @@ Let me show where our design currently falls short..."
 #### Step 2: Demonstrate the Risk
 
 Open the app with accessibility features enabled:
+
 - **VoiceOver** (Cmd+F5): Show buttons announcing "Button" instead of purpose
 - **Largest Text Size**: Show layout breaking or text clipping
 - **Color Contrast Analyzer**: Show failing contrast ratios
 - **Touch target overlay**: Show targets < 44pt
 
 #### Reference
+
 - App Store Review Guideline 2.5.1
 - WCAG 2.1 Level AA (industry standard)
 - ADA compliance requirements (legal risk in US)
@@ -779,6 +815,7 @@ I'm flagging this proactively so we can prepare a response plan if rejected."
 ```
 
 #### Why this works
+
 - You're not questioning their design taste
 - You're raising App Store rejection risk (business impact)
 - You're citing specific guidelines (not opinion)
@@ -788,6 +825,7 @@ I'm flagging this proactively so we can prepare a response plan if rejected."
 ### Real-World Example: App Store Rejection (48-Hour Resubmit Window)
 
 #### Scenario
+
 - 48 hours until resubmit deadline after rejection
 - Apple cited: "2.5.1 - Insufficient VoiceOver support"
 - Designer says: "Just add generic labels quickly"
@@ -811,6 +849,7 @@ Button(action: addToCart) {
 ```
 
 #### In the meeting, demonstrate
+
 1. Enable VoiceOver (Cmd+F5)
 2. Show "Button" announcement (generic - fails)
 3. Show "Add to cart" announcement (descriptive - passes)
@@ -819,6 +858,7 @@ Button(action: addToCart) {
 **Time estimate** 2-4 hours to audit all interactive elements and add proper labels.
 
 #### Result
+
 - Honest time estimate prevents second rejection
 - Proper labels pass Apple review
 - Resubmit accepted within 48 hours
@@ -855,16 +895,19 @@ This protects both of you and shows you're not blocking - just de-risking.
 ## WCAG Compliance Levels
 
 ### Level A (Minimum — Required for App Store)
+
 - 1.1.1 Non-text Content — Images have text alternatives
 - 2.1.1 Keyboard — All functionality via keyboard (iPadOS/macOS)
 - 4.1.2 Name, Role, Value — Elements have accessible names
 
 ### Level AA (Standard — Recommended)
+
 - 1.4.3 Contrast (Minimum) — 4.5:1 text, 3:1 UI
 - 1.4.4 Resize Text — Support 200% text scaling
 - 1.4.5 Images of Text — Use real text when possible
 
 ### Level AAA (Enhanced — Best Practice)
+
 - 1.4.6 Contrast (Enhanced) — 7:1 text, 4.5:1 UI
 - 2.3.3 Animation from Interactions — Reduce Motion support
 - 2.5.5 Target Size - 44x44pt minimum targets

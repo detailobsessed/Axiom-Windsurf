@@ -35,11 +35,13 @@ If no area specified → analyze project and suggest relevant audits
 ## Direct Dispatch
 
 If area argument provided ($ARGUMENTS contains an area):
+
 1. Look up the agent name from the table above
 2. Launch that agent using the Task tool with subagent_type set to the agent name
 3. Pass the current directory path to the agent
 
 **Example:**
+
 - User runs `/axiom:audit memory` → Launch memory-auditor agent
 - User runs `/axiom:audit concurrency` → Launch concurrency-auditor agent
 
@@ -48,6 +50,7 @@ If area argument provided ($ARGUMENTS contains an area):
 When running multiple audits (either user-requested or from smart suggestions):
 
 **Priority Order:**
+
 1. **CRITICAL audits** (data corruption/loss risk):
    - core-data → Schema safety, thread violations
    - storage → Files in wrong locations
@@ -71,6 +74,7 @@ When running multiple audits (either user-requested or from smart suggestions):
    - codable → JSON best practices
 
 **Batch Recommendations:**
+
 - For pre-release: Run CRITICAL + HIGH audits
 - For architecture review: Run swiftui-architecture + swiftui-nav + swiftui-performance
 - For performance tuning: Run swift-performance + swiftui-performance + memory + energy
@@ -91,13 +95,16 @@ When running multiple audits (user selected 2+ areas):
    - Include in agent prompt: "Write your full detailed report to {path}. Return only a summary with issue counts."
 3. **Collect results**: Use TaskOutput tool to retrieve each agent's summary
 4. **Present combined summary table**:
+
    | Audit | Status | CRITICAL | HIGH | MEDIUM | LOW | File |
    |-------|--------|----------|------|--------|-----|------|
    | memory | ✓ | 1 | 3 | 5 | 2 | scratch/audit-memory-2025-01-01.md |
    | concurrency | ✓ | 0 | 2 | 8 | 0 | scratch/audit-concurrency-2025-01-01.md |
+
 5. **User reviews files** for full details
 
 **Why this approach:**
+
 - Each audit remains fully thorough (no shortcuts)
 - Combined output doesn't exceed token limits
 - User gets quick summary + detailed files for review
@@ -107,6 +114,7 @@ When running multiple audits (user selected 2+ areas):
 ## Project Analysis (No Area Specified)
 
 If no area argument:
+
 1. Analyze project structure:
    - Check for .xcodeproj/.xcworkspace → suggest build audit
    - Find SwiftUI files (*.swift with "import SwiftUI") → suggest swiftui-performance, swiftui-architecture

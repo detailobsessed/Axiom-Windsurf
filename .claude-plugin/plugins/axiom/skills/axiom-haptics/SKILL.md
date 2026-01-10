@@ -44,10 +44,12 @@ Apple's audio and haptic design teams established three core principles for mult
 **Solution**: Haptic timing must match the visual/interaction moment
 
 **Example from WWDC**:
+
 - ✅ Ball hits wall → haptic fires at collision moment
 - ❌ Ball hits wall → haptic fires 100ms later (confusing)
 
 **Code pattern**:
+
 ```swift
 // ✅ Immediate feedback on touch
 @objc func buttonTapped() {
@@ -72,6 +74,7 @@ Apple's audio and haptic design teams established three core principles for mult
 **Solution**: All three senses should feel like a unified experience
 
 **Example from WWDC**:
+
 - Small ball → light haptic + high-pitched sound
 - Large ball → heavy haptic + low-pitched sound
 - Shield transformation → continuous haptic + progressive audio
@@ -84,12 +87,14 @@ Apple's audio and haptic design teams established three core principles for mult
 **Solution**: Reserve haptics for significant moments that benefit the user
 
 **When to use haptics**:
+
 - ✅ Confirming an important action (payment completed)
 - ✅ Alerting to critical events (low battery)
 - ✅ Providing continuous feedback (scrubbing slider)
 - ✅ Enhancing delight (app launch flourish)
 
 **When NOT to use haptics**:
+
 - ❌ Every single tap (overwhelming)
 - ❌ Scrolling through long lists (battery drain)
 - ❌ Background events user can't see (confusing)
@@ -106,6 +111,7 @@ For most apps, `UIFeedbackGenerator` provides 3 simple haptic types without cust
 Physical collision or impact sensation.
 
 **Styles** (ordered light → heavy):
+
 - `.light` - Small, delicate tap
 - `.medium` - Standard tap (most common)
 - `.heavy` - Strong, solid impact
@@ -113,6 +119,7 @@ Physical collision or impact sensation.
 - `.soft` - Gentle, cushioned tap
 
 **Usage pattern**:
+
 ```swift
 class MyViewController: UIViewController {
     let impactGenerator = UIImpactFeedbackGenerator(style: .medium)
@@ -130,12 +137,14 @@ class MyViewController: UIViewController {
 ```
 
 **Intensity variation** (iOS 13+):
+
 ```swift
 // intensity: 0.0 (lightest) to 1.0 (strongest)
 impactGenerator.impactOccurred(intensity: 0.5)
 ```
 
 **Common use cases**:
+
 - Button taps (`.medium`)
 - Toggle switches (`.light`)
 - Deleting items (`.heavy`)
@@ -146,6 +155,7 @@ impactGenerator.impactOccurred(intensity: 0.5)
 Discrete selection changes (picker wheels, segmented controls).
 
 **Usage**:
+
 ```swift
 class PickerViewController: UIViewController {
     let selectionGenerator = UISelectionFeedbackGenerator()
@@ -160,6 +170,7 @@ class PickerViewController: UIViewController {
 **Feels like**: Clicking a physical wheel with detents
 
 **Common use cases**:
+
 - Picker wheels
 - Segmented controls
 - Page indicators
@@ -170,11 +181,13 @@ class PickerViewController: UIViewController {
 System-level success/warning/error feedback.
 
 **Types**:
+
 - `.success` - Task completed successfully
 - `.warning` - Attention needed, but not critical
 - `.error` - Critical error occurred
 
 **Usage**:
+
 ```swift
 let notificationGenerator = UINotificationFeedbackGenerator()
 
@@ -191,6 +204,7 @@ func submitForm() {
 ```
 
 **Best practice**: Match haptic type to user outcome
+
 - ✅ Payment succeeds → `.success`
 - ✅ Form validation fails → `.error`
 - ✅ Approaching storage limit → `.warning`
@@ -307,6 +321,7 @@ let event = CHHapticEvent(
 ```
 
 **Parameters**:
+
 - `hapticIntensity`: Strength (0.0 = barely felt, 1.0 = maximum)
 - `hapticSharpness`: Character (0.0 = dull thud, 1.0 = crisp snap)
 
@@ -334,6 +349,7 @@ let event = CHHapticEvent(
 ```
 
 **Use cases**:
+
 - Rolling texture as object moves
 - Motor running
 - Charging progress
@@ -693,6 +709,7 @@ func handleServerResponse(_ result: Result<Data, Error>) {
 ### Simulator Limitations
 
 **Haptics DO NOT work in Simulator**. You will see:
+
 - No haptic feedback
 - No warnings or errors
 - Code runs normally
@@ -740,11 +757,13 @@ func playHaptic() {
 **Symptom**: `CHHapticEngine.start()` throws error
 
 **Causes**:
+
 1. Device doesn't support Core Haptics (< iPhone 8)
 2. Haptics disabled in Settings
 3. Low Power Mode enabled
 
 **Solution**:
+
 ```swift
 func safelyStartEngine() {
     guard CHHapticEngine.capabilitiesForHardware().supportsHaptics else {
@@ -767,6 +786,7 @@ func safelyStartEngine() {
 **Symptom**: Code runs but no haptic felt on device
 
 **Debug steps**:
+
 1. Check Settings → Sounds & Haptics → System Haptics is ON
 2. Check Low Power Mode is OFF
 3. Verify device is iPhone 8 or newer
@@ -778,11 +798,13 @@ func safelyStartEngine() {
 **Symptom**: Audio plays but haptic delayed or vice versa
 
 **Causes**:
+
 1. Not calling `prepare()` before haptic
 2. Audio/haptic started at different times
 3. Heavy main thread work blocking playback
 
 **Solution**:
+
 ```swift
 // ✅ Synchronized start
 func playCoordinated() {

@@ -349,6 +349,7 @@ extension RecordingViewController: AVInputPickerInteractionDelegate {
 ```
 
 **Features:**
+
 - Live sound level metering
 - Microphone mode selection
 - System remembers selection per app
@@ -375,6 +376,7 @@ captureSession.configuresApplicationAudioSessionForBluetoothHighQualityRecording
 ```
 
 **Notes:**
+
 - Uses dedicated Bluetooth link optimized for AirPods
 - Falls back to HFP if device doesn't support HQ mode
 - Supports AirPods stem controls for start/stop recording
@@ -425,6 +427,7 @@ let metadataSample = metadataGenerator.createMetadataSample()
 ### Output File Structure
 
 Spatial audio files contain:
+
 1. **Stereo AAC track** — Compatibility fallback
 2. **APAC track** — Spatial audio (FOA)
 3. **Metadata track** — Audio Mix tuning parameters

@@ -25,22 +25,26 @@ Questions you can ask Claude that will invoke this diagnostic:
 ## Symptoms This Diagnoses
 
 ### Location Update Issues
+
 - Updates never arrive — authorization, Info.plist, iteration
 - Location unavailable — indoor, airplane mode, GPS lock
 - Accuracy unexpectedly poor — reduced accuracy, configuration
 - Updates stop randomly — Task cancellation, isStationary
 
 ### Background Location Issues
+
 - Stops when backgrounded — capability, session, authorization
 - Doesn't resume after suspend — session recovery, relaunch
 - Blue indicator missing — session not held, wrong setup
 
 ### Authorization Problems
+
 - Always denied on fresh install — Info.plist strings
 - insufficientlyInUse — requesting from background
 - Reduced accuracy forced — user choice, temporary override
 
 ### Geofencing Issues
+
 - Events not triggering — condition limit, radius too small
 - Stale lastEvent — not awaiting events
 - Monitor not persisting — not reinitializing on launch
@@ -48,6 +52,7 @@ Questions you can ask Claude that will invoke this diagnostic:
 ## When to Use This Diagnostic
 
 Use this diagnostic when:
+
 - Location updates never arrive
 - Background location stops working
 - Users always deny authorization
@@ -86,26 +91,31 @@ Use this diagnostic when:
 ## Diagnostic Patterns
 
 ### Pattern 1: No Location Updates
+
 **Symptom**: `for try await update in CLLocationUpdate.liveUpdates()` never yields
 **Diagnosis**: Check authorizationStatus and Info.plist
 **Fix**: Add NSLocationWhenInUseUsageDescription, request authorization
 
 ### Pattern 2: Background Stops Working
+
 **Symptom**: Updates stop when app backgrounded
 **Diagnosis**: Missing CLBackgroundActivitySession or background mode
 **Fix**: Add capability, hold session in property (not local variable)
 
 ### Pattern 3: Geofence Never Triggers
+
 **Symptom**: CLMonitor events never fire
 **Diagnosis**: At 20-condition limit, radius < 100m, or not awaiting events
 **Fix**: Check condition count, increase radius, ensure Task awaits events
 
 ### Pattern 4: Authorization Always Denied
+
 **Symptom**: Fresh install immediately denied
 **Diagnosis**: Missing or empty Info.plist usage strings
 **Fix**: Add compelling NSLocationWhenInUseUsageDescription
 
 ### Pattern 5: Location Icon Persists
+
 **Symptom**: Arrow icon stays after feature done
 **Diagnosis**: Task not cancelled, session not invalidated, or CLMonitor still active
 **Fix**: Cancel Task, invalidate session, remove conditions
@@ -132,6 +142,7 @@ Use this diagnostic when:
 This is a **diagnostic skill** — systematic troubleshooting workflows for Core Location issues.
 
 #### Diagnostic includes
+
 - 6 symptom-based decision trees
 - 5 common mistake patterns with fixes
 - Quick reference table for fast diagnosis

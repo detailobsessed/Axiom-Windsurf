@@ -12,6 +12,7 @@ Complete API reference for iOS localization. Covers String Catalogs (.xcstrings)
 ## When to Use This Reference
 
 Use this reference when you need:
+
 - String Catalog structure and configuration
 - SwiftUI/UIKit localization patterns
 - Pluralization for multiple languages
@@ -36,6 +37,7 @@ Questions you can ask Claude that will draw from this reference:
 ## What's Covered
 
 ### String Catalogs (Xcode 15+)
+
 - .xcstrings format and structure
 - Automatic string extraction
 - Plural variations
@@ -43,28 +45,33 @@ Questions you can ask Claude that will draw from this reference:
 - Translation state tracking
 
 ### SwiftUI Localization
+
 - Automatic Text view localization
 - String(localized:comment:) pattern
 - LocalizedStringResource for deferred resolution
 - LocalizedStringKey usage
 
 ### UIKit Localization
+
 - NSLocalizedString patterns
 - String(localized:) modern API (iOS 15+)
 - Bundle-specific localization
 
 ### Pluralization
+
 - Language-specific plural rules
 - String Catalog plural variations
 - Format string patterns
 
 ### RTL Support
+
 - Leading/trailing vs left/right
 - Layout mirroring
 - Image flipping
 - Testing RTL layouts
 
 ### Xcode 26 Features
+
 - Generated symbols (compile-time safety)
 - Automatic comment generation
 - #bundle macro for packages

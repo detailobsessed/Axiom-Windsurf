@@ -12,6 +12,7 @@ Type-safe SQLite persistence using [SQLiteData](https://github.com/pointfreeco/s
 ## When to Use This Skill
 
 Use this skill when you're:
+
 - Using SQLiteData with @Table models
 - Setting up CloudKit sync with SQLiteData
 - Writing queries with @FetchAll, @FetchOne
@@ -41,6 +42,7 @@ Questions you can ask Claude that will draw from this skill:
 ## What's Covered
 
 ### @Table Models
+
 - let for auto primary key (first let = primary key)
 - var with defaults = non-nullable
 - Optional = nullable
@@ -48,6 +50,7 @@ Questions you can ask Claude that will draw from this skill:
 - @Ephemeral for non-persisted properties
 
 ### Queries
+
 - @FetchAll for array results
 - @FetchOne for single value/aggregate
 - where() with keypaths and closures
@@ -55,17 +58,20 @@ Questions you can ask Claude that will draw from this skill:
 - Static helpers: fetchAll, find (v1.4.0+)
 
 ### Mutations
+
 - insert with Draft pattern
 - update single and bulk
 - delete single and bulk
 - RETURNING clause for inserted values
 
 ### CloudKit Sync
+
 - SyncEngine configuration
 - prepareDependencies setup
 - Record sharing
 
 ### Advanced Patterns
+
 - #sql macro for raw SQL
 - FTS5 full-text search
 - @DatabaseFunction for custom functions

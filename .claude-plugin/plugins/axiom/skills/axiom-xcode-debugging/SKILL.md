@@ -21,18 +21,23 @@ Check build environment BEFORE debugging code. **Core principle** 80% of "myster
 These are real questions developers ask that this skill is designed to answer:
 
 #### 1. "My build is failing with 'BUILD FAILED' but no error details. I haven't changed anything. What's going on?"
+
 → The skill shows environment-first diagnostics: check Derived Data, simulator states, and zombie processes before investigating code
 
 #### 2. "Tests passed yesterday with no code changes, but now they're failing. This is frustrating. How do I fix this?"
+
 → The skill explains stale Derived Data and intermittent failures, shows the 2-5 minute fix (clean Derived Data)
 
 #### 3. "My app builds fine but it's running the old code from before my changes. I restarted Xcode but it still happens."
+
 → The skill demonstrates that Derived Data caches old builds, shows how deletion forces a clean rebuild
 
 #### 4. "The simulator says 'Unable to boot simulator' and I can't run tests. How do I recover?"
+
 → The skill covers simulator state diagnosis with simctl and safe recovery patterns (erase/shutdown/reboot)
 
 #### 5. "I'm getting 'No such module: SomePackage' errors after updating SPM dependencies. How do I fix this?"
+
 → The skill explains SPM caching issues and the clean Derived Data workflow that resolves "phantom" module errors
 
 ---
@@ -40,6 +45,7 @@ These are real questions developers ask that this skill is designed to answer:
 ## Red Flags — Check Environment First
 
 If you see ANY of these, suspect environment not code:
+
 - "It works on my machine but not CI"
 - "Tests passed yesterday, failing today with no code changes"
 - "Build succeeds but old code executes"
@@ -63,11 +69,13 @@ xcrun simctl list devices | grep -E "Booted|Booting|Shutting Down"
 ```
 
 #### What these tell you
+
 - **0 processes + small Derived Data + no booted sims** → Environment clean, investigate code
 - **10+ processes OR >10GB Derived Data OR simulators stuck** → Environment problem, clean first
 - **Stale code executing OR intermittent failures** → Clean Derived Data regardless of size
 
 #### Why environment first
+
 - Environment cleanup: 2-5 minutes → problem solved
 - Code debugging for environment issues: 30-120 minutes → wasted time
 
@@ -76,12 +84,14 @@ xcrun simctl list devices | grep -E "Booted|Booting|Shutting Down"
 ### Finding Your Scheme Name
 
 If you don't know your scheme name:
+
 ```bash
 # List available schemes
 xcodebuild -list
 ```
 
 ### For Stale Builds / "No such module" Errors
+
 ```bash
 # Clean everything
 xcodebuild clean -scheme YourScheme
@@ -94,6 +104,7 @@ xcodebuild build -scheme YourScheme \
 ```
 
 ### For Simulator Issues
+
 ```bash
 # Shutdown all simulators
 xcrun simctl shutdown all
@@ -110,6 +121,7 @@ killall -9 Simulator
 ```
 
 ### For Zombie Processes
+
 ```bash
 # Kill all xcodebuild (use cautiously)
 killall -9 xcodebuild
@@ -119,6 +131,7 @@ ps aux | grep xcodebuild | grep -v grep
 ```
 
 ### For Test Failures
+
 ```bash
 # Isolate failing test
 xcodebuild test -scheme YourScheme \
@@ -153,11 +166,13 @@ xcrun simctl io booted screenshot /tmp/verify-build-$(date +%s).png
 ### Using Axiom Tools
 
 **Quick screenshot**:
+
 ```bash
 /axiom:screenshot
 ```
 
 **Full simulator testing** (with navigation, state setup):
+
 ```bash
 /axiom:test-simulator
 ```
@@ -165,12 +180,14 @@ xcrun simctl io booted screenshot /tmp/verify-build-$(date +%s).png
 ### When to Use Simulator Verification
 
 Use when:
+
 - **Visual fixes** — Layout changes, UI updates, styling tweaks
 - **State-dependent bugs** — "Only happens in this specific screen"
 - **Intermittent failures** — Need to reproduce specific conditions
 - **Before shipping** — Final verification that fix actually works
 
 **Pro tip**: If you have debug deep links (see `axiom-deep-link-debugging` skill), you can navigate directly to the screen that was broken:
+
 ```bash
 xcrun simctl openurl booted "debug://problem-screen"
 sleep 1

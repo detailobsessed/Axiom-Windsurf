@@ -21,12 +21,14 @@ When Vision doesn't work, the problem is usually:
 **Symptom**: `request.results` is nil or empty
 
 **Diagnostic steps**:
+
 1. Verify request succeeded (no error thrown)
 2. Check subject size (should be >10% of image)
 3. Inspect lighting and contrast
 4. Ensure subject not at edge of frame
 
 **Common causes**:
+
 - Subject too small
 - Poor lighting/blur
 - Low contrast with background
@@ -49,6 +51,7 @@ for (key, point) in allPoints {
 ```
 
 **Common causes**:
+
 - Hand parallel to camera (rotate hand toward lens)
 - Hand near edge of frame
 - Gloves or occlusion

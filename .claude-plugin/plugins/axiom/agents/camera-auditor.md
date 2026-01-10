@@ -63,6 +63,7 @@ You are an expert at detecting camera, video, and audio capture issues in iOS ap
 ## Your Mission
 
 Run a comprehensive camera/capture audit and report all issues with:
+
 - File:line references with confidence levels
 - Severity ratings (CRITICAL/HIGH/MEDIUM/LOW)
 - Specific fix recommendations
@@ -71,12 +72,14 @@ Run a comprehensive camera/capture audit and report all issues with:
 ## Files to Scan
 
 Look for capture code in:
+
 - `**/*.swift` - All Swift files
 - Focus on files containing: `AVCaptureSession`, `AVCaptureDevice`, `AVCapturePhotoOutput`, `AVAudioSession`
 
 ## Files to Exclude
 
 Skip these from audit:
+
 - `*Tests.swift` - Test files
 - `*Previews.swift` - Preview providers
 - `*/Pods/*` - Third-party code
@@ -89,12 +92,14 @@ Skip these from audit:
 ### 1. Main Thread Session Work (CRITICAL - UI Freezes)
 
 **Pattern to find**:
+
 ```swift
 // BAD: startRunning on main thread
 session.startRunning()  // Without being on session queue
 ```
 
 **What to look for**:
+
 - `startRunning()` or `stopRunning()` not wrapped in `DispatchQueue` async
 - Missing `let sessionQueue = DispatchQueue(label:` pattern
 - Session configuration without dedicated queue
@@ -104,6 +109,7 @@ session.startRunning()  // Without being on session queue
 ### 2. Deprecated videoOrientation API (HIGH - iOS 17+ Issues)
 
 **Pattern to find**:
+
 ```swift
 // DEPRECATED
 connection.videoOrientation = .portrait
@@ -111,6 +117,7 @@ AVCaptureConnection.videoOrientation
 ```
 
 **What to look for**:
+
 - Any use of `videoOrientation` property
 - Manual device orientation observation for camera
 - Missing `RotationCoordinator`
@@ -120,6 +127,7 @@ AVCaptureConnection.videoOrientation
 ### 3. Missing Interruption Handling (HIGH - Camera Freezes)
 
 **Pattern to find**:
+
 ```swift
 // Missing observer for:
 .AVCaptureSessionWasInterrupted
@@ -127,6 +135,7 @@ AVCaptureSession.interruptionEndedNotification
 ```
 
 **What to look for**:
+
 - Files with `AVCaptureSession` but no interruption notification observers
 - No handling for phone calls, multitasking
 - No UI feedback for interrupted state
@@ -136,6 +145,7 @@ AVCaptureSession.interruptionEndedNotification
 ### 4. UIImagePickerController for Photo Selection (MEDIUM - Deprecated)
 
 **Pattern to find**:
+
 ```swift
 // DEPRECATED for photo selection
 UIImagePickerController()
@@ -143,6 +153,7 @@ UIImagePickerController()
 ```
 
 **What to look for**:
+
 - `UIImagePickerController` with `photoLibrary` source type
 - Should use `PHPickerViewController` or `PhotosPicker` instead
 
@@ -151,6 +162,7 @@ UIImagePickerController()
 ### 5. Over-Requesting Photo Library Access (MEDIUM - Privacy Issue)
 
 **Pattern to find**:
+
 ```swift
 // BAD: Requesting access just to pick photos
 PHPhotoLibrary.requestAuthorization
@@ -159,6 +171,7 @@ PHPhotoLibrary.authorizationStatus
 ```
 
 **What to look for**:
+
 - Permission requests when only using system pickers
 - PHPicker/PhotosPicker don't need library permission
 - Unnecessary privacy prompts
@@ -168,6 +181,7 @@ PHPhotoLibrary.authorizationStatus
 ### 6. Missing Photo Quality Settings (MEDIUM - Slow Capture)
 
 **Pattern to find**:
+
 ```swift
 // Missing quality prioritization
 AVCapturePhotoSettings()
@@ -175,6 +189,7 @@ AVCapturePhotoSettings()
 ```
 
 **What to look for**:
+
 - `AVCapturePhotoSettings` without `photoQualityPrioritization`
 - Default is often `.quality` which is slow
 - Social/sharing apps should use `.speed` or `.balanced`
@@ -184,6 +199,7 @@ AVCapturePhotoSettings()
 ### 7. AVAudioSession Category Mismatch (MEDIUM - Audio Issues)
 
 **Pattern to find**:
+
 ```swift
 // BAD: Wrong category for recording
 .setCategory(.playback)  // Can't record with this
@@ -191,6 +207,7 @@ AVCapturePhotoSettings()
 ```
 
 **What to look for**:
+
 - Video recording code with non-recording audio category
 - Should use `.playAndRecord` for video with audio
 - Missing category configuration before recording
@@ -200,6 +217,7 @@ AVCapturePhotoSettings()
 ### 8. Missing Purpose Strings (CRITICAL - App Store Rejection)
 
 **What to check**:
+
 - Look for camera/audio usage without corresponding Info.plist keys
 - Required keys:
   - `NSCameraUsageDescription` - For camera access
@@ -212,6 +230,7 @@ AVCapturePhotoSettings()
 ### 9. Configuration Without Block (LOW - Race Conditions)
 
 **Pattern to find**:
+
 ```swift
 // BAD: Modifying session without configuration block
 session.addInput(input)
@@ -220,6 +239,7 @@ session.addOutput(output)
 ```
 
 **What to look for**:
+
 - `addInput` or `addOutput` without surrounding `beginConfiguration`/`commitConfiguration`
 - Session modifications that could cause race conditions
 
@@ -228,12 +248,14 @@ session.addOutput(output)
 ### 10. Synchronous Photo Loading (LOW - UI Blocking)
 
 **Pattern to find**:
+
 ```swift
 // BAD: Blocking main thread
 try! item.loadTransferable(type:)  // Force try, no async
 ```
 
 **What to look for**:
+
 - Non-async Transferable loading
 - `PHImageManager.requestImage` without async handling
 - Image loading on main thread
@@ -259,11 +281,13 @@ For each issue found:
 Brief explanation of the issue
 
 **Fix**:
+
 ```swift
 // The corrected code
 ```
 
 **See**: camera-capture skill, Pattern X
+
 ```
 
 ## Summary Section
@@ -271,6 +295,7 @@ Brief explanation of the issue
 After listing all issues, provide a summary:
 
 ```
+
 ## Audit Summary
 
 - **CRITICAL**: X issues
@@ -279,9 +304,11 @@ After listing all issues, provide a summary:
 - **LOW**: X issues
 
 **Top priority fixes**:
+
 1. [Most important issue]
 2. [Second most important]
 3. [Third most important]
+
 ```
 
 ## Related Skills

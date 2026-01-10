@@ -13,6 +13,7 @@ Comprehensive reference for Apple's Human Interface Guidelines. Covers semantic 
 ## When to Use This Reference
 
 Use this reference when you need:
+
 - Complete semantic color names and their purposes
 - Typography scale and Dynamic Type sizes
 - Exact spacing values and layout guidelines
@@ -36,6 +37,7 @@ Questions you can ask Claude that will draw from this reference:
 ## What's Covered
 
 ### Color System
+
 - Label hierarchy (label, secondaryLabel, tertiaryLabel, quaternaryLabel)
 - Background colors (ungrouped vs grouped)
 - System colors (systemRed, systemBlue, etc.)
@@ -44,6 +46,7 @@ Questions you can ask Claude that will draw from this reference:
 - Tint colors and accent colors
 
 ### Typography
+
 - Text styles (largeTitle through caption2)
 - Font weights and when to use them
 - Dynamic Type support
@@ -51,12 +54,14 @@ Questions you can ask Claude that will draw from this reference:
 - Minimum readable sizes
 
 ### Spacing & Layout
+
 - Standard spacing values (4, 8, 12, 16, 20, 24pt)
 - Content margins
 - Safe areas
 - Grid systems
 
 ### Icons & SF Symbols
+
 - Symbol weights and scales
 - Symbol configurations
 - Rendering modes
@@ -64,12 +69,14 @@ Questions you can ask Claude that will draw from this reference:
 - Accessibility considerations
 
 ### Touch & Interaction
+
 - Minimum 44×44pt touch targets
 - Gesture patterns
 - Feedback expectations
 - Interactive states
 
 ### Accessibility
+
 - VoiceOver labels and hints
 - Dynamic Type requirements
 - Color contrast ratios
@@ -77,6 +84,7 @@ Questions you can ask Claude that will draw from this reference:
 - Button shapes
 
 ### Platform Specifics
+
 - iOS vs iPadOS patterns
 - macOS considerations
 - watchOS constraints

@@ -104,18 +104,21 @@ func initializeHaptics() {
 ## Common Patterns
 
 ### Button Tap
+
 ```swift
 let impactGenerator = UIImpactFeedbackGenerator(style: .medium)
 impactGenerator.impactOccurred()
 ```
 
 ### Selection Change (Picker, Segmented Control)
+
 ```swift
 let selectionGenerator = UISelectionFeedbackGenerator()
 selectionGenerator.selectionChanged()
 ```
 
 ### Success/Error/Warning
+
 ```swift
 let notificationGenerator = UINotificationFeedbackGenerator()
 notificationGenerator.notificationOccurred(.success)  // or .error, .warning
@@ -141,10 +144,12 @@ Otherwise, stick with **UIFeedbackGenerator** for simplicity.
 ### Haptics not working
 
 **Check**: Are you testing on a physical device (iPhone 8+)?
+
 - Simulator doesn't support haptics
 - Some older devices don't have Taptic Engine
 
 **Check**: Is the ringer/silent switch on?
+
 - Device must not be in silent mode (check Settings → Sounds & Haptics → System Haptics)
 
 ### Engine fails to start
@@ -166,6 +171,7 @@ engine?.resetHandler = {
 ### Haptics feel weak or inconsistent
 
 **Check**: Did you call `prepare()` before triggering?
+
 - Call `prepare()` 0.1-0.5 seconds before expected use
 - Reduces latency and ensures consistent response
 

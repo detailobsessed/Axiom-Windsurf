@@ -18,6 +18,7 @@ iCloud (both CloudKit and iCloud Drive) handles billions of sync operations dail
 ## Red Flags — Suspect Cloud Sync Issue
 
 If you see ANY of these:
+
 - Files/data not appearing on other devices
 - "iCloud account not available" errors
 - Persistent sync conflicts
@@ -27,6 +28,7 @@ If you see ANY of these:
 - Works on WiFi but not cellular
 
 ❌ **FORBIDDEN** "iCloud is broken, we should build our own sync"
+
 - iCloud infrastructure handles trillions of operations
 - Building reliable sync is incredibly complex
 - 99% of issues are configuration or connectivity
@@ -180,6 +182,7 @@ iCloud Drive files not syncing?
 **Cause**: iCloud servers temporarily unavailable or user signed out
 
 **Fix**:
+
 ```swift
 if error.code == .accountTemporarilyUnavailable {
     // Retry with exponential backoff
@@ -193,6 +196,7 @@ if error.code == .accountTemporarilyUnavailable {
 **Cause**: User's iCloud storage full
 
 **Fix**:
+
 ```swift
 if error.code == .quotaExceeded {
     // Show alert to user
@@ -208,6 +212,7 @@ if error.code == .quotaExceeded {
 **Cause**: Conflict - record modified on server since fetch
 
 **Fix**:
+
 ```swift
 if error.code == .serverRecordChanged,
    let serverRecord = error.serverRecord,
@@ -225,6 +230,7 @@ if error.code == .serverRecordChanged,
 **Cause**: No internet connection
 
 **Fix**:
+
 ```swift
 if error.code == .networkUnavailable {
     // Queue for retry when online
@@ -287,6 +293,7 @@ func checkDownloadError(url: URL) {
 **Symptom**: Save/fetch never completes, no error
 
 **Diagnosis**:
+
 ```swift
 // Add timeout
 Task {
@@ -309,6 +316,7 @@ if operation.isCancelled {
 ```
 
 **Common causes**:
+
 - No network connectivity
 - Account issues
 - Operation cancelled prematurely
@@ -318,6 +326,7 @@ if operation.isCancelled {
 **Symptom**: SwiftData saves locally but doesn't sync
 
 **Diagnosis**:
+
 ```swift
 // 1. Verify CloudKit configuration
 let config = ModelConfiguration(
@@ -345,6 +354,7 @@ class Task {
 **Symptom**: File operations hang
 
 **Diagnosis**:
+
 ```swift
 // ❌ WRONG: Nested coordination can deadlock
 coordinator.coordinate(writingItemAt: url, options: [], error: nil) { newURL in
@@ -364,6 +374,7 @@ coordinator.coordinate(writingItemAt: url, options: [], error: nil) { newURL in
 **Symptom**: Conflicts persist even after resolution
 
 **Diagnosis**:
+
 ```swift
 // ❌ WRONG: Not marking as resolved
 let conflicts = NSFileVersion.unresolvedConflictVersionsOfItem(at: url)
@@ -387,6 +398,7 @@ try NSFileVersion.removeOtherVersionsOfItem(at: url)
 **DIAGNOSIS STEPS** (run in order):
 
 1. **Check account status** (2 min):
+
    ```swift
    // On affected device
    let status = FileManager.default.ubiquityIdentityToken
@@ -409,12 +421,14 @@ try NSFileVersion.removeOtherVersionsOfItem(at: url)
    - Does sync work on fresh install?
 
 **ROOT CAUSES** (90% of cases):
+
 - Entitlements changed/corrupted in build
 - CloudKit container ID mismatch
 - Breaking schema changes
 - Account restrictions (new parental controls, etc.)
 
 **FIX**:
+
 - Verify entitlements in build
 - Test migration path from old version
 - Add better error handling and user messaging
@@ -425,15 +439,17 @@ try NSFileVersion.removeOtherVersionsOfItem(at: url)
 
 ### CloudKit Console (recommended - WWDC 2024)
 
-**Access**: https://icloud.developer.apple.com/dashboard
+**Access**: <https://icloud.developer.apple.com/dashboard>
 
 **Monitor**:
+
 - Error rates by type
 - Latency percentiles (p50, p95, p99)
 - Quota usage
 - Request volume
 
 **Set alerts for**:
+
 - High error rate (>5%)
 - Quota approaching limit (>80%)
 - Latency spikes

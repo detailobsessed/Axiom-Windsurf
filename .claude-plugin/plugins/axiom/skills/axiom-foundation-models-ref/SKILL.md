@@ -16,6 +16,7 @@ The Foundation Models framework provides access to Apple's on-device Large Langu
 ### Model Specifications
 
 **Technical Details**:
+
 - **Parameters**: 3 billion (3B)
 - **Quantization**: 2-bit
 - **Context Window**: 4096 tokens (combined input + output)
@@ -23,6 +24,7 @@ The Foundation Models framework provides access to Apple's on-device Large Langu
 - **Platforms**: iOS 26+, macOS 26+, iPadOS 26+, axiom-visionOS 26+
 
 **Optimized For**:
+
 - Text summarization
 - Information extraction
 - Content classification
@@ -31,12 +33,14 @@ The Foundation Models framework provides access to Apple's on-device Large Langu
 - Entity detection
 
 **NOT Optimized For**:
+
 - World knowledge queries
 - Complex multi-step reasoning
 - Mathematical computation
 - Translation (use dedicated translation models)
 
 **Privacy & Performance**:
+
 - Runs entirely on-device
 - No network required (works offline)
 - Data never leaves device
@@ -48,6 +52,7 @@ The Foundation Models framework provides access to Apple's on-device Large Langu
 ## When to Use This Reference
 
 Use this reference when:
+
 - Implementing Foundation Models features
 - Understanding API capabilities
 - Looking up specific code examples
@@ -56,6 +61,7 @@ Use this reference when:
 - Debugging implementation issues
 
 **Related Skills**:
+
 - `axiom-foundation-models` — Discipline skill with anti-patterns, pressure scenarios, decision trees
 - `axiom-foundation-models-diag` — Diagnostic skill for troubleshooting issues
 
@@ -70,6 +76,7 @@ Use this reference when:
 ### Creating a Session
 
 **Basic Creation**:
+
 ```swift
 import FoundationModels
 
@@ -77,6 +84,7 @@ let session = LanguageModelSession()
 ```
 
 **With Custom Instructions**:
+
 ```swift
 let session = LanguageModelSession(instructions: """
     You are a friendly barista in a pixel art coffee shop.
@@ -88,6 +96,7 @@ let session = LanguageModelSession(instructions: """
 #### From WWDC 301:1:05
 
 **With Tools**:
+
 ```swift
 let session = LanguageModelSession(
     tools: [GetWeatherTool()],
@@ -98,6 +107,7 @@ let session = LanguageModelSession(
 #### From WWDC 286:15:03
 
 **With Specific Model/Use Case**:
+
 ```swift
 let session = LanguageModelSession(
     model: SystemLanguageModel(useCase: .contentTagging)
@@ -109,6 +119,7 @@ let session = LanguageModelSession(
 ### Instructions vs Prompts
 
 **Instructions**:
+
 - Come from **developer**
 - Define model's role, style, constraints
 - Mostly static
@@ -116,12 +127,14 @@ let session = LanguageModelSession(
 - Model trained to obey instructions over prompts (security feature)
 
 **Prompts**:
+
 - Come from **user** (or dynamic app state)
 - Specific requests for generation
 - Dynamic input
 - Each call to `respond(to:)` adds prompt to transcript
 
 **Security Consideration**:
+
 - **NEVER** interpolate untrusted user input into instructions
 - User input should go in prompts only
 - Prevents prompt injection attacks
@@ -129,6 +142,7 @@ let session = LanguageModelSession(
 ### respond(to:) Method
 
 **Basic Text Generation**:
+
 ```swift
 func respond(userInput: String) async throws -> String {
     let session = LanguageModelSession(instructions: """
@@ -148,6 +162,7 @@ func respond(userInput: String) async throws -> String {
 ### respond(to:generating:) Method
 
 **Structured Output with @Generable**:
+
 ```swift
 @Generable
 struct SearchSuggestions {
@@ -174,6 +189,7 @@ print(response.content) // SearchSuggestions instance
 ### Generation Options
 
 **Deterministic Output (Greedy Sampling)**:
+
 ```swift
 let response = try await session.respond(
     to: prompt,
@@ -184,6 +200,7 @@ let response = try await session.respond(
 #### From WWDC 301:6:14
 
 **Low Variance (Conservative)**:
+
 ```swift
 let response = try await session.respond(
     to: prompt,
@@ -192,6 +209,7 @@ let response = try await session.respond(
 ```
 
 **High Variance (Creative)**:
+
 ```swift
 let response = try await session.respond(
     to: prompt,
@@ -202,6 +220,7 @@ let response = try await session.respond(
 #### From WWDC 301:6:14
 
 **Skip Schema in Prompt (Optimization)**:
+
 ```swift
 let response = try await session.respond(
     to: prompt,
@@ -241,6 +260,7 @@ print(session.transcript) // Shows full history
 #### From WWDC 286:17:46
 
 **How it works**:
+
 - Each `respond()` call adds entry to transcript
 - Model uses entire transcript for context
 - Enables conversational interactions
@@ -256,6 +276,7 @@ for entry in transcript.entries {
 ```
 
 **Use cases**:
+
 - Debugging generation issues
 - Displaying conversation history in UI
 - Exporting chat logs
@@ -303,6 +324,7 @@ struct HaikuView: View {
 ### Basic Usage
 
 **On Structs**:
+
 ```swift
 @Generable
 struct Person {
@@ -321,6 +343,7 @@ let person = response.content // Type-safe Person instance
 #### From WWDC 301:8:14
 
 **On Enums**:
+
 ```swift
 @Generable
 struct NPC {
@@ -340,14 +363,17 @@ struct NPC {
 ### Supported Types
 
 **Primitives**:
+
 - `String`
 - `Int`, `Float`, `Double`, `Decimal`
 - `Bool`
 
 **Collections**:
+
 - `[ElementType]` (arrays)
 
 **Composed Types**:
+
 ```swift
 @Generable
 struct Itinerary {
@@ -367,6 +393,7 @@ struct Itinerary {
 ### @Guide Constraints
 
 **Natural Language Description**:
+
 ```swift
 @Generable
 struct NPC {
@@ -378,6 +405,7 @@ struct NPC {
 #### From WWDC 301:11:20
 
 **Numeric Range**:
+
 ```swift
 @Generable
 struct Character {
@@ -389,6 +417,7 @@ struct Character {
 #### From WWDC 301:11:20
 
 **Array Count**:
+
 ```swift
 @Generable
 struct Suggestions {
@@ -400,6 +429,7 @@ struct Suggestions {
 #### From WWDC 301:11:20
 
 **Array Maximum Count**:
+
 ```swift
 @Generable
 struct Result {
@@ -409,6 +439,7 @@ struct Result {
 ```
 
 **Regex Patterns**:
+
 ```swift
 @Generable
 struct NPC {
@@ -434,6 +465,7 @@ session.respond(to: "Generate a fun NPC", generating: NPC.self)
 ### Constrained Decoding
 
 **How it works**:
+
 1. `@Generable` macro generates schema at compile-time
 2. Schema defines valid token sequences
 3. During generation, model creates probability distribution for next token
@@ -444,6 +476,7 @@ session.respond(to: "Generate a fun NPC", generating: NPC.self)
 **From WWDC 286**: "Constrained decoding prevents structural mistakes. Model is prevented from generating invalid field names or wrong types."
 
 **Benefits**:
+
 - Zero parsing code needed
 - No runtime parsing errors
 - Type-safe Swift objects
@@ -452,6 +485,7 @@ session.respond(to: "Generate a fun NPC", generating: NPC.self)
 ### Property Declaration Order
 
 **Properties generated in order declared**:
+
 ```swift
 @Generable
 struct Itinerary {
@@ -462,6 +496,7 @@ struct Itinerary {
 ```
 
 **Why it matters**:
+
 - Later properties can reference earlier ones
 - Better model quality: Summaries after content
 - Better streaming UX: Important properties first
@@ -575,6 +610,7 @@ struct ItineraryView: View {
 ### Best Practices
 
 **1. Use SwiftUI animations**:
+
 ```swift
 if let name = itinerary?.name {
     Text(name)
@@ -583,6 +619,7 @@ if let name = itinerary?.name {
 ```
 
 **2. View identity for arrays**:
+
 ```swift
 // ✅ GOOD - Stable identity
 ForEach(days, id: \.id) { day in
@@ -596,6 +633,7 @@ ForEach(days.indices, id: \.self) { index in
 ```
 
 **3. Property order optimization**:
+
 ```swift
 // ✅ GOOD - Title first for streaming
 @Generable
@@ -683,6 +721,7 @@ print(response.content)
 #### From WWDC 286:15:03
 
 **How it works**:
+
 1. Session initialized with tools
 2. User prompt: "What's Tokyo's weather?"
 3. Model analyzes prompt, decides weather data needed
@@ -820,11 +859,13 @@ struct GetContactEventTool: Tool {
 **Two forms**:
 
 1. **Natural language** (String):
+
 ```swift
 return ToolOutput("Temperature is 71°F")
 ```
 
-2. **Structured** (GeneratedContent):
+1. **Structured** (GeneratedContent):
+
 ```swift
 let content = GeneratedContent(properties: ["temperature": 71])
 return ToolOutput(content)
@@ -833,12 +874,14 @@ return ToolOutput(content)
 ### Tool Naming Best Practices
 
 **DO**:
+
 - Short, readable names: `getWeather`, `findContact`
 - Use verbs: `get`, `find`, `fetch`, `create`
 - One sentence descriptions
 - Keep descriptions concise (they're in prompt)
 
 **DON'T**:
+
 - Abbreviations: `gtWthr`
 - Implementation details in description
 - Long descriptions (increases token count)
@@ -863,6 +906,7 @@ let session = LanguageModelSession(
 ### Tool Calling Behavior
 
 **Key facts**:
+
 - Tool can be called **multiple times** per request
 - Multiple tools can be called **in parallel**
 - Model decides **when** to call (not guaranteed to call)
@@ -976,11 +1020,13 @@ let answers = try generatedContent.value([GeneratedContent].self, forProperty: "
 ### Dynamic vs Static @Generable
 
 **Use @Generable when**:
+
 - Structure known at compile-time
 - Want type safety
 - Want automatic parsing
 
 **Use Dynamic Schemas when**:
+
 - Structure only known at runtime
 - User-defined schemas
 - Maximum flexibility
@@ -994,12 +1040,14 @@ let answers = try generatedContent.value([GeneratedContent].self, forProperty: "
 ### Sampling Methods
 
 **Random Sampling (Default)**:
+
 ```swift
 let response = try await session.respond(to: prompt)
 // Different output each time
 ```
 
 **Greedy Sampling (Deterministic)**:
+
 ```swift
 let response = try await session.respond(
     to: prompt,
@@ -1011,6 +1059,7 @@ let response = try await session.respond(
 #### From WWDC 301:6:14
 
 **Use greedy for**:
+
 - Unit tests
 - Demos that need repeatability
 - When consistency critical
@@ -1020,6 +1069,7 @@ let response = try await session.respond(
 ### Temperature Control
 
 **Low variance** (focused, conservative):
+
 ```swift
 let response = try await session.respond(
     to: prompt,
@@ -1029,6 +1079,7 @@ let response = try await session.respond(
 ```
 
 **High variance** (creative, diverse):
+
 ```swift
 let response = try await session.respond(
     to: prompt,
@@ -1040,6 +1091,7 @@ let response = try await session.respond(
 #### From WWDC 301:6:14
 
 **Temperature scale**:
+
 - `0.1-0.5`: Very focused
 - `1.0` (default): Balanced
 - `1.5-2.0`: Very creative
@@ -1051,6 +1103,7 @@ let response = try await session.respond(
 ### Content Tagging Adapter
 
 **Specialized adapter for**:
+
 - Tag generation
 - Entity extraction
 - Topic detection
@@ -1076,6 +1129,7 @@ let response = try await session.respond(
 ### Custom Use Cases
 
 **With custom instructions**:
+
 ```swift
 @Generable
 struct Top3ActionEmotionResult {
@@ -1105,6 +1159,7 @@ let response = try await session.respond(
 ### GenerationError Types
 
 **exceededContextWindowSize**:
+
 ```swift
 do {
     let response = try await session.respond(to: prompt)
@@ -1117,6 +1172,7 @@ do {
 #### From WWDC 301:3:37
 
 **guardrailViolation**:
+
 ```swift
 do {
     let response = try await session.respond(to: userInput)
@@ -1127,6 +1183,7 @@ do {
 ```
 
 **unsupportedLanguageOrLocale**:
+
 ```swift
 do {
     let response = try await session.respond(to: userInput)
@@ -1141,6 +1198,7 @@ do {
 ### Context Window Management
 
 #### Strategy 1: Fresh Session
+
 ```swift
 var session = LanguageModelSession()
 
@@ -1156,6 +1214,7 @@ do {
 #### From WWDC 301:3:37
 
 #### Strategy 2: Condensed Session
+
 ```swift
 do {
     let response = try await session.respond(to: prompt)
@@ -1223,15 +1282,18 @@ guard supportedLanguages.contains(Locale.current.language) else {
 ### Requirements
 
 **Device Requirements**:
+
 - Apple Intelligence-enabled device
 - iPhone 15 Pro or later
 - iPad with M1+ chip
 - Mac with Apple silicon
 
 **Region Requirements**:
+
 - Supported region (check Apple Intelligence availability)
 
 **User Requirements**:
+
 - User opted in to Apple Intelligence in Settings
 
 ---
@@ -1243,6 +1305,7 @@ guard supportedLanguages.contains(Locale.current.language) else {
 **Access**: Instruments app → Foundation Models template
 
 **Metrics**:
+
 - Initial model load time
 - Token counts (input/output)
 - Generation time per request
@@ -1361,6 +1424,7 @@ let data = try JSONEncoder().encode(feedback)
 #### From WWDC 286:22:13
 
 **Use for**:
+
 - Reporting quality issues
 - Providing examples of desired behavior
 - Helping Apple improve models
@@ -1472,12 +1536,14 @@ import Playgrounds
 ### From Server LLMs
 
 **When to migrate**:
+
 - Privacy concerns (data leaving device)
 - Offline requirements
 - Cost concerns (per-request fees)
 - Use case is summarization/extraction/classification
 
 **When NOT to migrate**:
+
 - Need world knowledge
 - Need complex reasoning
 - Need very long context (>4096 tokens)
@@ -1485,6 +1551,7 @@ import Playgrounds
 ### From Manual JSON Parsing
 
 **Before**:
+
 ```swift
 let prompt = "Generate person as JSON"
 let response = try await session.respond(to: prompt)
@@ -1493,6 +1560,7 @@ let person = try JSONDecoder().decode(Person.self, from: data)
 ```
 
 **After**:
+
 ```swift
 @Generable
 struct Person {
@@ -1507,6 +1575,7 @@ let response = try await session.respond(
 ```
 
 **Benefits**:
+
 - No parsing code
 - Guaranteed structure
 - Type safety

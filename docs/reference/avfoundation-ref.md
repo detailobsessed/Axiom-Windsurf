@@ -14,24 +14,28 @@ Complete guide to AVFoundation audio based on WWDC 2025 sessions 251 and 403, co
 ## What This Reference Covers
 
 ### AVAudioSession
+
 - Categories (playback, record, playAndRecord)
 - Modes (default, voiceChat, videoRecording)
 - Options (mixWithOthers, allowBluetooth, bluetoothHighQualityRecording)
 - Route management and interruption handling
 
 ### AVAudioEngine
+
 - Node connections and pipelines
 - Input/output taps for processing
 - Format conversion and sample rates
 - Real-time audio processing
 
 ### Bit-Perfect Output (USB DAC)
+
 - iOS automatic passthrough behavior
 - Sample rate matching
 - Format negotiation
 - Hardware-native playback
 
 ### iOS 26+ Features
+
 - AVInputPickerInteraction for in-app input selection
 - AirPods high-quality recording mode
 - Spatial audio capture (First Order Ambisonics)
@@ -42,6 +46,7 @@ Complete guide to AVFoundation audio based on WWDC 2025 sessions 251 and 403, co
 ## When to Use This Reference
 
 Use this reference when:
+
 - Configuring audio session categories and modes
 - Building AVAudioEngine processing pipelines
 - Implementing USB DAC bit-perfect output
@@ -117,6 +122,7 @@ playerItem.audioMix = audioMix
 ## Complete Coverage
 
 This reference includes:
+
 - All AVAudioSession categories, modes, and options
 - AVAudioEngine node types and connections
 - iOS 26+ input picker implementation
@@ -129,6 +135,7 @@ This reference includes:
 ## Anti-Patterns
 
 ### Using Default Category
+
 ```swift
 // ❌ Default category may not suit your needs
 let session = AVAudioSession.sharedInstance()
@@ -136,12 +143,14 @@ let session = AVAudioSession.sharedInstance()
 ```
 
 ### Ignoring Interruptions
+
 ```swift
 // ❌ Not handling phone calls, alarms, Siri
 // Your audio stops without graceful handling
 ```
 
 ### Blocking Main Thread
+
 ```swift
 // ❌ Processing audio on main thread
 audioEngine.inputNode.installTap(...) { buffer, time in
@@ -160,6 +169,7 @@ audioEngine.inputNode.installTap(...) { buffer, time in
 This is a **reference skill** — comprehensive API guide without mandatory workflows.
 
 #### Reference includes
+
 - Complete AVFoundation audio API documentation
 - iOS 26+ spatial audio features
 - Bit-perfect DAC output patterns

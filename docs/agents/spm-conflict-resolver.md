@@ -5,6 +5,7 @@ Analyzes Package.swift and Package.resolved to diagnose and resolve Swift Packag
 ## How to Use This Agent
 
 **Natural language (automatic triggering):**
+
 - "SPM won't resolve my dependencies"
 - "I'm getting 'No such module' after adding a package"
 - "Duplicate symbol linker error"
@@ -12,6 +13,7 @@ Analyzes Package.swift and Package.resolved to diagnose and resolve Swift Packag
 - "Package won't build with Swift 6"
 
 **Explicit command:**
+
 ```bash
 /axiom:resolve-deps
 ```
@@ -19,14 +21,17 @@ Analyzes Package.swift and Package.resolved to diagnose and resolve Swift Packag
 ## What It Checks
 
 ### Critical Issues
+
 - **Version range conflicts** — Two packages require incompatible versions of shared dependency
 - **Duplicate symbols** — Same library linked twice (static + dynamic, or two versions)
 
 ### High Priority
+
 - **Swift 6 language mode mismatch** — Package compiled with Swift 5 but client uses Swift 6
 - **Missing transitive dependency** — Stale or corrupted Package.resolved
 
 ### Medium Priority
+
 - **Macro target build failure** — Swift macros need special Xcode permissions
 - **Platform version mismatch** — Package requires higher iOS/macOS version
 
@@ -56,6 +61,7 @@ rm -rf .build
 rm Package.resolved
 swift package resolve
 ```
+
 ```
 
 ## Model & Tools

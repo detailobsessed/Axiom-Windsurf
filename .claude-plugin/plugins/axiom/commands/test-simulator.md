@@ -10,6 +10,7 @@ Launches the **simulator-tester** agent for automated simulator testing with vis
 ## What It Does
 
 The agent will:
+
 1. Check simulator state and boot if needed
 2. Set up test scenarios (location, permissions, push notifications)
 3. Capture screenshots and video
@@ -30,32 +31,41 @@ The agent will:
 ## Common Scenarios
 
 **Visual Verification**:
+
 ```bash
 /axiom:test-simulator
 ```
+
 "Take a screenshot to verify the login button fix"
 
 **Location Testing**:
+
 ```bash
 /axiom:test-simulator
 ```
+
 "Set location to San Francisco and test the map feature"
 
 **Push Notifications**:
+
 ```bash
 /axiom:test-simulator
 ```
+
 "Send a test push notification and screenshot the result"
 
 **Permission Flows**:
+
 ```bash
 /axiom:test-simulator
 ```
+
 "Test the camera permission dialog"
 
 ## Prefer Natural Language?
 
 Instead of using this command, you can simply say:
+
 - "Can you take a screenshot of the app?"
 - "Test my app with location simulation"
 - "Check if the push notification handling works"
@@ -67,6 +77,7 @@ The simulator-tester agent will automatically trigger.
 ## Quick Screenshot
 
 For just a quick screenshot without full testing, use:
+
 ```bash
 /axiom:screenshot
 ```

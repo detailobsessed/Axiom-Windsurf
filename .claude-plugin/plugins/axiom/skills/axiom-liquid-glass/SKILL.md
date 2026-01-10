@@ -12,6 +12,7 @@ apple_platforms: iOS 26+, iPadOS 26+, macOS Tahoe+, axiom-visionOS 3+
 ## When to Use This Skill
 
 Use when:
+
 - Implementing Liquid Glass effects in your app
 - Reviewing existing UI for Liquid Glass adoption opportunities
 - Debugging visual artifacts with Liquid Glass materials
@@ -21,6 +22,7 @@ Use when:
 - Troubleshooting tinting, legibility, or adaptive behavior issues
 
 #### Related Skills
+
 - Use `axiom-liquid-glass-ref` for comprehensive app-wide adoption guidance (app icons, controls, navigation, menus, windows, platform considerations)
 
 ## Example Prompts
@@ -28,18 +30,23 @@ Use when:
 These are real questions developers ask that this skill is designed to answer:
 
 #### 1. "I just saw Liquid Glass in WWDC videos. How is it different from blur effects I've used before? Should I adopt it?"
+
 → The skill explains Liquid Glass as a lensing-based material (not blur), shows design philosophy, and when adoption makes sense
 
 #### 2. "I'm implementing Liquid Glass in my app but the lensing effect doesn't look quite right. It looks like a regular blur. What am I missing?"
+
 → The skill covers the visual properties (lensing vs motion vs environment), Regular vs Clear variants, and debugging visual artifacts
 
 #### 3. "Liquid Glass works great on iPhone but looks odd on iPad. Should I adjust the implementation differently for different screen sizes?"
+
 → The skill demonstrates adaptive Liquid Glass patterns and platform-specific guidance (iOS 26+, macOS Tahoe+, axiom-visionOS 3+)
 
 #### 4. "I need to use Liquid Glass but still need legible text on top. How do I ensure text contrast while using Liquid Glass?"
+
 → The skill covers tinting strategies, adaptive color choices, and opacity patterns for maintaining readability across light/dark modes
 
 #### 5. "We want to do a design review of our Liquid Glass implementation. What are the expert criteria for a good Liquid Glass implementation?"
+
 → The skill provides the comprehensive review checklist and professional push-back frameworks for design review meetings
 
 ---
@@ -64,6 +71,7 @@ Liquid Glass is Apple's next-generation material design system introduced at WWD
 Liquid Glass defines itself through **lensing** — the warping and bending of light that communicates presence, motion, and form.
 
 **How it works**:
+
 - Dynamically concentrates and shapes light in real-time
 - Provides definition against background while feeling visually grounded
 - Controls feel ultra-lightweight and transparent while visually distinguishable
@@ -87,12 +95,14 @@ Motion and visuals were designed as one unified experience:
 Liquid Glass **continuously adapts** without fixed light/dark appearance:
 
 **Content-aware adaptation**:
+
 - Shadows become more prominent when text scrolls underneath
 - Tint and dynamic range shift to ensure legibility
 - Independently switches light/dark to feel at home in any context
 - Larger elements (menus, sidebars) simulate thicker material with deeper shadows and richer lensing
 
 **Platform adaptation**:
+
 - Nests perfectly into rounded corners of windows
 - Forms distinct functional layer for controls/navigation
 - Ambient environment (colorful content nearby) subtly spills onto surface
@@ -132,6 +142,7 @@ Button("Tap Me") {
 #### Regular Variant (Default — Use Most Often)
 
 **Characteristics**:
+
 - Most versatile, use in 95% of cases
 - Full visual and adaptive effects
 - Provides legibility regardless of context
@@ -151,12 +162,14 @@ NavigationView {
 #### Clear Variant (Special Cases Only)
 
 **Characteristics**:
+
 - Permanently more transparent
 - No adaptive behaviors
 - Allows content richness to interact with glass
 - **Requires dimming layer** for legibility
 
 **Use ONLY when ALL three conditions are met**:
+
 1. ✅ Element is over **media-rich content**
 2. ✅ Content layer won't be negatively affected by **dimming layer**
 3. ✅ Content above glass is **bold and bright**
@@ -181,17 +194,20 @@ ZStack {
 Liquid Glass is composed of multiple layers working together:
 
 ### 1. Highlights Layer
+
 - Light sources shine on material, producing highlights responding to geometry
 - Lights move during interactions (lock/unlock), defining silhouette
 - Some cases respond to device motion (feels aware of position in real world)
 
 ### 2. Shadows Layer
+
 - Aware of background content
 - Increases shadow opacity over text for separation
 - Lowers shadow opacity over solid light backgrounds
 - Ensures elements are always easy to spot
 
 ### 3. Internal Glow (Interaction Feedback)
+
 - Material illuminates from within on interaction
 - Glow starts under fingertips, spreads throughout element
 - Spreads to nearby Liquid Glass elements
@@ -199,6 +215,7 @@ Liquid Glass is composed of multiple layers working together:
 - Makes interface feel alive and connected to physical world
 
 ### 4. Adaptive Tinting Layer
+
 - Multiple layers adapt together to maintain hierarchy
 - Windows losing focus visually recede (Mac/iPad)
 - All behaviors come built-in automatically
@@ -210,6 +227,7 @@ Liquid Glass is composed of multiple layers working together:
 ### ✅ DO: Reserve for Navigation Layer
 
 **Correct Usage**:
+
 ```
 [Content Layer — No Glass]
     ↓
@@ -225,6 +243,7 @@ Liquid Glass is composed of multiple layers working together:
 ### ❌ DON'T: Use on Content Layer
 
 **Wrong**:
+
 ```swift
 // DON'T apply to table views, lists, or content
 List(items) { item in
@@ -238,6 +257,7 @@ List(items) { item in
 ### ❌ DON'T: Stack Glass on Glass
 
 **Wrong**:
+
 ```swift
 ZStack {
     NavigationBar()
@@ -249,6 +269,7 @@ ZStack {
 ```
 
 **Correct**:
+
 ```swift
 ZStack {
     NavigationBar()
@@ -275,6 +296,7 @@ ZStack {
 Work in concert with Liquid Glass to maintain separation and legibility with scrolling content.
 
 **How they work**:
+
 - Content begins scrolling → effect gently dissolves content into background
 - Lifts glass visually above moving content
 - Floating elements (titles) remain clear
@@ -302,6 +324,7 @@ ScrollView {
 Liquid Glass introduces **adaptive tinting** that respects material principles and maximizes legibility.
 
 **How it works**:
+
 1. Selecting color generates range of tones
 2. Tones mapped to content brightness underneath element
 3. Inspired by colored glass in reality
@@ -321,6 +344,7 @@ Button("Primary Action") {
 ### Tinting Best Practices
 
 #### ✅ DO: Use for Primary Actions
+
 ```swift
 // Good — Emphasizes primary action
 Button("View Bag") {
@@ -331,6 +355,7 @@ Button("View Bag") {
 ```
 
 #### ❌ DON'T: Tint Everything
+
 ```swift
 // Wrong — When everything is tinted, nothing stands out
 VStack {
@@ -345,6 +370,7 @@ VStack {
 ### Solid Fills vs Tinting
 
 **Solid fills break Liquid Glass character**:
+
 ```swift
 // ❌ Opaque, breaks visual character
 Button("Action") {}
@@ -363,14 +389,17 @@ Button("Action") {}
 ### Automatic Legibility Features
 
 Small elements (navbars, tabbars):
+
 - Constantly adapt appearance based on background
 - Flip light/dark for discernibility
 
 Large elements (menus, sidebars):
+
 - Adapt based on context
 - **Don't flip light/dark** (too distracting for large surface area)
 
 Symbols/glyphs:
+
 - Mirror glass behavior (flip light/dark)
 - Maximize contrast automatically
 - All content on Regular variant receives this treatment
@@ -403,16 +432,19 @@ NavigationView {
 Liquid Glass offers several accessibility features that modify material **without sacrificing its magic**:
 
 ### Reduced Transparency
+
 - Makes Liquid Glass frostier
 - Obscures more content behind it
 - Applied automatically when system setting enabled
 
 ### Increased Contrast
+
 - Makes elements predominantly black or white
 - Highlights with contrasting border
 - Applied automatically when system setting enabled
 
 ### Reduced Motion
+
 - Decreases intensity of effects
 - Disables elastic properties
 - Applied automatically when system setting enabled
@@ -428,11 +460,13 @@ Liquid Glass offers several accessibility features that modify material **withou
 **Concern**: Liquid Glass rendering cost in complex view hierarchies
 
 **Guidance**:
+
 - Regular variant optimized for performance
 - Larger elements (menus, sidebars) use more pronounced effects but managed by system
 - Avoid excessive nesting of glass elements
 
 **Optimization**:
+
 ```swift
 // ❌ Avoid deep nesting
 ZStack {
@@ -458,12 +492,14 @@ VStack {
 ### Rendering Costs
 
 **Adaptive behaviors have computational cost**:
+
 - Light/dark switching
 - Shadow adjustments
 - Tint calculations
 - Lensing effects
 
 **System handles optimization**, but be mindful:
+
 - Don't animate Liquid Glass elements unnecessarily
 - Use Clear variant sparingly (requires dimming layer computation)
 - Profile with Instruments if experiencing performance issues
@@ -501,6 +537,7 @@ func testLiquidGlassAppearance() {
 ### Test Across Configurations
 
 Critical test cases:
+
 - ✅ Light mode vs dark mode
 - ✅ Different color schemes (environment)
 - ✅ Reduced Transparency enabled
@@ -534,6 +571,7 @@ func testLiquidGlassAccessibility() {
 ### The Problem
 
 Under design review pressure, you'll face requests to:
+
 - "Use Clear variant everywhere — Regular is too opaque"
 - "Glass on all controls for visual cohesion"
 - "More transparency to let content shine through"
@@ -568,6 +606,7 @@ Let me show which screens meet all three..."
 #### Step 2: Demonstrate the Risk
 
 Open the app on a device. Show:
+
 - Clear variant in low-contrast scenario (unreadable)
 - Regular variant in same scenario (legible)
 
@@ -592,6 +631,7 @@ we'll need an expedited follow-up. I'm flagging this proactively."
 ```
 
 #### Why this works
+
 - You're not questioning their taste (you like Clear too)
 - You're raising accessibility/legibility risk
 - You're offering a solution that preserves their vision in hero sections
@@ -600,6 +640,7 @@ we'll need an expedited follow-up. I'm flagging this proactively."
 ### Real-World Example: App Store Launch Blocker (36-Hour Deadline)
 
 #### Scenario
+
 - 36 hours to launch
 - Chief designer says: "Clear variant everywhere"
 - Client watching the review meeting
@@ -624,6 +665,7 @@ NavigationBar()
 ```
 
 #### Result
+
 - 30-minute compromise demo
 - 90 minutes to implement changes
 - Launch on schedule with optimal legibility
@@ -662,11 +704,13 @@ This protects both of you and shows you're not blocking - just de-risking.
 When reviewing Liquid Glass implementation (your code or others'), check:
 
 ### 1. Material Appropriateness
+
 - [ ] Is Liquid Glass used only on navigation layer (not content)?
 - [ ] Are standard controls getting glass automatically via Xcode 26 recompile?
 - [ ] Is glass avoided on glass situations?
 
 ### 2. Variant Selection
+
 - [ ] Is Regular variant used for most cases?
 - [ ] If Clear variant used, do all three conditions apply?
   - [ ] Over media-rich content?
@@ -675,27 +719,32 @@ When reviewing Liquid Glass implementation (your code or others'), check:
 - [ ] Are Regular and Clear never mixed in same interface?
 
 ### 3. Legibility & Contrast
+
 - [ ] Are primary actions selectively tinted (not everything)?
 - [ ] Is color used in content layer for overall app color scheme?
 - [ ] Are solid fills avoided on glass elements?
 - [ ] Do elements maintain legibility on various backgrounds?
 
 ### 4. Layering & Hierarchy
+
 - [ ] Are content intersections avoided in steady states?
 - [ ] Are elements on top of glass using fills/transparency (not glass)?
 - [ ] Is visual hierarchy clear (navigation layer vs content layer)?
 
 ### 5. Scroll Edge Effects
+
 - [ ] Are scroll edge effects applied where Liquid Glass meets scrolling content?
 - [ ] Is hard style used for pinned accessory views?
 
 ### 6. Accessibility
+
 - [ ] Does implementation work with Reduced Transparency?
 - [ ] Does implementation work with Increased Contrast?
 - [ ] Does implementation work with Reduced Motion?
 - [ ] Are interactive elements hittable in all configurations?
 
 ### 7. Performance
+
 - [ ] Is view hierarchy reasonably flat?
 - [ ] Are glass elements animated only when necessary?
 - [ ] Is Clear variant used sparingly?
@@ -707,6 +756,7 @@ When reviewing Liquid Glass implementation (your code or others'), check:
 ### Mistake 1: Using Glass Everywhere
 
 **Wrong**:
+
 ```swift
 List(landmarks) { landmark in
     LandmarkRow(landmark)
@@ -716,6 +766,7 @@ List(landmarks) { landmark in
 ```
 
 **Correct**:
+
 ```swift
 NavigationView {
     List(landmarks) { landmark in
@@ -735,6 +786,7 @@ NavigationView {
 ### Mistake 2: Clear Variant Without Dimming
 
 **Wrong**:
+
 ```swift
 ZStack {
     VideoPlayer(player: player)
@@ -745,6 +797,7 @@ ZStack {
 ```
 
 **Correct**:
+
 ```swift
 ZStack {
     VideoPlayer(player: player)
@@ -776,6 +829,7 @@ ZStack {
 **Issue**: Glass appears too transparent or invisible
 
 **Check**:
+
 1. Are you using Clear variant? (Switch to Regular if inappropriate)
 2. Is background content extremely light or dark? (Glass adapts - this may be correct behavior)
 3. Is Reduced Transparency enabled? (Check accessibility settings)
@@ -783,6 +837,7 @@ ZStack {
 **Issue**: Glass appears opaque or has harsh edges
 
 **Check**:
+
 1. Are you using solid fills on glass? (Remove, use tinting)
 2. Is Increased Contrast enabled? (Expected behavior)
 3. Is custom shape too complex? (Simplify geometry)
@@ -792,6 +847,7 @@ ZStack {
 **Issue**: Glass doesn't flip to dark style on dark backgrounds
 
 **Check**:
+
 1. Is element large (menu, sidebar)? (Large elements don't flip - by design)
 2. Is background actually dark? (Use Color Picker to verify)
 3. Are you overriding appearance? (Remove `.preferredColorScheme()` if unintended)
@@ -799,6 +855,7 @@ ZStack {
 **Issue**: Content on glass not legible in dark mode
 
 **Fix**:
+
 ```swift
 // Let SwiftUI handle contrast automatically
 Text("Label")
@@ -814,6 +871,7 @@ Text("Label")
 **Issue**: Scrolling feels janky with Liquid Glass
 
 **Debug**:
+
 1. Profile with Instruments (see `axiom-swiftui-performance` skill)
 2. Check for excessive view body updates
 3. Simplify view hierarchy under glass
@@ -822,6 +880,7 @@ Text("Label")
 **Issue**: Animations stuttering
 
 **Check**:
+
 1. Are you animating glass shape changes? (Expensive)
 2. Profile with SwiftUI Instrument for long view updates
 3. Consider reducing glass usage if critical path
@@ -833,6 +892,7 @@ Text("Label")
 ### From UIBlurEffect / NSVisualEffectView
 
 **Before** (UIKit):
+
 ```swift
 let blurEffect = UIBlurEffect(style: .systemMaterial)
 let blurView = UIVisualEffectView(effect: blurEffect)
@@ -840,6 +900,7 @@ view.addSubview(blurView)
 ```
 
 **After** (SwiftUI with Liquid Glass):
+
 ```swift
 ZStack {
     // Content
@@ -848,6 +909,7 @@ ZStack {
 ```
 
 **Benefits**:
+
 - Automatic adaptation (no manual style switching)
 - Built-in interaction feedback
 - Platform-appropriate appearance
@@ -863,6 +925,7 @@ If you've built custom translucent effects:
 4. **Measure performance** — Likely improvement over custom implementations
 
 **When to keep custom materials**:
+
 - Specific artistic effect not achievable with Liquid Glass
 - Backward compatibility with iOS < 26 required
 - Non-standard UI paradigm incompatible with Liquid Glass principles
@@ -885,6 +948,7 @@ func glassEffect<S: Shape>(
 ```
 
 **Parameters**:
+
 - `shape`: Shape defining glass bounds (default: `Capsule()`)
 - `isInteractive`: On iOS, enables interactive mode for custom controls (default: `false`)
 
@@ -893,6 +957,7 @@ func glassEffect<S: Shape>(
 **Availability**: iOS 26+, iPadOS 26+, macOS Tahoe+, axiom-visionOS 3+
 
 **Example**:
+
 ```swift
 // Default capsule shape
 Text("Hello").glassEffect()
@@ -917,11 +982,13 @@ func glassEffect<S: Shape>(
 ```
 
 **Parameters**:
+
 - `variant`: `.regular` or `.clear`
 - `shape`: Shape defining glass bounds
 - `isInteractive`: Interactive mode for custom controls (iOS)
 
 **Example**:
+
 ```swift
 Text("Hello").glassEffect(.clear, in: Circle())
 ```
@@ -935,9 +1002,11 @@ func scrollEdgeEffect(_ style: ScrollEdgeStyle) -> some View
 ```
 
 **Parameters**:
+
 - `style`: `.automatic`, `.soft`, or `.hard`
 
 **Example**:
+
 ```swift
 ScrollView {
     // Content
@@ -954,12 +1023,14 @@ func scrollEdgeEffectStyle(_ style: ScrollEdgeStyle, for edges: Edge.Set) -> som
 ```
 
 **Parameters**:
+
 - `style`: `.hard`, `.soft`, or `.automatic`
 - `edges`: Which edges to apply effect (`.top`, `.bottom`, `.leading`, `.trailing`)
 
 **Use case**: Custom bars with controls, text, or icons that have content scrolling beneath them. System bars (toolbars, navigation bars) adopt this automatically.
 
 **Example**:
+
 ```swift
 // Custom toolbar with controls
 CustomToolbar()
@@ -987,6 +1058,7 @@ func glassBackgroundEffect() -> some View
 **Use case**: Apply Liquid Glass appearance to custom views (not buttons/controls) that should beautifully reflect surrounding content like photos.
 
 **Example**:
+
 ```swift
 struct PhotoGalleryView: View {
     var body: some View {
@@ -1099,11 +1171,13 @@ func containerRelativeShape(_ shape: ContainerRelativeShape) -> some View
 ```
 
 **Parameters**:
+
 - `shape`: Shape that aligns with container (e.g., `.roundedRectangle`)
 
 **Use case**: Create visual harmony by making controls concentric to their containers (sheets concentric to windows, controls concentric to sheets).
 
 **Example**:
+
 ```swift
 // Control shape aligns with container curvature
 Button("Action") { }
@@ -1124,11 +1198,13 @@ func tabBarMinimizationBehavior(_ behavior: TabBarMinimizationBehavior) -> some 
 ```
 
 **Parameters**:
+
 - `behavior`: `.onScrollDown`, `.onScrollUp`, `.automatic`, or `.never`
 
 **Use case**: Content-focused apps (reading, media) where tab bar should recede during scrolling.
 
 **Example**:
+
 ```swift
 TabView {
     ContentView()
@@ -1175,6 +1251,7 @@ struct GlassEffectContainer<Content: View>: View {
 **Use case** When applying Liquid Glass effects to multiple custom elements. Optimizes performance and enables fluid morphing between glass shapes.
 
 #### Example
+
 ```swift
 // ✅ Combine effects in container for optimization
 GlassEffectContainer {
@@ -1192,12 +1269,14 @@ GlassEffectContainer {
 ```
 
 #### Benefits
+
 - Optimizes rendering performance
 - Fluidly morphs Liquid Glass shapes into each other
 - Reduces compositor overhead
 - Better animation performance
 
 #### When to use
+
 - Multiple custom Liquid Glass elements
 - Morphing animations between glass shapes
 - Performance-critical interfaces
@@ -1213,23 +1292,27 @@ GlassEffectContainer {
 To ship with latest SDKs while maintaining previous appearance:
 
 #### Add to Info.plist
+
 ```xml
 <key>UIDesignRequiresCompatibility</key>
 <true/>
 ```
 
 #### Effect
+
 - App built with iOS 26 SDK
 - Appearance matches iOS 18 and earlier
 - Liquid Glass effects disabled
 - Previous blur/material styles used
 
 #### When to use
+
 - Need time to audit interface changes
 - Gradual adoption strategy
 - Maintain exact appearance temporarily
 
 #### Migration strategy
+
 1. Ship with `UIDesignRequiresCompatibility` enabled
 2. Audit interface changes in separate build
 3. Update interface incrementally

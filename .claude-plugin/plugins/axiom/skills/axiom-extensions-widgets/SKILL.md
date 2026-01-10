@@ -15,6 +15,7 @@ apple_platforms: iOS 14+, iPadOS 14+, watchOS 9+
 **Mental model**: Think of widgets as **archived snapshots** on a timeline, not live views. Your widget doesn't "run" continuously — it renders, gets archived, and the system displays the snapshot.
 
 **Extension sandboxing**: Extensions have:
+
 - Limited memory (~30MB)
 - No network access in widget views (fetch in TimelineProvider only)
 - Separate bundle container from main app
@@ -23,6 +24,7 @@ apple_platforms: iOS 14+, iPadOS 14+, watchOS 9+
 ## When to Use This Skill
 
 ✅ **Use this skill when**:
+
 - Implementing any widget (Home Screen, Lock Screen, StandBy, Control Center)
 - Creating Live Activities
 - Debugging why widgets show stale data
@@ -33,6 +35,7 @@ apple_platforms: iOS 14+, iPadOS 14+, watchOS 9+
 - Sharing data between app and widget/extension
 
 ❌ **Do NOT use this skill for**:
+
 - Pure App Intents implementation (use **app-intents-ref**)
 - SwiftUI layout questions (use **swiftui-layout**)
 - Performance profiling (use **swiftui-performance**)
@@ -48,21 +51,27 @@ apple_platforms: iOS 14+, iPadOS 14+, watchOS 9+
 ## Example Prompts
 
 #### 1. "My widget isn't updating"
+
 → This skill covers timeline policies, refresh budgets, manual reload, and App Groups configuration
 
 #### 2. "How do I share data between app and widget?"
+
 → This skill explains App Groups entitlement, shared UserDefaults, and container URLs
 
 #### 3. "Widget shows old data even after I update the app"
+
 → This skill covers container paths, UserDefaults suite names, and WidgetCenter reload
 
 #### 4. "Live Activity fails to start"
+
 → This skill covers 4KB data limit, ActivityAttributes constraints, authorization checks
 
 #### 5. "Control Center control takes forever to respond"
+
 → This skill covers async ValueProvider patterns and optimistic UI
 
 #### 6. "Interactive widget button does nothing"
+
 → This skill covers App Intent perform() implementation and WidgetCenter reload
 
 ---
@@ -74,6 +83,7 @@ apple_platforms: iOS 14+, iPadOS 14+, watchOS 9+
 **Time cost**: 2-4 hours debugging why widgets are blank or show errors
 
 ### Symptom
+
 - Widget renders but shows no data
 - Console errors: "NSURLSession not available in widget extension"
 - Widget appears blank intermittently
@@ -148,6 +158,7 @@ struct Provider: TimelineProvider {
 ```
 
 **Constraints**:
+
 - **30-second timeout** - System kills extension if getTimeline() doesn't complete
 - **No background sessions** - Can't download large files
 - **Battery cost** - Every timeline reload uses battery
@@ -162,6 +173,7 @@ struct Provider: TimelineProvider {
 **Time cost**: 1-2 hours debugging why widget shows empty/default data
 
 ### Symptom
+
 - Widget always shows placeholder or default values
 - Changes in main app don't reflect in widget
 - UserDefaults reads return nil in widget
@@ -195,6 +207,7 @@ let value = shared.string(forKey: "myKey") // Returns "Updated"
 ```
 
 **Verification**:
+
 ```swift
 let containerURL = FileManager.default.containerURL(
     forSecurityApplicationGroupIdentifier: "group.com.myapp"
@@ -210,6 +223,7 @@ print("Shared container: \(containerURL?.path ?? "MISSING")")
 **Time cost**: Poor user experience, battery drain, widgets stop updating
 
 ### Symptom
+
 - Widget updates frequently at first, then stops
 - Console logs: "Timeline reload budget exhausted"
 - Widget becomes stale after a few hours
@@ -251,6 +265,7 @@ func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) ->
 ```
 
 **Guidelines**:
+
 - 15-60 minute intervals for most widgets
 - 5-15 minutes for time-sensitive data (stocks, sports)
 - Use `.atEnd` policy for automatic reload
@@ -263,6 +278,7 @@ func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) ->
 **Time cost**: Control Center control unresponsive, poor UX
 
 ### Symptom
+
 - Tapping control in Control Center shows spinner for seconds
 - Control seems "stuck" or frozen
 - No immediate visual feedback
@@ -324,6 +340,7 @@ struct ThermostatControl: ControlWidget {
 **Time cost**: User annoyance, negative reviews
 
 ### Symptom
+
 - Live Activities stay on Lock Screen for hours after event ends
 - Users must manually dismiss completed activities
 - Activity shows "Delivered" but won't disappear
@@ -364,6 +381,7 @@ await activity.end(nil, dismissalPolicy: .after(dismissTime))
 ```
 
 **Best practices**:
+
 - `.immediate` — Transient events (timer completed, song finished)
 - `.default` — Most activities (shows "completed" state for ~4 hours)
 - `.after(date)` — Specific end time (meeting ends, flight lands)
@@ -375,6 +393,7 @@ await activity.end(nil, dismissalPolicy: .after(dismissTime))
 **Time cost**: Activity fails to start silently, hard to debug
 
 ### Symptom
+
 - `Activity.request()` throws error
 - Console: "Activity attributes exceed size limit"
 - Activity never appears on Lock Screen
@@ -432,6 +451,7 @@ struct GameLiveActivityView: View {
 ```
 
 **Strategies**:
+
 - Store IDs/references, not full objects
 - Use asset catalogs for images (not embedded Data)
 - Keep ContentState minimal (only changeable data)
@@ -442,6 +462,7 @@ struct GameLiveActivityView: View {
 **Hard limit**: 4096 bytes (4KB)
 
 **Target guidance**:
+
 - ✅ **< 2KB**: Safe with room to grow - recommended for v1.0
 - ⚠️ **2-3KB**: Acceptable but monitor closely as you add features
 - 🔴 **3.5KB+**: Risky - future fields may push you over limit
@@ -449,6 +470,7 @@ struct GameLiveActivityView: View {
 **Why safety margins matter**: You'll add fields later (new features, more data). Starting at 3.8KB leaves zero room for growth.
 
 **Checking size**:
+
 ```swift
 let attributes = GameAttributes(gameID: "123", teamAName: "Hawks", teamBName: "Eagles")
 let state = GameAttributes.ContentState(teamAScore: 14, teamBScore: 10, quarter: 2, timeRemaining: "5:23", lastPlay: nil)
@@ -472,6 +494,7 @@ if let attributesData = try? encoder.encode(attributes),
 ```
 
 **Optimization priorities** (when over 2KB):
+
 1. Replace `String` descriptions with enums (if fixed set)
 2. Shorten string values ("Team A" → "A")
 3. Use smaller types (Int → Int8 if range allows)
@@ -484,6 +507,7 @@ if let attributesData = try? encoder.encode(attributes),
 **Time cost**: 30 minutes debugging invisible widget
 
 ### Symptom
+
 - Widget builds successfully
 - No errors in console
 - Widget doesn't appear in widget picker/gallery
@@ -524,6 +548,7 @@ struct MyWidget: Widget {
 ```
 
 **Other common causes**:
+
 - Widget target's "Skip Install" set to YES (should be NO)
 - Widget extension not added to app's "Embed App Extensions"
 - Clean build folder needed (`Cmd+Shift+K`)
@@ -592,6 +617,7 @@ Before debugging any widget or extension issue, complete this checklist:
 ## Widget Debugging Checklist
 
 - ☐ **App Groups enabled** in BOTH main app AND extension targets
+
   ```bash
   # Verify entitlements
   codesign -d --entitlements - /path/to/YourApp.app
@@ -603,6 +629,7 @@ Before debugging any widget or extension issue, complete this checklist:
   - Verify it appears with correct name and description
 
 - ☐ **Console logs** for timeline errors
+
   ```bash
   # Xcode Console
   # Filter: "widget" OR "timeline"
@@ -610,12 +637,15 @@ Before debugging any widget or extension issue, complete this checklist:
   ```
 
 - ☐ **Manual reload test**
+
   ```swift
   WidgetCenter.shared.reloadAllTimelines()
   ```
+
   - If this fixes it → problem is timeline policy or refresh budget
 
 - ☐ **Shared container accessible**
+
   ```swift
   let container = FileManager.default.containerURL(
       forSecurityApplicationGroupIdentifier: "group.com.myapp"
@@ -627,12 +657,14 @@ Before debugging any widget or extension issue, complete this checklist:
 ## Live Activity Debugging Checklist
 
 - ☐ **ActivityAttributes < 4KB**
+
   ```swift
   let encoded = try JSONEncoder().encode(attributes)
   print("Size: \(encoded.count) bytes") // Must be < 4096
   ```
 
 - ☐ **Authorization check**
+
   ```swift
   let authInfo = ActivityAuthorizationInfo()
   print("Enabled: \(authInfo.areActivitiesEnabled)")
@@ -659,11 +691,13 @@ Before debugging any widget or extension issue, complete this checklist:
 ## Scenario 1: "Widget shows wrong data in production"
 
 ### Situation
+
 - App released to App Store
 - Users report widget displaying incorrect/stale information
 - Works fine in development
 
 ### Pressure Signals
+
 - 🚨 **App Store reviews** — 1-star reviews mentioning broken widget
 - ⏰ **Time pressure** — Need hotfix ASAP
 - 👔 **Executive visibility** — Management asking for status updates
@@ -709,6 +743,7 @@ shared.set(Date(), forKey: "lastUpdate")
 ```
 
 Common issues:
+
 - App uses `group.com.myapp.dev`
 - Widget uses `group.com.myapp.production`
 - **Fix**: Ensure EXACT same group ID in both .entitlements files
@@ -749,6 +784,7 @@ func applicationDidBecomeActive(_ application: UIApplication) {
 ### Communication Template
 
 **To stakeholders**:
+
 ```
 Status: Investigating widget data sync issue
 
@@ -762,6 +798,7 @@ Workaround for users: Force-quit app and relaunch (triggers widget refresh)
 ```
 
 ### Time Saved
+
 - **Without systematic fix**: 4-8 hours of trial-and-error, multiple resubmissions
 - **With this process**: 1-2 hours to identify, fix, and verify
 
@@ -770,11 +807,13 @@ Workaround for users: Force-quit app and relaunch (triggers widget refresh)
 ## Scenario 2: "Live Activity must update instantly"
 
 ### Situation
+
 - Sports score app
 - Users expect scores to update within seconds of real game events
 - Current timeline-based approach too slow
 
 ### Pressure
+
 - **Competitive**: "Other apps update faster"
 - **Deadline**: Marketing promised "real-time" updates
 
@@ -890,6 +929,7 @@ try! "\(timestamp): Received push\n".append(to: logURL)
 ### Communication Template
 
 **To marketing/exec (Phase 1)**:
+
 ```
 Launch Timeline:
 - Phase 1 (immediate): Live Activities with app-driven updates. Updates appear when users open app or pull to refresh.
@@ -899,6 +939,7 @@ Recommendation: Launch Phase 1 to market, communicate Phase 2 as "coming soon" o
 ```
 
 **To marketing/exec (Phase 2)**:
+
 ```
 "Real-time" positioning requires clarification:
 
@@ -912,6 +953,7 @@ Recommendation: Position as "near real-time" (accurate) vs "instant" (misleading
 ```
 
 ### Reality Check
+
 - Push notifications are fastest mechanism available
 - 1-3 second latency is normal
 - Budget limits exist for battery optimization
@@ -922,6 +964,7 @@ Recommendation: Position as "near real-time" (accurate) vs "instant" (misleading
 ## Scenario 3: "Control Center control is slow"
 
 ### Situation
+
 - Smart home control for lights
 - Tapping control in Control Center takes 3-5 seconds to respond
 - Users expect instant feedback
@@ -1010,6 +1053,7 @@ struct LightControl: ControlWidget {
 Before shipping widgets or Live Activities:
 
 ## Pre-Release
+
 - ☐ App Groups entitlement in BOTH targets (app + extension)
 - ☐ Shared UserDefaults uses `suiteName` (not `.standard`)
 - ☐ Timeline entries ≥ 5 minutes apart (avoid budget exhaustion)
@@ -1027,12 +1071,14 @@ Before shipping widgets or Live Activities:
 - ☐ Verified widget appears in Widget Gallery
 
 ## Post-Release Monitoring
+
 - ☐ Monitor for "Timeline reload budget exhausted" errors
 - ☐ Track widget data staleness in analytics
 - ☐ Watch App Store reviews for widget-related complaints
 - ☐ Log App Group container access for debugging
 
 ## Common Failure Modes
+
 - Missing App Groups → Widget shows default data
 - Wrong group ID → App and widget can't communicate
 - Over-refreshing → Widget stops updating after hours

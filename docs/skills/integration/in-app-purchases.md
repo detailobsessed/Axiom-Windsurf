@@ -12,6 +12,7 @@ StoreKit 2 implementation guide with testing-first workflow. Covers consumables,
 ## When to Use This Skill
 
 Use this skill when you're:
+
 - Implementing any in-app purchase functionality
 - Adding consumable products (coins, hints, boosts)
 - Adding non-consumable products (premium features, level packs)
@@ -39,30 +40,35 @@ Questions you can ask Claude that will draw from this skill:
 ## What's Covered
 
 ### Testing-First Workflow
+
 - Creating `.storekit` configuration file
 - Product configuration (consumables, non-consumables, subscriptions)
 - Simulator testing with accelerated time
 - Why .storekit-first catches bugs early
 
 ### StoreManager Architecture
+
 - Product loading with Product.products(for:)
 - Purchase flow with Product.purchase()
 - Transaction verification (StoreKit.VerificationResult)
 - Transaction.finish() timing
 
 ### Transaction Handling
+
 - Transaction.updates listener (background purchases)
 - Transaction.currentEntitlements for restore
 - Consumable vs durable transaction lifecycles
 - Server-side verification patterns
 
 ### Subscription Management
+
 - Product.SubscriptionInfo for subscription details
 - Renewal state tracking
 - Grace period handling
 - Family Sharing support
 
 ### Common Issues
+
 - Missing Transaction.finish() (purchase stuck)
 - Not listening to Transaction.updates
 - Product ID mismatches

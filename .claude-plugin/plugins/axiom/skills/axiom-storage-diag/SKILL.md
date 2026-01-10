@@ -18,6 +18,7 @@ The iOS file system is battle-tested across millions of apps and devices. If you
 ## Red Flags — Suspect File Storage Issue
 
 If you see ANY of these:
+
 - Files mysteriously disappear after device restart
 - Files disappear randomly (weeks after creation)
 - App backup size unexpectedly large (>500 MB)
@@ -27,6 +28,7 @@ If you see ANY of these:
 - Background tasks can't access files
 
 ❌ **FORBIDDEN** "iOS deleted my files, the file system is broken"
+
 - iOS file system handles billions of files daily across all apps
 - System behavior is documented and predictable
 - 99% of issues are location/protection mismatches
@@ -175,6 +177,7 @@ App backup > 500 MB?
 **Cause**: tmp/ is purged aggressively by system
 
 **Fix**:
+
 ```swift
 // ❌ WRONG: Using tmp/ for anything that should persist
 let tmpURL = FileManager.default.temporaryDirectory
@@ -197,6 +200,7 @@ try data.write(to: fileURL)
 **Cause**: Caches/ is purged under storage pressure (expected behavior)
 
 **Fix**: Either re-download on demand OR move to Application Support if can't be regenerated
+
 ```swift
 // ✅ CORRECT: Handle missing cache gracefully
 func loadCachedImage(url: URL) async throws -> UIImage {
@@ -223,6 +227,7 @@ func loadCachedImage(url: URL) async throws -> UIImage {
 **Cause**: Files with .complete protection inaccessible when locked
 
 **Fix**:
+
 ```swift
 // ❌ WRONG: .complete protection for background-accessed files
 try data.write(to: url, options: .completeFileProtection)
@@ -243,6 +248,7 @@ try data.write(
 **Cause**: Downloaded content in Documents/ or not marked excluded
 
 **Fix**:
+
 ```swift
 // ✅ CORRECT: Exclude re-downloadable content
 func downloadPodcast(url: URL) async throws {
@@ -275,6 +281,7 @@ func downloadPodcast(url: URL) async throws {
 **DIAGNOSIS STEPS**:
 
 1. **Check storage location** (5 min):
+
    ```swift
    // Were photos in Caches/?
    let photosInCaches = path.contains("/Caches/")
@@ -282,6 +289,7 @@ func downloadPodcast(url: URL) async throws {
    ```
 
 2. **Check if backed up** (5 min):
+
    ```swift
    // Check if excluded from backup
    let excluded = try? url.resourceValues(
@@ -295,11 +303,13 @@ func downloadPodcast(url: URL) async throws {
    - Did we migrate data from old location?
 
 **ROOT CAUSES** (90% of cases):
+
 - Photos in Caches/ (purged under storage pressure)
 - Photos excluded from backup + no cloud sync
 - Migration code missing after major iOS update
 
 **FIX**:
+
 - User photos MUST be in Documents/
 - Never exclude user-created content from backup
 - Always have cloud sync OR backup for user content

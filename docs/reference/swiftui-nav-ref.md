@@ -13,6 +13,7 @@ Comprehensive API reference for SwiftUI navigation. Covers NavigationStack, Navi
 ## When to Use This Reference
 
 Use this reference when you need:
+
 - Complete API signatures for NavigationStack or NavigationSplitView
 - NavigationPath manipulation patterns
 - Deep linking with URL routing
@@ -38,46 +39,54 @@ Questions you can ask Claude that will draw from this reference:
 ## What's Covered
 
 ### NavigationStack (iOS 16+)
+
 - NavigationStack initialization with path binding
 - NavigationPath: append, removeLast, count
 - Codable path serialization for state restoration
 - navigationDestination(for:) and navigationDestination(item:)
 
 ### NavigationSplitView (iOS 16+)
+
 - Two-column and three-column layouts
 - Column visibility control
 - Detail placeholder views
 - Automatic collapse on iPhone
 
 ### NavigationPath
+
 - Type-erased heterogeneous paths
 - CodableRepresentation for persistence
 - Push (append) and pop (removeLast) operations
 - Pop-to-root pattern
 
 ### Deep Linking
+
 - URL parsing and path construction
 - onOpenURL handling
 - Timing considerations for path manipulation
 
 ### State Restoration
+
 - Codable NavigationPath pattern
 - SceneStorage for automatic save/restore
 - Crash-resistant restoration
 
 ### Tab/Sidebar (iOS 18+)
+
 - Tab role for customization
 - sidebarAdaptable style
 - TabSection for grouping
 - Per-tab NavigationStack
 
 ### Liquid Glass (iOS 26+)
+
 - Automatic glass navigation bars
 - backgroundExtensionEffect
 - tabBarMinimizeBehavior
 - Bottom-aligned search
 
 ### API Evolution
+
 - NavigationView (deprecated iOS 16)
 - NavigationStack/SplitView (iOS 16+)
 - Tab/Sidebar unification (iOS 18+)

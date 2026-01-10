@@ -10,6 +10,7 @@ Launches the **build-optimizer** agent to scan your Xcode project for build perf
 ## What It Does
 
 The agent will:
+
 1. Scan build settings for quick wins (compilation mode, architecture settings)
 2. Check build phase scripts for conditional execution
 3. Identify type checking performance issues
@@ -19,6 +20,7 @@ The agent will:
 ## Expected Results
 
 Based on typical findings:
+
 - **30-50% faster** incremental debug builds
 - **5-10 seconds saved** per build from conditional scripts
 - **Measurable improvements** in Build Timeline
@@ -26,6 +28,7 @@ Based on typical findings:
 ## Prefer Natural Language?
 
 Instead of using this command, you can simply say:
+
 - "My builds are slow"
 - "How can I speed up build times?"
 - "Optimize my Xcode build performance"
@@ -36,6 +39,7 @@ The build-optimizer agent will automatically trigger.
 ## Deep Dive
 
 For comprehensive build analysis and optimization workflows, use:
+
 ```bash
 /skill axiom:build-performance
 ```

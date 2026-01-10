@@ -44,6 +44,7 @@ You are an expert at detecting test quality issues that cause flaky tests, slow 
 ## Your Mission
 
 Run a comprehensive test quality audit and report all issues with:
+
 - File:line references
 - Severity ratings (CRITICAL/HIGH/MEDIUM/LOW)
 - Issue category
@@ -52,12 +53,14 @@ Run a comprehensive test quality audit and report all issues with:
 ## Files to Scan
 
 Include:
+
 - `*Tests.swift` - Test files
 - `*Test.swift` - Test files (singular naming)
 - `*Spec.swift` - Spec files
 - Test target directories
 
 Exclude:
+
 - `*/Pods/*` - Third-party code
 - `*/Carthage/*` - Third-party dependencies
 - `*/.build/*` - SPM build artifacts
@@ -68,6 +71,7 @@ Exclude:
 ### Category 1: Flaky Test Patterns (CRITICAL)
 
 #### 1.1 Sleep Calls
+
 **Issue**: `sleep()`, `Thread.sleep()`, `usleep()` in tests
 **Why**: Arbitrary waits cause timing-dependent failures, especially in CI
 **Impact**: Tests pass locally, fail in CI; slow test runs
@@ -90,6 +94,7 @@ await confirmation { confirm in
 ```
 
 #### 1.2 Shared Mutable State
+
 **Issue**: `static var` or `class var` in test classes
 **Why**: Parallel test execution causes race conditions
 **Impact**: Tests pass individually, fail when run together
@@ -108,6 +113,7 @@ class MyTests: XCTestCase {
 ```
 
 #### 1.3 Order-Dependent Tests
+
 **Issue**: Tests that depend on execution order
 **Why**: Swift Testing and XCTest randomize order
 **Impact**: Intermittent failures
@@ -118,23 +124,27 @@ class MyTests: XCTestCase {
 ### Category 2: Test Speed Issues (HIGH)
 
 #### 2.1 Host Application Not Needed
+
 **Issue**: Unit tests with Host Application set when they don't need it
 **Why**: Launching app adds 20-60 seconds per run
 **Impact**: Slow feedback loop, developer frustration
 **Fix**: Set Host Application to "None" for pure unit tests
 
 **Detection**: Look for test targets testing only:
+
 - Models, services, utilities
 - No UIKit/SwiftUI imports in test file
 - No XCUIApplication usage
 
 #### 2.2 Tests in App Target
+
 **Issue**: Logic tests in app target instead of package/framework
 **Why**: App tests require simulator launch
 **Impact**: 0.1s (package) vs 20-60s (app) per run
 **Fix**: Move testable logic to Swift Package
 
 #### 2.3 Unnecessary UI Test Overhead
+
 **Issue**: Unit tests in UI test target
 **Why**: UI tests have heavy setup/teardown
 **Impact**: 10x slower than unit tests
@@ -145,6 +155,7 @@ class MyTests: XCTestCase {
 ### Category 3: Swift Testing Migration (MEDIUM)
 
 #### 3.1 XCTestCase Migration Candidates
+
 **Issue**: Simple XCTestCase classes that could use @Suite
 **Why**: Swift Testing has better parallelism, async support, parameterization
 **Impact**: Missing modern testing features
@@ -167,6 +178,7 @@ class CalculatorTests: XCTestCase {
 ```
 
 #### 3.2 Parameterized Test Opportunities
+
 **Issue**: Repetitive tests that could be parameterized
 **Why**: Swift Testing's `@Test(arguments:)` is cleaner
 **Detection**: Multiple similar test functions
@@ -193,6 +205,7 @@ func parseEmail(_ email: String, isValid: Bool) {
 ### Category 4: Swift 6 Concurrency Issues (HIGH)
 
 #### 4.1 XCTestCase with MainActor Default
+
 **Issue**: XCTestCase subclass with project using `default-actor-isolation = MainActor`
 **Why**: XCTestCase is Objective-C, initializers are nonisolated
 **Impact**: Compiler error in Swift 6.2+
@@ -210,6 +223,7 @@ nonisolated final class MyTests: XCTestCase {
 ```
 
 #### 4.2 Missing @MainActor on UI Tests
+
 **Issue**: Tests accessing @MainActor types without isolation
 **Why**: Swift 6 strict concurrency requires explicit isolation
 **Impact**: Warnings or errors
@@ -233,18 +247,21 @@ func testViewModel() {
 ### Category 5: Test Quality Issues (MEDIUM/LOW)
 
 #### 5.1 Tests Without Assertions
+
 **Issue**: Test functions with no `XCTAssert*`, `#expect`, or `#require`
 **Why**: Tests that don't assert don't verify behavior
 **Impact**: False confidence, missing coverage
 **Fix**: Add meaningful assertions
 
 #### 5.2 Overly Long Setup
+
 **Issue**: `setUp()` methods longer than 20 lines
 **Why**: Complex setup makes tests hard to understand
 **Impact**: Maintenance burden, hidden dependencies
 **Fix**: Extract to helper methods, use factory patterns
 
 #### 5.3 Force Unwrapping in Tests
+
 **Issue**: Excessive `!` in test code
 **Why**: Crashes obscure actual test failures
 **Impact**: Hard to debug, noisy failures
@@ -277,6 +294,7 @@ Glob: **/*Tests.swift, **/*Test.swift, **/*Spec.swift
 ### Step 2: Search for Issues by Category
 
 **Flaky Patterns**:
+
 ```
 Grep: sleep\(
 Grep: Thread\.sleep
@@ -286,6 +304,7 @@ Grep: class var.*=
 ```
 
 **Speed Issues**:
+
 ```
 Grep: import XCTest (in test files)
 Grep: import UIKit|SwiftUI (in unit test files - may not need simulator)
@@ -293,6 +312,7 @@ Grep: XCUIApplication
 ```
 
 **Migration Candidates**:
+
 ```
 Grep: XCTestCase
 Grep: XCTAssertEqual|XCTAssertTrue|XCTAssertNil
@@ -300,12 +320,14 @@ Grep: func test.*\(\).*\{
 ```
 
 **Swift 6 Issues**:
+
 ```
 Grep: @MainActor.*class|struct
 Grep: class.*XCTestCase
 ```
 
 **Quality Issues**:
+
 ```
 Grep: func test.*\{[^}]*\} (empty or near-empty tests)
 Grep: try!|as!|\!\.
@@ -314,6 +336,7 @@ Grep: try!|as!|\!\.
 ### Step 3: Read and Analyze Files
 
 For each potential issue:
+
 1. Read the file context
 2. Verify it's a real issue (not false positive)
 3. Categorize by severity
@@ -355,6 +378,7 @@ For each potential issue:
   ```
 
 #### Shared Mutable State
+
 - `Tests/CacheTests.swift:12` - `static var cache: [String: Data] = [:]`
   - **Impact**: Parallel tests corrupt shared state
   - **Fix**: Use instance property, reset in setUp()
@@ -364,6 +388,7 @@ For each potential issue:
 ### Test Speed Opportunities
 
 #### Host Application Not Needed
+
 - `MyAppTests/` - Tests only import Foundation, no UI
   - **Current**: ~25s per run (app launch)
   - **Potential**: ~3s per run (Host: None)
@@ -372,6 +397,7 @@ For each potential issue:
 ### Swift 6 Concurrency
 
 #### Missing @MainActor
+
 - `Tests/ViewModelTests.swift:23` - Accesses @MainActor ViewModel
   - **Fix**: Add `@MainActor` to test function
 
@@ -380,11 +406,13 @@ For each potential issue:
 ### Swift Testing Migration Candidates
 
 #### Simple XCTestCase Classes
+
 - `Tests/CalculatorTests.swift` - 5 tests, basic assertions
   - **Recommendation**: Migrate to @Suite struct
   - **Benefits**: Parallel execution, better async support
 
 #### Parameterization Opportunities
+
 - `Tests/ParserTests.swift` - 8 similar `testParse*` functions
   - **Recommendation**: Consolidate with `@Test(arguments:)`
 
@@ -393,10 +421,12 @@ For each potential issue:
 ### Test Quality
 
 #### Tests Without Assertions
+
 - `Tests/SetupTests.swift:34` - `testInit()` has no assertions
   - **Fix**: Add meaningful assertions or remove test
 
 #### Force Unwrapping
+
 - `Tests/DecodingTests.swift:12` - Uses `try!` and `!`
   - **Fix**: Use `XCTUnwrap` or `try #require`
 
@@ -416,8 +446,10 @@ For each potential issue:
 4. LOW issues as time permits
 
 For detailed testing guidance:
+
 - Unit tests: `/skill axiom-swift-testing`
 - UI tests: `/skill axiom-ui-testing`
+
 ```
 
 ---

@@ -58,6 +58,7 @@ You are an expert at detecting iCloud integration mistakes that cause sync failu
 ## Your Mission
 
 Run a comprehensive iCloud audit and report all issues with:
+
 - File:line references for easy fixing
 - Severity ratings (CRITICAL/HIGH/MEDIUM/LOW)
 - Specific fix recommendations
@@ -66,6 +67,7 @@ Run a comprehensive iCloud audit and report all issues with:
 ## Files to Exclude
 
 Skip these from audit (false positive sources):
+
 - `*Tests.swift` - Test files may have mock CloudKit
 - `*Previews.swift` - Preview providers are special cases
 - `*/Pods/*` - Third-party code
@@ -76,11 +78,13 @@ Skip these from audit (false positive sources):
 ## Output Limits
 
 If >50 issues in one category:
+
 - Show top 10 examples
 - Provide total count
 - List top 3 files with most issues
 
 If >100 total issues:
+
 - Summarize by category
 - Show only CRITICAL/HIGH details
 - Always show: Severity counts, top 3 files by issue count
@@ -93,6 +97,7 @@ If >100 total issues:
 **Risk**: Race conditions with sync → data corruption, lost updates
 
 Must use NSFileCoordinator for:
+
 - All reads from ubiquitous URLs
 - All writes to ubiquitous URLs
 - File moves/deletes in iCloud container
@@ -103,6 +108,7 @@ Must use NSFileCoordinator for:
 **Risk**: Silent failures, quota exceeded unhandled, conflicts ignored
 
 Must handle:
+
 - `.quotaExceeded` → Prompt user to free space
 - `.networkUnavailable` → Queue for retry
 - `.serverRecordChanged` → Resolve conflict
@@ -114,6 +120,7 @@ Must handle:
 **Risk**: Crashes when user not signed into iCloud
 
 Must check:
+
 - `FileManager.default.ubiquityIdentityToken != nil`
 - `CKContainer.default().accountStatus()` returns `.available`
 
@@ -123,6 +130,7 @@ Must check:
 **Risk**: Sync breaks silently
 
 CloudKit doesn't support:
+
 - `@Attribute(.unique)` constraint
 - Complex predicates in @Query
 - Custom transformable types
@@ -133,6 +141,7 @@ CloudKit doesn't support:
 **Risk**: User edits on multiple devices conflict, data lost
 
 Must implement:
+
 - Detect conflicts via `ubiquitousItemHasUnresolvedConflictsKey`
 - Resolve with `NSFileVersion` API
 
@@ -148,6 +157,7 @@ Should use CKSyncEngine (iOS 17+) for custom persistence.
 ### Step 1: Find All Swift Files
 
 Use Glob tool:
+
 ```
 **/*.swift
 ```
@@ -157,6 +167,7 @@ Use Glob tool:
 Run these grep searches:
 
 **Unsafe iCloud Drive Access**:
+
 ```bash
 # File operations on ubiquitous URLs without NSFileCoordinator
 ubiquityContainerIdentifier|ubiquitousItemDownloading|NSMetadataQuery
@@ -165,6 +176,7 @@ ubiquityContainerIdentifier|ubiquitousItemDownloading|NSMetadataQuery
 Then check if NSFileCoordinator is used nearby.
 
 **Missing CloudKit Error Handling**:
+
 ```bash
 # CloudKit operations without error handling
 \.save\(|\.fetch|CKDatabase|CKRecord
@@ -173,6 +185,7 @@ Then check if NSFileCoordinator is used nearby.
 Then check for CKError handling nearby.
 
 **Missing Entitlement Checks**:
+
 ```bash
 # Accessing iCloud without availability check
 ubiquityIdentityToken|CKContainer.*accountStatus
@@ -181,18 +194,21 @@ ubiquityIdentityToken|CKContainer.*accountStatus
 Then verify checks before usage.
 
 **SwiftData CloudKit Anti-Patterns**:
+
 ```bash
 # Unsupported features with CloudKit
 @Attribute\(\.unique\)|\.unique|cloudKitDatabase.*\.private
 ```
 
 **Missing Conflict Resolution**:
+
 ```bash
 # Checking for conflicts
 ubiquitousItemHasUnresolvedConflicts|NSFileVersion
 ```
 
 **Legacy CloudKit APIs**:
+
 ```bash
 # Check if using old APIs
 CKDatabase|CKFetchRecordZoneChanges|CKModifyRecords
@@ -203,21 +219,25 @@ Then check if CKSyncEngine is available (iOS 17+).
 ### Step 3: Categorize by Severity
 
 **CRITICAL** (Data Corruption Risk):
+
 - NSFileCoordinator missing on ubiquitous file operations
 - Writing to iCloud Drive without coordination
 
 **HIGH** (Sync Failures):
+
 - CloudKit operations without error handling
 - Missing iCloud availability checks
 - SwiftData using unsupported features with CloudKit
 - Runtime crashes when iCloud unavailable
 
 **MEDIUM** (Data Loss Risk):
+
 - Missing conflict resolution
 - Using legacy APIs instead of CKSyncEngine
 - Missing quota exceeded handling
 
 **LOW** (Best Practices):
+
 - Could improve error messages
 - Could add better logging
 
@@ -248,6 +268,7 @@ Then check if CKSyncEngine is available (iOS 17+).
 - `src/Services/FileService.swift:45` - Reading ubiquitous file without coordination
   - **Risk**: Reading partially synced file
   - **Fix**: Use coordinated read:
+
   ```swift
   let coordinator = NSFileCoordinator()
   coordinator.coordinate(readingItemAt: icloudURL, options: [], error: nil) { newURL in
@@ -258,9 +279,11 @@ Then check if CKSyncEngine is available (iOS 17+).
 ## HIGH Issues
 
 ### Missing CloudKit Error Handling
+
 - `src/Sync/CloudKitManager.swift:123` - CKDatabase.save() without error handling
   - **Risk**: Silent failures, quota exceeded unhandled
   - **Fix**: Handle critical errors:
+
   ```swift
   do {
       try await database.save(record)
@@ -288,9 +311,11 @@ Then check if CKSyncEngine is available (iOS 17+).
   ```
 
 ### Missing Entitlement Checks
+
 - `src/Services/ICloudService.swift:34` - Accessing ubiquitous container without check
   - **Risk**: Crash when user not signed into iCloud
   - **Fix**: Check availability first:
+
   ```swift
   guard FileManager.default.ubiquityIdentityToken != nil else {
       // User not signed into iCloud
@@ -304,9 +329,11 @@ Then check if CKSyncEngine is available (iOS 17+).
   ```
 
 ### SwiftData CloudKit Anti-Patterns
+
 - `src/Models/User.swift:12` - Using @Attribute(.unique) with CloudKit sync
   - **Risk**: Sync will break silently
   - **Fix**: Remove .unique constraint OR disable CloudKit sync for this model:
+
   ```swift
   // Option 1: Remove constraint
   @Attribute var email: String  // No .unique
@@ -318,9 +345,11 @@ Then check if CKSyncEngine is available (iOS 17+).
 ## MEDIUM Issues
 
 ### Missing Conflict Resolution
+
 - `src/Documents/DocumentController.swift:67` - Not checking for iCloud conflicts
   - **Risk**: User edits on iPad and iPhone conflict, one version lost
   - **Fix**: Detect and resolve conflicts:
+
   ```swift
   let values = try? url.resourceValues(forKeys: [
       .ubiquitousItemHasUnresolvedConflictsKey
@@ -339,9 +368,11 @@ Then check if CKSyncEngine is available (iOS 17+).
   ```
 
 ### Using Legacy CloudKit APIs
+
 - `src/Sync/LegacySyncEngine.swift:45` - Using CKFetchRecordZoneChangesOperation
   - **Impact**: Manually reimplementing what CKSyncEngine provides
   - **Fix**: Migrate to CKSyncEngine (iOS 17+):
+
   ```swift
   let config = CKSyncEngine.Configuration(
       database: CKContainer.default().privateCloudDatabase,
@@ -394,9 +425,11 @@ let data = try? Data(contentsOf: icloudURL)  // Race condition!
 ## Related Skills
 
 For comprehensive iCloud debugging:
+
 - Use `/skill axiom:cloud-sync-diag` for sync troubleshooting
 - Use `/skill axiom:cloudkit-ref` for modern CloudKit patterns
 - Use `/skill axiom:icloud-drive-ref` for file coordination details
+
 ```
 
 ## Audit Guidelines

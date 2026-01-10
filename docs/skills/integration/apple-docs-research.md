@@ -12,6 +12,7 @@ Techniques for researching Apple frameworks, APIs, and WWDC sessions. Covers Chr
 ## When to Use This Skill
 
 Use this skill when you're:
+
 - Researching Apple frameworks or APIs (WidgetKit, SwiftUI, etc.)
 - Need full WWDC session transcripts with code samples
 - Looking for Apple Developer documentation
@@ -19,6 +20,7 @@ Use this skill when you're:
 - Building comprehensive skills based on Apple technologies
 
 **Do NOT use for:**
+
 - Third-party framework documentation
 - General web research
 - Basic Swift language questions
@@ -35,17 +37,20 @@ Questions you can ask Claude that will draw from this skill:
 ## What's Covered
 
 ### WWDC Session Transcripts
+
 - Chrome auto-capture technique
 - Apple Developer video page structure
 - Full verbatim transcripts with timestamps
 - Code sample extraction
 
 ### Apple Documentation via sosumi.ai
+
 - Markdown-formatted documentation
 - Cleaner output than developer.apple.com
 - URL patterns
 
 ### Time Savings
+
 - Manual transcription: 3-4 hours per session
 - Auto-capture: 2-5 minutes per session
 
@@ -56,11 +61,13 @@ Questions you can ask Claude that will draw from this skill:
 Apple Developer video pages contain complete transcripts that Chrome auto-captures.
 
 1. **Navigate** to WWDC session:
+
    ```
    https://developer.apple.com/videos/play/wwdc2025/278/
    ```
 
 2. **Chrome saves** to session directory:
+
    ```
    ~/Library/Caches/superpowers/browser/YYYY-MM-DD/session-XXXXX/001-navigate.md
    ```
@@ -82,6 +89,7 @@ https://sosumi.ai/documentation/widgetkit
 ```
 
 **Benefits:**
+
 - Cleaner markdown output
 - Easier to parse and reference
 - Same content, better format

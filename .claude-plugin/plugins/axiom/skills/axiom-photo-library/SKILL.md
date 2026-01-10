@@ -14,6 +14,7 @@ Guides you through photo picking, limited library handling, and saving photos to
 ## When to Use This Skill
 
 Use when you need to:
+
 - ☑ Let users select photos from their library
 - ☑ Handle limited photo library access
 - ☑ Save photos/videos to the camera roll
@@ -146,6 +147,7 @@ struct ContentView: View {
 ```
 
 **Multi-selection**:
+
 ```swift
 @State private var selectedItems: [PhotosPickerItem] = []
 
@@ -293,6 +295,7 @@ class PhotoPickerViewController: UIViewController, PHPickerViewControllerDelegat
 ```
 
 **Filter options**:
+
 ```swift
 // Images only
 config.filter = .images
@@ -341,6 +344,7 @@ picker.didMove(toParent: self)
 ```
 
 **Updating picker while displayed (iOS 17+)**:
+
 ```swift
 // Deselect assets by their identifiers
 picker.deselectAssets(withIdentifiers: ["assetID1", "assetID2"])
@@ -383,6 +387,7 @@ let result = try await item.loadTransferable(type: HDRImage.self)
 ```
 
 **UIKit equivalent**:
+
 ```swift
 var config = PHPickerConfiguration()
 config.preferredAssetRepresentationMode = .current  // Don't transcode
@@ -448,6 +453,7 @@ class PhotoLibraryManager {
 ```
 
 **Observe limited selection changes**:
+
 ```swift
 // Register for changes
 PHPhotoLibrary.shared().register(self)
@@ -537,6 +543,7 @@ func loadImage(from item: PhotosPickerItem) async -> UIImage? {
 ```
 
 **Loading with progress**:
+
 ```swift
 func loadImageWithProgress(from item: PhotosPickerItem) async -> UIImage? {
     let progress = Progress()
@@ -609,6 +616,7 @@ class PhotoGalleryViewModel: NSObject, ObservableObject, PHPhotoLibraryChangeObs
 ### Anti-Pattern 1: Requesting Full Access for Photo Picking
 
 **Wrong**:
+
 ```swift
 // Over-requesting - picker doesn't need this!
 let status = await PHPhotoLibrary.requestAuthorization(for: .readWrite)
@@ -618,6 +626,7 @@ if status == .authorized {
 ```
 
 **Right**:
+
 ```swift
 // Just show the picker - no permission needed
 PhotosPicker(selection: $item, matching: .images) {
@@ -630,6 +639,7 @@ PhotosPicker(selection: $item, matching: .images) {
 ### Anti-Pattern 2: Ignoring Limited Status
 
 **Wrong**:
+
 ```swift
 let status = PHPhotoLibrary.authorizationStatus(for: .readWrite)
 if status == .authorized {
@@ -640,6 +650,7 @@ if status == .authorized {
 ```
 
 **Right**:
+
 ```swift
 let status = PHPhotoLibrary.authorizationStatus(for: .readWrite)
 switch status {
@@ -662,12 +673,14 @@ case .notDetermined:
 ### Anti-Pattern 3: Synchronous Image Loading
 
 **Wrong**:
+
 ```swift
 // Blocks UI thread
 let data = try! selectedItem.loadTransferable(type: Data.self)
 ```
 
 **Right**:
+
 ```swift
 Task {
     if let data = try? await selectedItem.loadTransferable(type: Data.self) {
@@ -681,6 +694,7 @@ Task {
 ### Anti-Pattern 4: Using UIImagePickerController for Photo Selection
 
 **Wrong**:
+
 ```swift
 let picker = UIImagePickerController()
 picker.sourceType = .photoLibrary
@@ -688,6 +702,7 @@ present(picker, animated: true)
 ```
 
 **Right**:
+
 ```swift
 var config = PHPickerConfiguration()
 config.filter = .images
@@ -708,6 +723,7 @@ present(picker, animated: true)
 **Reality**: Since iOS 14, users can grant limited access. Full access request triggers additional privacy prompt. App Store Review may reject unnecessary permission requests.
 
 **Correct action**:
+
 1. Use PhotosPicker or PHPicker (no permission needed)
 2. Only request .readWrite if building a gallery browser
 3. Only request .addOnly if just saving photos
@@ -723,6 +739,7 @@ present(picker, animated: true)
 **Reality**: User likely granted `.limited` access and selected 0 photos initially.
 
 **Correct action**:
+
 1. Check for `.limited` status
 2. Show `presentLimitedLibraryPicker()` to let user add photos
 3. Explain in UI: "Tap here to add more photos"
@@ -738,6 +755,7 @@ present(picker, animated: true)
 **Reality**: Large photos (RAW, panoramas, Live Photos) are slow to decode. Solution is UX, not caching.
 
 **Correct action**:
+
 1. Show loading placeholder immediately
 2. Load thumbnail first, full image second
 3. Show progress indicator for large files
@@ -750,28 +768,33 @@ present(picker, animated: true)
 Before shipping photo library features:
 
 **Permission Strategy**:
+
 - ☑ Using PHPicker/PhotosPicker for simple selection (no permission needed)
 - ☑ Only requesting .readWrite if building gallery UI
 - ☑ Only requesting .addOnly if only saving photos
 - ☑ Info.plist usage descriptions present
 
 **Limited Library**:
+
 - ☑ Handling `.limited` status (not treating as denied)
 - ☑ Offering `presentLimitedLibraryPicker()` for users to add photos
 - ☑ UI explains limited access to users
 
 **Image Loading**:
+
 - ☑ All loading is async (no UI blocking)
 - ☑ Custom Transferable handles JPEG/HEIF (not just PNG)
 - ☑ Error handling for failed loads
 - ☑ Loading indicator for large files
 
 **Saving Photos**:
+
 - ☑ Using .addOnly when full access not needed
 - ☑ Using performChanges for atomic operations
 - ☑ Handling save failures gracefully
 
 **Photo Library Changes**:
+
 - ☑ Registered as PHPhotoLibraryChangeObserver if displaying library
 - ☑ Updating UI on main thread after changes
 - ☑ Unregistering observer in deinit

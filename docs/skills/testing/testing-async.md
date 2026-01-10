@@ -12,6 +12,7 @@ description: Swift Testing patterns for async code — confirmation for callback
 ## When to Use This Skill
 
 ✅ **Use this skill when**:
+
 - Writing tests for async functions
 - Testing callback-based APIs with Swift Testing
 - Migrating async XCTests to Swift Testing
@@ -19,6 +20,7 @@ description: Swift Testing patterns for async code — confirmation for callback
 - Need to verify events fire expected number of times
 
 ❌ **Do NOT use this skill for**:
+
 - XCTest-only project (use XCTestExpectation)
 - UI automation tests (use XCUITest)
 - Performance testing with metrics (use XCTest)

@@ -5,6 +5,7 @@ Troubleshooting guide for CoreML model loading, inference, and compression issue
 ## Symptoms This Diagnoses
 
 Use when you're experiencing:
+
 - Model fails to load with "unsupported version" or "failed to create compute plan"
 - First prediction is slow but subsequent ones are fast
 - All predictions are consistently slow
@@ -52,6 +53,7 @@ CoreML issue
 **Cause**: Model compiled for newer OS than device supports.
 
 **Fix**: Re-convert with lower deployment target:
+
 ```python
 mlmodel = ct.convert(
     traced,
@@ -64,6 +66,7 @@ mlmodel = ct.convert(
 **Cause**: Device specialization not cached (normal for first launch).
 
 **Mitigation**: Warm cache in background at app launch:
+
 ```swift
 Task.detached(priority: .background) {
     _ = try? await MLModel.load(contentsOf: modelURL)
@@ -75,6 +78,7 @@ Task.detached(priority: .background) {
 **Cause**: Too aggressive compression or wrong granularity.
 
 **Fix**: Try per-grouped-channel palettization (iOS 18+):
+
 ```python
 config = OpPalettizerConfig(
     nbits=4,

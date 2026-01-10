@@ -16,6 +16,7 @@ apple_platforms: iOS 5.0+, iPadOS 13.0+, macOS 10.7+
 ## When to Use This Skill
 
 Use this skill when:
+
 - Implementing document-based iCloud sync
 - Syncing user files across devices
 - Building document-based apps (like Pages, Numbers)
@@ -32,11 +33,13 @@ Use this skill when:
 **iCloud Drive is for FILE-BASED sync**, not structured data.
 
 **Use when**:
+
 - User creates/edits documents
 - Files need to sync like Dropbox
 - Document picker integration
 
 **Don't use when**:
+
 - Need queryable structured data (use CloudKit)
 - Need relationships between records (use CloudKit)
 - Small key-value preferences (use NSUbiquitousKeyValueStore)
@@ -119,6 +122,7 @@ func saveToICloud(data: Data, filename: String) throws {
 ## File Coordination (Critical for Safety)
 
 **Always use NSFileCoordinator** when accessing iCloud files. This prevents:
+
 - Race conditions with sync
 - Data corruption
 - Lost updates
@@ -381,6 +385,7 @@ NotificationCenter.default.addObserver(
 ```
 
 **Limitations**:
+
 - Total storage: 1 MB
 - Max keys: 1024
 - Max value size: 1 MB

@@ -13,6 +13,7 @@ Widget development patterns for Home Screen, Lock Screen, StandBy, Live Activiti
 ## When to Use This Skill
 
 Use this skill when you're:
+
 - Implementing any widget (Home Screen, Lock Screen, StandBy, Control Center)
 - Creating Live Activities with Dynamic Island
 - Widget shows stale data or doesn't update
@@ -39,35 +40,41 @@ Questions you can ask Claude that will draw from this skill:
 ## What's Covered
 
 ### Timeline Management
+
 - TimelineProvider patterns (getTimeline, getSnapshot, placeholder)
 - Refresh budgets and policies
 - Manual reload with WidgetCenter
 - When widgets actually update
 
 ### Data Sharing
+
 - App Groups entitlement setup
 - Shared UserDefaults with suite name
 - Container URLs for file sharing
 - Why widgets can't see main app data directly
 
 ### Live Activities
+
 - ActivityAttributes and 4KB data limit
 - Dynamic Island presentation
 - Push notification updates
 - Authorization and entitlements
 
 ### Control Center Controls (iOS 18+)
+
 - ValueProvider for async state
 - Optimistic UI patterns
 - Control action handling
 
 ### Interactive Widgets (iOS 17+)
+
 - App Intent integration
 - Button/Toggle in widget views
 - perform() implementation
 - WidgetCenter reload after actions
 
 ### Common Anti-Patterns
+
 - Network calls in widget view (use TimelineProvider)
 - Missing App Groups entitlement
 - Wrong UserDefaults suite name

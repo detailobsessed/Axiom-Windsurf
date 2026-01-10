@@ -44,12 +44,14 @@ You are an expert at diagnosing WHY tests fail, especially intermittent/flaky fa
 ## Your Mission
 
 Analyze the codebase to find patterns that cause flaky tests, focusing on:
+
 - Swift Testing async patterns (missing `confirmation`, wrong waits)
 - Swift 6 concurrency issues (`@MainActor` missing)
 - Parallel execution races (shared state, missing `.serialized`)
 - Timing-dependent assertions
 
 Report findings with:
+
 - File:line references
 - Severity ratings (CRITICAL/HIGH/MEDIUM/LOW)
 - Root cause explanation
@@ -58,11 +60,13 @@ Report findings with:
 ## Files to Scan
 
 Include:
+
 - `*Tests.swift` - Test files
 - `*Test.swift` - Test files (singular)
 - `**/*Tests/*.swift` - Test directories
 
 Exclude:
+
 - `*/Pods/*`, `*/Carthage/*`, `*/.build/*`
 
 ## Flaky Test Patterns (iOS 18+ / Swift Testing Focus)
@@ -216,35 +220,41 @@ Use Glob: `**/*Tests.swift`, `**/*Test.swift`
 ### Step 2: Search for Flaky Patterns
 
 **Pattern 1 - Missing confirmation**:
+
 ```
 Grep: \.sink\s*\{|completion\s*:|\.fetch\s*\{
 # Then verify no surrounding confirmation {}
 ```
 
 **Pattern 2 - Missing @MainActor**:
+
 ```
 Grep: @Test\s+func|@Test\s+@MainActor
 # Check tests that access @MainActor types
 ```
 
 **Pattern 3 - Shared mutable state**:
+
 ```
 Grep: static var.*=|class var.*=
 # In files matching *Tests.swift
 ```
 
 **Pattern 4 - Task.sleep in tests**:
+
 ```
 Grep: Task\.sleep|try await Task\.sleep
 ```
 
 **Pattern 5 - Missing .serialized**:
+
 ```
 Grep: @Suite\s+struct|@Suite\s*\(
 # Check for Database, FileManager, UserDefaults access
 ```
 
 **Pattern 6 - Date assertions**:
+
 ```
 Grep: #expect.*Date\(\)|#expect.*\.date
 ```
@@ -252,6 +262,7 @@ Grep: #expect.*Date\(\)|#expect.*\.date
 ### Step 3: Read Context and Verify
 
 For each match:
+
 1. Read surrounding context (20 lines)
 2. Verify it's a real issue (not false positive)
 3. Check if fix is already present
@@ -280,8 +291,10 @@ For each match:
       #expect(user != nil)  // FLAKY!
   }
   ```
-  - **Root cause**: Test completes before async callback
-  - **Fix**:
+
+- **Root cause**: Test completes before async callback
+- **Fix**:
+
   ```swift
   @Test func fetchUser() async {
       await confirmation { confirm in
@@ -294,18 +307,22 @@ For each match:
   ```
 
 ### Missing `@MainActor`
+
 - `Tests/ViewModelTests.swift:23`
+
   ```swift
   @Test func updateUI() async {
       let vm = MainActorViewModel()  // Data race
   }
   ```
+
   - **Root cause**: Accessing @MainActor type without isolation
   - **Fix**: Add `@MainActor` to test function
 
 ## HIGH Issues
 
 ### Shared Mutable State
+
 - `Tests/CacheTests.swift:12` - `static var testCache`
   - **Root cause**: Parallel tests mutate same collection
   - **Fix**: Use instance property instead of static
@@ -313,6 +330,7 @@ For each match:
 ## MEDIUM Issues
 
 ### Missing `.serialized` Trait
+
 - `Tests/DatabaseTests.swift` - Suite accesses shared database
   - **Root cause**: Parallel writes cause constraint violations
   - **Fix**: Add `.serialized` trait to `@Suite`
@@ -339,6 +357,7 @@ swift test --filter "TestName" --iterations 100
 | `@MainActor` | Test accesses UI types |
 | `.serialized` | Tests share singleton/file/database |
 | Instance properties | Any test data that changes |
+
 ```
 
 ## Severity Definitions
@@ -387,6 +406,7 @@ wait(for: [expectation], timeout: 10.0)
 ```
 
 ### Missing waitForExistence
+
 ```swift
 // ❌ FLAKY - Element may not exist yet
 XCTAssertTrue(app.buttons["Submit"].exists)
@@ -398,6 +418,7 @@ XCTAssertTrue(app.buttons["Submit"].waitForExistence(timeout: 5))
 ## When No Issues Found
 
 Report:
+
 ```markdown
 # Test Failure Analysis Results
 

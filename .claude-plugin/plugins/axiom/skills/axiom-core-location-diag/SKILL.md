@@ -425,6 +425,7 @@ class LocationService {
 ### Quick Checks
 
 The location arrow appears when:
+
 - App actively receiving location updates
 - CLMonitor is monitoring conditions
 - Background activity session active

@@ -5,6 +5,7 @@ Automatically scans Xcode projects for build performance optimizations and provi
 ## How to Use This Agent
 
 **Natural language (automatic triggering):**
+
 - "My builds are slow"
 - "How can I speed up build times?"
 - "Optimize my Xcode build performance"
@@ -12,6 +13,7 @@ Automatically scans Xcode projects for build performance optimizations and provi
 - "Can you make my builds faster?"
 
 **Explicit command:**
+
 ```bash
 /axiom:optimize-build
 ```
@@ -26,6 +28,7 @@ Automatically scans Xcode projects for build performance optimizations and provi
 ## Expected Results
 
 Based on typical findings:
+
 - **30-50% faster** incremental debug builds
 - **5-10 seconds saved** per build from conditional scripts
 - **Measurable improvements** in Build Timeline

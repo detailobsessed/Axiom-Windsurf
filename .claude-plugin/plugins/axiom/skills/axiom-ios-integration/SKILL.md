@@ -11,6 +11,7 @@ user-invocable: false
 ## When to Use
 
 Use this router for:
+
 - Siri & Shortcuts (App Intents)
 - Apple Intelligence integration
 - Widgets & Live Activities

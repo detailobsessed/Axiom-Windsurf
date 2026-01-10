@@ -16,6 +16,7 @@ version: 1.2.0
 **Platforms**: iOS 18+, macOS 15+
 
 **Related Skills**:
+
 - `axiom-performance-profiling` — Use Instruments to measure (do this first!)
 - `axiom-swiftui-performance` — SwiftUI-specific optimizations
 - `axiom-build-performance` — Compilation speed
@@ -409,6 +410,7 @@ func test() {
 ```
 
 **Why This Matters**: Observed object lifetimes are an emergent property of compiler optimizations and can change between:
+
 - Xcode versions
 - Build configurations (Debug vs Release)
 - Unrelated code changes that enable new optimizations
@@ -675,12 +677,14 @@ var sprites: [40 of Sprite] = ...
 ```
 
 **When to Use InlineArray**:
+
 - Fixed size known at compile time
 - Performance-critical paths (tight loops, hot paths)
 - Want to avoid heap allocation entirely
 - Small to medium sizes (practical limit ~1KB stack usage)
 
 **Key Characteristics**:
+
 ```swift
 let inline = InlineArray<10, Int>(repeating: 0)
 
@@ -697,6 +701,7 @@ let mutableSpan = inline.mutableSpan  // Mutable view
 ```
 
 **Performance Comparison**:
+
 ```swift
 // Array: Heap allocation + COW overhead
 var array = Array(repeating: 0, count: 100)
@@ -731,6 +736,7 @@ let array = inline  // Stack storage
 ```
 
 **Copy Semantics Warning**:
+
 ```swift
 // ❌ Unexpected: InlineArray copies eagerly
 func processLarge(_ data: InlineArray<1000, UInt8>) {
@@ -753,6 +759,7 @@ struct Buffer {
 ```
 
 **When NOT to Use InlineArray**:
+
 - Dynamic sizes (use Array)
 - Large data (>1KB stack usage risky)
 - Frequently passed by value (use Span instead)
@@ -998,6 +1005,7 @@ func typedThrows() throws(GenericError) -> Int {
 ### What is Span?
 
 Span is a modern replacement for `UnsafeBufferPointer` that provides:
+
 - **Spatial safety**: Bounds-checked operations prevent out-of-bounds access
 - **Temporal safety**: Lifetime inherited from source, preventing use-after-free
 - **Zero overhead**: No heap allocation, no reference counting
@@ -1389,28 +1397,33 @@ struct AtomicCounter: @unchecked Sendable {
 ## Code Review Checklist
 
 ### Memory Management
+
 - [ ] Large structs (>64 bytes) use indirect storage or are classes
 - [ ] COW types use `isKnownUniquelyReferenced` before mutation
 - [ ] Collections use `reserveCapacity` when size is known
 - [ ] Weak references only where needed (prefer unowned when safe)
 
 ### Generics
+
 - [ ] Protocol types use `some` instead of `any` where possible
 - [ ] Hot paths use concrete types or `@_specialize`
 - [ ] Generic constraints are as specific as possible
 
 ### Collections
+
 - [ ] Pure Swift code uses `ContiguousArray` over `Array`
 - [ ] Dictionary keys have efficient `hash(into:)` implementations
 - [ ] Lazy evaluation used for short-circuit operations
 
 ### Concurrency
+
 - [ ] Synchronous operations don't use `async`
 - [ ] Actor calls are batched when possible
 - [ ] Task creation is minimized (use TaskGroup)
 - [ ] CPU-intensive work uses `@concurrent` (Swift 6.2)
 
 ### Optimization
+
 - [ ] Profiling data exists before optimization
 - [ ] Inlining only for small, frequently called functions
 - [ ] Memory layout optimized for cache locality (large structs)
@@ -1424,15 +1437,18 @@ struct AtomicCounter: @unchecked Sendable {
 **The Pressure**: Manager sees "slow" in profiler, demands immediate action.
 
 **Red Flags**:
+
 - No baseline measurements
 - No Time Profiler data showing hotspots
 - "Make everything faster" without targets
 
 **Time Cost Comparison**:
+
 - Premature optimization: 2 days of work, no measurable improvement
 - Profile-guided optimization: 2 hours profiling + 4 hours fixing actual bottleneck = 40% faster
 
 **How to Push Back Professionally**:
+
 ```
 "I want to optimize effectively. Let me spend 30 minutes with Instruments
 to find the actual bottleneck. This prevents wasting time on code that's
@@ -1444,15 +1460,18 @@ not the problem. I've seen this save days of work."
 **The Pressure**: Team adopts Swift 6, decides "everything should be an actor."
 
 **Red Flags**:
+
 - Actor for simple value types
 - Actor for synchronous-only operations
 - Async overhead in tight loops
 
 **Time Cost Comparison**:
+
 - Actor everywhere: 100μs overhead per operation, janky UI
 - Appropriate isolation: 10μs overhead, smooth 60fps
 
 **How to Push Back Professionally**:
+
 ```
 "Actors are great for isolation, but they add overhead. For this simple
 counter, lock-free atomics are 10x faster. Let's use actors where we need
@@ -1464,15 +1483,18 @@ them—shared mutable state—and avoid them for pure value types."
 **The Pressure**: Someone reads that inlining is faster, marks everything `@inlinable`.
 
 **Red Flags**:
+
 - Large functions marked `@inlinable`
 - Internal implementation details exposed
 - Binary size increases 50%
 
 **Time Cost Comparison**:
+
 - Inline everything: Code bloat, slower app launch (3s → 5s)
 - Selective inlining: Fast launch, actual hotspots optimized
 
 **How to Push Back Professionally**:
+
 ```
 "Inlining trades code size for speed. The compiler already inlines when
 beneficial. Manual @inlinable should be for small, frequently called
@@ -1488,6 +1510,7 @@ functions. Let's profile and inline the 3 actual hotspots, not everything."
 **Problem**: Processing 1000 images takes 30 seconds.
 
 **Investigation**:
+
 ```swift
 // Original code
 func processImages(_ images: [UIImage]) -> [ProcessedImage] {
@@ -1500,6 +1523,7 @@ func processImages(_ images: [UIImage]) -> [ProcessedImage] {
 ```
 
 **Solution**:
+
 ```swift
 func processImages(_ images: [UIImage]) -> [ProcessedImage] {
     var results = ContiguousArray<ProcessedImage>()
@@ -1520,6 +1544,7 @@ func processImages(_ images: [UIImage]) -> [ProcessedImage] {
 **Problem**: Actor counter in tight loop causes UI jank.
 
 **Investigation**:
+
 ```swift
 // Original - 10,000 actor hops
 for _ in 0..<10000 {
@@ -1528,6 +1553,7 @@ for _ in 0..<10000 {
 ```
 
 **Solution**:
+
 ```swift
 // Batch operations
 actor Counter {
@@ -1548,6 +1574,7 @@ await counter.incrementBatch(10000)  // Single actor hop
 **Problem**: Protocol-based rendering is slow.
 
 **Investigation**:
+
 ```swift
 // Original - existential overhead
 func render(shapes: [any Shape]) {
@@ -1558,6 +1585,7 @@ func render(shapes: [any Shape]) {
 ```
 
 **Solution**:
+
 ```swift
 // Specialized generic
 func render<S: Shape>(shapes: [S]) {
@@ -1579,11 +1607,13 @@ func render<S: Shape>(shapes: [S]) { }
 **Problem**: Apple's Password Monitoring service needed to scale while reducing costs.
 
 **Original Implementation**: Java-based service
+
 - High memory usage (gigabytes)
 - 50% Kubernetes cluster utilization
 - Moderate throughput
 
 **Swift Rewrite Benefits**:
+
 ```swift
 // Key performance wins from Swift's features:
 
@@ -1601,6 +1631,7 @@ func render<S: Shape>(shapes: [S]) { }
 ```
 
 **Results** (Apple's published metrics):
+
 - **40% throughput increase** vs Java implementation
 - **100x memory reduction**: Gigabytes → Megabytes
 - **50% Kubernetes capacity freed**: Same workload, half the resources

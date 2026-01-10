@@ -11,36 +11,43 @@ I'll perform a comprehensive accessibility audit of your iOS/macOS codebase, che
 ## What I'll Check
 
 ### 1. VoiceOver Labels & Hints (CRITICAL)
+
 **Pattern**: Missing `accessibilityLabel`, generic labels ("Button"), missing `accessibilityHint`
 **Impact**: Users with vision disabilities cannot understand UI purpose
 **WCAG**: 4.1.2 Name, Role, Value (Level A)
 
 ### 2. Dynamic Type Support (HIGH)
+
 **Pattern**: Fixed font sizes, hardcoded `UIFont.systemFont(ofSize:)`, missing `.font(.body)` in SwiftUI
 **Impact**: Users with vision disabilities cannot read text
 **WCAG**: 1.4.4 Resize Text (Level AA)
 
 ### 3. Color Contrast (HIGH)
+
 **Pattern**: Low contrast text/background combinations, missing `.accessibilityDifferentiateWithoutColor`
 **Impact**: Users with vision disabilities cannot read content
 **WCAG**: 1.4.3 Contrast (Minimum) (Level AA - 4.5:1 for text, 3:1 for large text)
 
 ### 4. Touch Target Sizes (MEDIUM)
+
 **Pattern**: Buttons/tappable areas smaller than 44x44pt
 **Impact**: Users with motor disabilities cannot tap accurately
 **WCAG**: 2.5.5 Target Size (Level AAA - 44x44pt)
 
 ### 5. Keyboard Navigation (iPadOS/macOS) (MEDIUM)
+
 **Pattern**: Missing keyboard shortcuts, non-focusable interactive elements
 **Impact**: Users who cannot use touch/mouse cannot navigate
 **WCAG**: 2.1.1 Keyboard (Level A)
 
 ### 6. Reduce Motion Support (MEDIUM)
+
 **Pattern**: Animations without `UIAccessibility.isReduceMotionEnabled` checks
 **Impact**: Users with vestibular disorders experience discomfort/nausea
 **WCAG**: 2.3.3 Animation from Interactions (Level AAA)
 
 ### 7. Common Violations (HIGH)
+
 **Pattern**: Images without labels, buttons with wrong traits, inaccessible custom controls
 **Impact**: VoiceOver users cannot understand or interact with UI
 **WCAG**: Multiple (1.1.1 Non-text Content, 4.1.2 Name Role Value)
@@ -90,6 +97,7 @@ WCAG Compliance Level:
 ## Detection Patterns
 
 ### VoiceOver Labels
+
 ```swift
 // BAD - No label
 Button(action: {}) {
@@ -104,6 +112,7 @@ Button(action: {}) {
 ```
 
 ### Dynamic Type
+
 ```swift
 // BAD - Fixed size
 .font(.system(size: 17))
@@ -116,6 +125,7 @@ UIFontMetrics.default.scaledFont(for: customFont)
 ```
 
 ### Color Contrast
+
 ```swift
 // BAD - Low contrast
 Text("Warning").foregroundColor(.yellow) // on white background
@@ -127,6 +137,7 @@ Text("Warning")
 ```
 
 ### Touch Targets
+
 ```swift
 // BAD - Too small
 Button("X") {}.frame(width: 24, height: 24)
@@ -136,6 +147,7 @@ Button("X") {}.frame(minWidth: 44, minHeight: 44)
 ```
 
 ### Reduce Motion
+
 ```swift
 // BAD - Always animates
 withAnimation(.spring()) { }
@@ -164,6 +176,7 @@ if !UIAccessibility.isReduceMotionEnabled {
 ## Post-Audit
 
 After fixing issues:
+
 1. Run Accessibility Inspector (Xcode → Open Developer Tool)
 2. Test with VoiceOver (Cmd+F5 on simulator)
 3. Test with Dynamic Type (Settings → Accessibility → Display & Text Size)

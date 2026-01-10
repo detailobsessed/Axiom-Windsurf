@@ -5,6 +5,7 @@ Automatically audits existing IAP code to detect missing transaction.finish() ca
 ## How to Use This Agent
 
 **Natural language (automatic triggering):**
+
 - "Can you review my in-app purchase implementation?"
 - "I'm having issues with subscription renewals"
 - "Audit my StoreKit 2 code"
@@ -12,6 +13,7 @@ Automatically audits existing IAP code to detect missing transaction.finish() ca
 - "My restore purchases isn't working properly"
 
 **Explicit command:**
+
 ```bash
 /axiom:audit-iap
 ```

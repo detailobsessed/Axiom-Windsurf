@@ -26,34 +26,42 @@ SwiftUI debugging falls into three categories, each with a different diagnostic 
 These are real questions developers ask that this skill is designed to answer:
 
 #### 1. "My list item doesn't update when I tap the favorite button, even though the data changed"
+
 → The skill walks through the decision tree to identify struct mutation vs lost binding vs missing observer
 
 #### 2. "Preview crashes with 'Cannot find AppModel in scope' but it compiles fine"
+
 → The skill shows how to provide missing dependencies with `.environment()` or `.environmentObject()`
 
 #### 3. "My counter resets to 0 every time I toggle a boolean, why?"
+
 → The skill identifies accidental view recreation from conditionals and shows `.opacity()` fix
 
 #### 4. "I'm using @Observable but the view still doesn't update when I change the property"
+
 → The skill explains when to use @State vs plain properties with @Observable objects
 
 #### 5. "Text field loses focus when I start typing, very frustrating"
+
 → The skill identifies ForEach identity issues and shows how to use stable IDs
 
 ## When to Use SwiftUI Debugging
 
 #### Use this skill when
+
 - ✅ A view isn't updating when you expect it to
 - ✅ Preview crashes or won't load
 - ✅ Layout looks wrong on specific devices
 - ✅ You're tempted to bandaid with @ObservedObject everywhere
 
 #### Use `axiom-xcode-debugging` instead when
+
 - App crashes at runtime (not preview)
 - Build fails completely
 - You need environment diagnostics
 
 #### Use `axiom-swift-concurrency` instead when
+
 - Questions about async/await or MainActor
 - Data race warnings
 
@@ -64,6 +72,7 @@ These are real questions developers ask that this skill is designed to answer:
 SwiftUI provides a debug-only method to understand why a view's body was called.
 
 **Usage in LLDB**:
+
 ```swift
 // Set breakpoint in view's body
 // In LLDB console:
@@ -71,6 +80,7 @@ SwiftUI provides a debug-only method to understand why a view's body was called.
 ```
 
 **Temporary in code** (remove before shipping):
+
 ```swift
 var body: some View {
     let _ = Self._printChanges() // Debug only
@@ -80,6 +90,7 @@ var body: some View {
 ```
 
 **Output interpretation**:
+
 ```
 MyView: @self changed
   - Means the view value itself changed (parameters passed to view)
@@ -92,11 +103,13 @@ MyView: (no output)
 ```
 
 **⚠️ Important**:
+
 - Prefixed with underscore → May be removed in future releases
 - **NEVER submit to App Store** with _printChanges calls
 - Performance impact → Use only during debugging
 
 **When to use**:
+
 - Need to understand exact trigger for view update
 - Investigating unexpected updates
 - Verifying dependencies after refactoring
@@ -392,6 +405,7 @@ struct ContentView: View {
 **Fix it (pre-iOS 17)**: Use `@StateObject` if you own the object, `@ObservedObject` if it's injected, or `@EnvironmentObject` if it's shared across the tree.
 
 **Why @Observable is better** (iOS 17+):
+
 - Automatic dependency tracking (only reads trigger updates)
 - No `@Published` wrapper needed
 - Works with `@State` instead of `@StateObject`
@@ -515,12 +529,14 @@ struct DetailView: View {
 **Root cause**: Xcode cache corruption. The preview process has stale information about your code.
 
 **Diagnostic checklist**:
+
 - Preview worked yesterday, code hasn't changed → Likely cache
 - Restarting Xcode fixes it temporarily but returns → Definitely cache
 - Same code builds in simulator fine but preview fails → Cache
 - Multiple unrelated previews fail at once → Cache
 
 **Fix it** (in order):
+
 1. Restart Preview Canvas: `Cmd+Option+P`
 2. Restart Xcode completely (File → Close Window, then reopen project)
 3. Nuke derived data: `rm -rf ~/Library/Developer/Xcode/DerivedData`
@@ -701,6 +717,7 @@ SwiftUI uses view identity to track views over time, preserve state, and animate
 ### Two Types of Identity
 
 #### 1. Structural Identity (Implicit)
+
 Position in view hierarchy determines identity:
 
 ```swift
@@ -711,6 +728,7 @@ VStack {
 ```
 
 **When structural identity changes**:
+
 ```swift
 if showDetails {
     DetailView()  // Identity changes when condition changes
@@ -723,6 +741,7 @@ if showDetails {
 **Problem**: `SummaryView` gets recreated each time, losing @State values.
 
 #### 2. Explicit Identity
+
 You control identity with `.id()` modifier:
 
 ```swift
@@ -737,6 +756,7 @@ DetailView()
 ### Common Identity Issues
 
 #### Issue 1: State Resets Unexpectedly
+
 **Symptom**: @State values reset to initial values when you don't expect.
 
 **Cause**: View identity changed (position in hierarchy or .id() value changed).
@@ -782,6 +802,7 @@ var body: some View {
 ```
 
 #### Issue 2: Animations Don't Work
+
 **Symptom**: View changes but doesn't animate.
 
 **Cause**: Identity changed, SwiftUI treats as remove + add instead of update.
@@ -801,6 +822,7 @@ ForEach(items) { item in
 ```
 
 #### Issue 3: ForEach with Changing Data
+
 **Symptom**: List items jump around or animate incorrectly.
 
 **Cause**: Non-unique or changing identifiers.
@@ -835,17 +857,20 @@ ForEach(items) { item in  // id: \.id implicit
 ### When to Use .id()
 
 **Use .id() to**:
+
 - Force view recreation when data changes fundamentally
 - Animate transitions between distinct states
 - Reset @State when external dependency changes
 
 **Example: Force recreation on data change**:
+
 ```swift
 DetailView(item: item)
     .id(item.id)  // New item → new view → @State resets
 ```
 
 **Don't use .id() when**:
+
 - You just need to update view content (use bindings instead)
 - Trying to fix update issues (investigate root cause instead)
 - Identity is already stable
@@ -853,6 +878,7 @@ DetailView(item: item)
 ### Debugging Identity Issues
 
 #### 1. Self._printChanges()
+
 ```swift
 var body: some View {
     let _ = Self._printChanges()
@@ -861,9 +887,11 @@ var body: some View {
 ```
 
 #### 2. Check .id() modifiers
+
 Search codebase for `.id()` - are IDs changing unexpectedly?
 
 #### 3. Check conditionals
+
 Views in `if/else` change position → different identity.
 
 **Fix**: Use `.opacity()` or stable `.id()` instead.
@@ -888,6 +916,7 @@ When you're under deadline pressure, you'll be tempted to shortcuts that hide pr
 ### Scenario 1: "Preview keeps crashing, we ship tomorrow"
 
 #### Red flags you might hear
+
 - "Just rebuild everything"
 - "Delete derived data and don't worry about it"
 - "Ship without validating in preview"
@@ -896,6 +925,7 @@ When you're under deadline pressure, you'll be tempted to shortcuts that hide pr
 **The danger**: You skip diagnosis, cache issue recurs after 2 weeks in production, you're debugging while users hit crashes.
 
 **What to do instead** (5-minute protocol, total):
+
 1. Restart Preview Canvas: `Cmd+Option+P` (30 seconds)
 2. Restart Xcode (2 minutes)
 3. Nuke derived data: `rm -rf ~/Library/Developer/Xcode/DerivedData` (30 seconds)
@@ -911,6 +941,7 @@ When you're under deadline pressure, you'll be tempted to shortcuts that hide pr
 ### Scenario 2: "View won't update, let me just wrap it in @ObservedObject"
 
 #### Red flags you might think
+
 - "Adding @ObservedObject everywhere will fix it"
 - "Use ObservableObject as a band-aid"
 - "Add @Published to random properties"
@@ -919,6 +950,7 @@ When you're under deadline pressure, you'll be tempted to shortcuts that hide pr
 **The danger**: You're treating symptoms, not diagnosing. Same view won't update in other contexts. You've just hidden the bug.
 
 **What to do instead** (2-minute diagnosis):
+
 1. Can you reproduce in a minimal preview? If NO → cache corruption (see Scenario 1)
 2. If YES: Test each root cause in order:
    - Does the view have @State that you're modifying directly? → Struct Mutation
@@ -934,6 +966,7 @@ When you're under deadline pressure, you'll be tempted to shortcuts that hide pr
 ### Scenario 2b: "Intermittent updates - it works sometimes, not always"
 
 #### Red flags you might think
+
 - "It must be a threading issue, let me add @MainActor everywhere"
 - "Let me try @ObservedObject, @State, and custom Binding until something works"
 - "Delete DerivedData and hope cache corruption fixes it"
@@ -946,6 +979,7 @@ Intermittent bugs are the MOST important to diagnose correctly. One wrong guess 
 **What to do instead** (60-minute systematic diagnosis):
 
 **Step 1: Reproduce in preview** (15 min)
+
 - Create minimal preview of just the broken view
 - Tap/interact 20 times
 - Does it fail intermittently, consistently, or never?
@@ -954,6 +988,7 @@ Intermittent bugs are the MOST important to diagnose correctly. One wrong guess 
   - **Can't reproduce at all**: Intermittent race condition, investigate further
 
 **Step 2: Isolate the variable** (15 min)
+
 - If it's intermittent in preview: Likely view recreation
   - Did the view recently move into a conditional? Remove it and test
   - Did you add `if` logic that might recreate the parent? Remove it and test
@@ -962,11 +997,13 @@ Intermittent bugs are the MOST important to diagnose correctly. One wrong guess 
   - Try after clearing DerivedData
 
 **Step 3: Apply the specific fix** (30 min)
+
 - Once you've identified view recreation: Use `.opacity()` instead of conditionals
 - Once you've identified struct mutation: Use full reassignment
 - Once you've verified it's cache: Nuke DerivedData properly
 
 **Step 4: Verify 100% reliability** (until submission)
+
 - Run the same interaction 30+ times
 - Test on multiple devices/simulators
 - Get QA to verify
@@ -987,6 +1024,7 @@ Intermittent bugs are the MOST important to diagnose correctly. One wrong guess 
 ### Scenario 3: "Layout looks wrong on iPad, we're out of time"
 
 #### Red flags you might think
+
 - "Add some padding and magic numbers"
 - "It's probably a safe area thing, let me just ignore it"
 - "Let's lock this to iPhone only"
@@ -995,6 +1033,7 @@ Intermittent bugs are the MOST important to diagnose correctly. One wrong guess 
 **The danger**: Magic numbers break on other sizes. SafeArea ignoring is often wrong. Locking to iPhone means you ship a broken iPad experience.
 
 **What to do instead** (3-minute diagnosis):
+
 1. Run in simulator or device
 2. Use Debug View Hierarchy: Debug menu → View Hierarchy (takes 30 seconds to load)
 3. Check: Is the problem SafeArea, ZStack ordering, or GeometryReader sizing?
@@ -1068,6 +1107,7 @@ Text().cornerRadius(8).padding()  // Corners first
 **Scenario**: You have a list of tasks. When you tap a task to mark it complete, the checkmark should appear, but it doesn't.
 
 **Code**:
+
 ```swift
 struct TaskListView: View {
     @State var tasks: [Task] = [...]
@@ -1091,10 +1131,12 @@ struct TaskListView: View {
 ```
 
 **Diagnosis using the skill**:
+
 1. Can you reproduce in preview? YES
 2. Are you modifying the struct directly? YES → **Struct Mutation** (Root Cause 1)
 
 **Fix**:
+
 ```swift
 Button("Done") {
     // ✅ RIGHT: Full reassignment
@@ -1113,6 +1155,7 @@ Button("Done") {
 **Scenario**: You created a custom data model. It works fine in the app, but the preview crashes with "Cannot find 'CustomModel' in scope".
 
 **Code**:
+
 ```swift
 import SwiftUI
 
@@ -1132,10 +1175,12 @@ struct TaskDetailView: View {
 ```
 
 **Diagnosis using the skill**:
+
 1. What's the error? "Cannot find in scope" → **Missing Dependency** (Error Type 1)
 2. What does TaskDetailView need? The Task model and modelContext
 
 **Fix**:
+
 ```swift
 #Preview {
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
@@ -1155,6 +1200,7 @@ struct TaskDetailView: View {
 **Scenario**: You have a search field. You type characters, but the text doesn't appear in the UI. However, the search results DO update.
 
 **Code**:
+
 ```swift
 struct SearchView: View {
     @State var searchText = ""
@@ -1180,11 +1226,13 @@ struct SearchView: View {
 ```
 
 **Diagnosis using the skill**:
+
 1. Can you reproduce in preview? YES
 2. Are you passing a binding to a child view? YES (TextField)
 3. Is it a constant binding? YES → **Lost Binding Identity** (Root Cause 2)
 
 **Fix**:
+
 ```swift
 // ✅ RIGHT: Pass the actual binding
 TextField("Search", text: $searchText)
@@ -1201,11 +1249,13 @@ After fixing SwiftUI issues, verify with visual confirmation in the simulator.
 ### Why Simulator Verification Matters
 
 SwiftUI previews don't always match simulator behavior:
+
 - **Different rendering** — Some visual effects only work on device/simulator
 - **Different timing** — Animations may behave differently
 - **Different state** — Full app lifecycle vs isolated preview
 
 **Use simulator verification for**:
+
 - Layout fixes (spacing, alignment, sizing)
 - View update fixes (state changes, bindings)
 - Animation and gesture issues
@@ -1251,6 +1301,7 @@ For complex scenarios (state setup, multiple steps, log analysis):
 ```
 
 Then describe what you want to test:
+
 - "Navigate to the recipe editor and verify the layout fix"
 - "Test the profile screen with empty state"
 - "Verify the animation doesn't stutter anymore"
@@ -1258,6 +1309,7 @@ Then describe what you want to test:
 ### Before/After Example
 
 **Before fix** (view not updating):
+
 ```bash
 # 1. Reproduce bug
 xcrun simctl openurl booted "debug://recipe-list"
@@ -1267,6 +1319,7 @@ xcrun simctl io booted screenshot /tmp/before-fix.png
 ```
 
 **After fix** (added @State binding):
+
 ```bash
 # 2. Test fix
 xcrun simctl openurl booted "debug://recipe-list"
@@ -1286,4 +1339,3 @@ xcrun simctl io booted screenshot /tmp/after-fix.png
 **Docs**: /swiftui/managing-model-data-in-your-app, /swiftui, /swiftui/state-and-data-flow, /xcode/previews, /observation
 
 **Skills**: axiom-swiftui-performance, axiom-swiftui-debugging-diag, axiom-xcode-debugging, axiom-swift-concurrency
-

@@ -12,6 +12,7 @@ Explicit ownership modifiers for performance optimization and noncopyable type s
 ## When to Use
 
 ✅ **Use when:**
+
 - Large value types being passed read-only (avoid copies)
 - Working with noncopyable types (`~Copyable`)
 - Reducing ARC retain/release traffic
@@ -19,6 +20,7 @@ Explicit ownership modifiers for performance optimization and noncopyable type s
 - Performance-critical code where copies show in profiling
 
 ❌ **Don't use when:**
+
 - Simple types (Int, Bool, small structs)
 - Compiler optimization is sufficient (most cases)
 - Readability matters more than micro-optimization

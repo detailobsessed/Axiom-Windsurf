@@ -10,6 +10,7 @@ Implementation patterns for Core Location. Covers authorization strategy, monito
 ## When to Use This Skill
 
 Use this skill when you're:
+
 - Choosing between When In Use vs Always authorization
 - Deciding on monitoring approach (continuous, significant-change, CLMonitor)
 - Implementing geofencing or region monitoring
@@ -33,6 +34,7 @@ Questions you can ask Claude that will draw from this skill:
 ## What's Covered
 
 ### Anti-Patterns Prevented
+
 - Premature Always authorization (30-60% denial rate)
 - Continuous updates for geofencing (10x battery drain vs CLMonitor)
 - Ignoring stationary detection (wasted battery)
@@ -42,16 +44,19 @@ Questions you can ask Claude that will draw from this skill:
 - Ignoring CLServiceSession (iOS 18+)
 
 ### Decision Trees
+
 - Authorization strategy (When In Use vs Always, upgrade flow)
 - Monitoring strategy (continuous vs significant-change vs CLMonitor)
 - Accuracy selection (navigation vs fitness vs store finder)
 
 ### Pressure Scenarios
+
 - "Just use Always authorization" pushback
 - "Location isn't working in background" debugging
 - "Geofence events aren't firing" production issues
 
 ### Checklists
+
 - Pre-release location checklist
 - Background location setup checklist
 

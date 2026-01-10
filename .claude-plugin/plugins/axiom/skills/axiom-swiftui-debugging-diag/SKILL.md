@@ -12,6 +12,7 @@ last_updated: Initial release with 5 diagnostic patterns, SwiftUI Instrument wor
 ## When to Use This Diagnostic Skill
 
 Use this skill when:
+
 - **Basic troubleshooting failed** — Applied `axiom-swiftui-debugging` skill patterns but issue persists
 - **Self._printChanges() shows unexpected patterns** — View updating when it shouldn't, or not updating when it should
 - **Intermittent issues** — Works sometimes, fails other times ("heisenbug")
@@ -24,23 +25,28 @@ Use this skill when:
 Under pressure, you'll be tempted to shortcuts that hide problems instead of diagnosing them. **NEVER do these**:
 
 ❌ **Guessing with random @State/@Observable changes**
+
 - "Let me try adding @Observable here and see if it works"
 - "Maybe if I change this to @StateObject it'll fix it"
 
 ❌ **Adding .id(UUID()) to force updates**
+
 - Creates new view identity every render
 - Destroys state preservation
 - Masks root cause
 
 ❌ **Using ObservableObject when @Observable would work** (iOS 17+)
+
 - Adds unnecessary complexity
 - Miss out on automatic dependency tracking
 
 ❌ **Ignoring intermittent issues** ("works sometimes")
+
 - "I'll just merge and hope it doesn't happen in production"
 - Intermittent = systematic bug, not randomness
 
 ❌ **Shipping without understanding**
+
 - "The fix works, I don't know why"
 - Production is too expensive for trial-and-error
 
@@ -111,6 +117,7 @@ SwiftUI view issue after basic troubleshooting?
 **Symptom**: Need to understand exactly why view body runs
 
 **When to use**:
+
 - View updating more often than expected
 - View not updating when it should
 - Verifying dependencies after refactoring
@@ -171,6 +178,7 @@ MyView: @self changed  # Environment is part of @self
    - Fix: Extract specific dependency
 
 **Verification**:
+
 - Remove `Self._printChanges()` call before committing
 - Never ship to production with this code
 
@@ -185,12 +193,14 @@ MyView: @self changed  # Environment is part of @self
 **Symptom**: Complex update patterns that Self._printChanges() can't fully explain
 
 **When to use**:
+
 - Multiple views updating when one should
 - Need to trace data flow through app
 - Views updating but don't know which data triggered it
 - Long view body updates (performance issue)
 
 **Prerequisites**:
+
 - Xcode 26+ installed
 - Device updated to iOS 26+ / macOS Tahoe+
 - Build in Release mode
@@ -198,6 +208,7 @@ MyView: @self changed  # Environment is part of @self
 **Steps**:
 
 #### 1. Launch Instruments (5 min)
+
 ```bash
 # Build Release
 xcodebuild build -scheme YourScheme -configuration Release
@@ -208,11 +219,13 @@ xcodebuild build -scheme YourScheme -configuration Release
 ```
 
 #### 2. Record Trace (3 min)
+
 - Click Record button
 - Perform the action that triggers unexpected updates
 - Stop recording (10-30 seconds of interaction is enough)
 
 #### 3. Analyze Long View Body Updates (5 min)
+
 - Look at **Long View Body Updates lane**
 - Any orange/red bars? Those are expensive views
 - Click on a long update → Detail pane shows view name
@@ -224,6 +237,7 @@ xcodebuild build -scheme YourScheme -configuration Release
 **Fix**: Move expensive operation to model layer, cache result
 
 #### 4. Analyze Unnecessary Updates (7 min)
+
 - Highlight time range of user action (e.g., tapping favorite button)
 - Expand hierarchy in detail pane
 - **Count updates** — more than expected?
@@ -232,6 +246,7 @@ xcodebuild build -scheme YourScheme -configuration Release
 #### 5. Interpret Cause & Effect Graph (5 min)
 
 **Graph nodes**:
+
 ```
 [Blue node] = Your code (gesture, state change, view body)
 [System node] = SwiftUI/system work
@@ -255,10 +270,12 @@ xcodebuild build -scheme YourScheme -configuration Release
 ```
 
 **Click on nodes**:
+
 - **State change node** → See backtrace of where value was set
 - **View body node** → See which properties it read (dependencies)
 
 **Verification**:
+
 - Record new trace after fix
 - Compare before/after update counts
 - Verify red/orange bars reduced or eliminated
@@ -274,6 +291,7 @@ xcodebuild build -scheme YourScheme -configuration Release
 **Symptom**: @State values reset unexpectedly, or views don't animate
 
 **When to use**:
+
 - Counter resets to 0 when it shouldn't
 - Animations don't work (view pops instead of animates)
 - ForEach items jump around
@@ -343,6 +361,7 @@ ForEach(items, id: \.id) { item in
 | State resets on navigation | Check NavigationStack path management |
 
 **Verification**:
+
 - Add Self._printChanges() — should NOT see "@self changed" repeatedly
 - Animations should now work smoothly
 - @State values should persist
@@ -356,6 +375,7 @@ ForEach(items, id: \.id) { item in
 **Symptom**: Many views updating when unrelated data changes
 
 **When to use**:
+
 - Cause & Effect Graph shows "Environment" node triggering many updates
 - Slow scrolling or animation performance
 - Unexpected cascading updates
@@ -372,6 +392,7 @@ grep -r "\.environment(" --include="*.swift" .
 ```
 
 **Look for**:
+
 ```swift
 // ❌ BAD: Frequently changing values
 .environment(\.scrollOffset, scrollOffset)  // Updates 60+ times/second
@@ -385,17 +406,20 @@ grep -r "\.environment(" --include="*.swift" .
 #### 2. Check what's in environment (3 min)
 
 Using Pattern D2 (Instruments), check Cause & Effect Graph:
+
 - Click on "Environment" node
 - See which properties changed
 - Count how many views checked for updates
 
 **Questions**:
+
 - Is this value changing every scroll/animation frame?
 - Do all these views actually need this value?
 
 #### 3. Apply fix (4 min)
 
 **Fix A: Remove from environment** (if frequently changing):
+
 ```swift
 // ❌ Before: Environment
 .environment(\.scrollOffset, scrollOffset)
@@ -405,6 +429,7 @@ ChildView(scrollOffset: scrollOffset)
 ```
 
 **Fix B: Use @Observable model** (if needed by many views):
+
 ```swift
 // Instead of storing primitive in environment:
 @Observable class ScrollViewModel {
@@ -420,6 +445,7 @@ var body: some View {
 ```
 
 **Verification**:
+
 - Record new trace in Instruments
 - Check Cause & Effect Graph — fewer views should update
 - Performance should improve (smoother scrolling/animations)
@@ -433,6 +459,7 @@ var body: some View {
 **Symptom**: Preview won't load or crashes with unclear error
 
 **When to use**:
+
 - Preview fails after basic fixes (swiftui-debugging skill)
 - Error message unclear or generic
 - Preview worked before, stopped suddenly
@@ -444,6 +471,7 @@ var body: some View {
 **Location**: Editor menu → Canvas → Diagnostics
 
 **What it shows**:
+
 - Detailed error messages
 - Missing dependencies
 - State initialization issues
@@ -460,6 +488,7 @@ ls -lt ~/Library/Logs/DiagnosticReports/ | grep -i preview | head -5
 ```
 
 **What to look for**:
+
 - Fatal errors (array out of bounds, force unwrap nil)
 - Missing module imports
 - Framework initialization failures
@@ -467,6 +496,7 @@ ls -lt ~/Library/Logs/DiagnosticReports/ | grep -i preview | head -5
 #### 3. Isolate the problem (5 min)
 
 **Create minimal preview**:
+
 ```swift
 // Start with empty preview
 #Preview {
@@ -524,6 +554,7 @@ let items = ["a", "b", "c"]
 ```
 
 **Verification**:
+
 - Preview loads without errors
 - Can interact with preview normally
 - Changes reflect immediately
@@ -535,6 +566,7 @@ let items = ["a", "b", "c"]
 ### The Situation
 
 **Context**:
+
 - iOS 26 build shipped 2 days ago
 - Users report "settings screen freezes when toggling features"
 - 15% of users affected (reported via App Store reviews)
@@ -547,22 +579,27 @@ let items = ["a", "b", "c"]
 If you hear ANY of these under deadline pressure, **STOP and use diagnostic patterns**:
 
 ❌ **"Let me try different property wrappers and see what works"**
+
 - Random changes = guessing
 - 80% chance of making it worse
 
 ❌ **"It works on my device, must be iOS 26 bug"**
+
 - User reports are real
 - 15% = systematic issue, not edge case
 
 ❌ **"We can roll back if the fix doesn't work"**
+
 - App Store review takes 24 hours
 - Rollback isn't instant
 
 ❌ **"Add .id(UUID()) to force refresh"**
+
 - Destroys state preservation
 - Hides root cause
 
 ❌ **"Users will accept degraded performance for now"**
+
 - Once shipped, you're committed for 24 hours
 - Bad reviews persist
 
@@ -596,6 +633,7 @@ xcodebuild build -scheme YourApp -configuration Release
 ```
 
 **Find**:
+
 - Which view is expensive?
 - What data change triggered it?
 - How many views updated?
@@ -605,18 +643,21 @@ xcodebuild build -scheme YourApp -configuration Release
 Based on diagnostic findings:
 
 **If Long View Body Update**:
+
 ```swift
 // Example finding: Formatter creation in body
 // Fix: Move to cached formatter
 ```
 
 **If Cascade Update**:
+
 ```swift
 // Example finding: All toggle views reading entire settings array
 // Fix: Per-toggle view models with granular dependencies
 ```
 
 **If Environment Issue**:
+
 ```swift
 // Example finding: Environment value updating every frame
 // Fix: Remove from environment, use direct parameter
@@ -652,6 +693,7 @@ Deploying build 2.1.1 now. Will monitor for next 24 hours."
 ```
 
 **This shows**:
+
 - You diagnosed with evidence (not guessed)
 - You understand the root cause
 - You verified the fix
@@ -660,6 +702,7 @@ Deploying build 2.1.1 now. Will monitor for next 24 hours."
 ### Time Cost Comparison
 
 #### Option A: Guess and Pray
+
 - Time to try random fixes: 30 min
 - Time to deploy: 20 min
 - Time to learn it failed: 24 hours (next App Store review)
@@ -668,6 +711,7 @@ Deploying build 2.1.1 now. Will monitor for next 24 hours."
 - Risk: Made it worse, now TWO bugs
 
 #### Option B: Diagnostic Protocol (This Skill)
+
 - Time to diagnose: 45 min
 - Time to apply targeted fix: 20 min
 - Time to verify: 15 min
@@ -733,10 +777,12 @@ Before shipping ANY fix:
 ### Mistake 1: "I added @Observable and it fixed it"
 
 **Why it's wrong**: You don't know WHY it fixed it
+
 - Might work now, break later
 - Might have hidden another bug
 
 **Right approach**:
+
 - Use Pattern D1 (Self._printChanges()) to see BEFORE state
 - Apply @Observable
 - Use Pattern D1 again to see AFTER state
@@ -745,21 +791,25 @@ Before shipping ANY fix:
 ### Mistake 2: "Instruments is too slow for quick fixes"
 
 **Why it's wrong**: Guessing is slower when you're wrong
+
 - 25 min diagnostic = certain fix
 - 5 min guess × 3 failed attempts = 15 min + still broken
 
 **Right approach**:
+
 - Always profile for production issues
 - Use Self._printChanges() for simple cases
 
 ### Mistake 3: "The fix works, I don't need to verify"
 
 **Why it's wrong**: Manual testing ≠ verification
+
 - Might work for your specific test
 - Might fail for edge cases
 - Might have introduced performance regression
 
 **Right approach**:
+
 - Always verify in Instruments after fix
 - Compare before/after traces
 - Test edge cases (empty data, large data, etc.)
@@ -825,6 +875,7 @@ grep -r "\.id(" --include="*.swift" .
 ### Instruments Navigation
 
 **In Instruments (after recording)**:
+
 1. Select **SwiftUI** track
 2. Expand to see:
    - Update Groups lane
@@ -836,6 +887,7 @@ grep -r "\.id(" --include="*.swift" .
 6. Find your view in call stack (Command-F)
 
 **Cause & Effect Graph**:
+
 1. Expand hierarchy in detail pane
 2. Hover over view name → Click arrow
 3. Choose "Show Cause & Effect Graph"

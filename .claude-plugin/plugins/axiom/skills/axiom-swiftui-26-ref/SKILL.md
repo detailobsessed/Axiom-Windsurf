@@ -44,6 +44,7 @@ Comprehensive guide to new SwiftUI features in iOS 26, iPadOS 26, macOS Tahoe, w
 ## Liquid Glass Design System
 
 #### For comprehensive Liquid Glass coverage, see
+
 - `axiom-liquid-glass` skill — Design principles, implementation, variants, design review pressure
 - `axiom-liquid-glass-ref` skill — App-wide adoption guide (app icons, controls, navigation, menus, windows)
 
@@ -52,6 +53,7 @@ Comprehensive guide to new SwiftUI features in iOS 26, iPadOS 26, macOS Tahoe, w
 The new design system provides "a bright and fluid experience that's consistent across Apple platforms." Apps automatically adopt the new appearance upon recompilation - navigation containers, tab bars, and toolbars update automatically.
 
 #### Key visual elements
+
 - Glassy sidebars on iPad/macOS that reflect surrounding content
 - Compact tab bars on iPhone
 - Liquid Glass toolbar items with morphing transitions
@@ -151,6 +153,7 @@ struct PhotoGalleryView: View {
 ### System Controls Updates
 
 Controls now have the new design automatically:
+
 - Toggles
 - Segmented pickers
 - Sliders
@@ -356,11 +359,13 @@ struct MediaControlView: View {
 ```
 
 **Visibility options**
+
 - `.automatic` — System default (usually visible)
 - `.visible` — Always show thumb
 - `.hidden` — Hide thumb
 
 **Use cases**
+
 - Media player progress indicators
 - Read-only value displays
 - Minimal UI designs where slider acts as progress view
@@ -455,12 +460,14 @@ struct ContentView: View {
 ```
 
 **Features**
+
 - Works like `safeAreaInset` but with integrated blur
 - Progressive blur (`.soft`) or hard blur (`.hard`) via `scrollEdgeEffectStyle`
 - Automatically respects safe areas
 - Bar remains fixed while content scrolls beneath
 
 **Use cases**
+
 - Action bars that remain visible while scrolling
 - Fixed controls at screen edges
 - Bottom toolbars with scroll blur
@@ -493,6 +500,7 @@ struct LinkView: View {
 ```
 
 **Key difference**
+
 - Default `Link` opens in Safari app
 - `openURL(url, prefersInApp: true)` opens in SFSafariViewController-style in-app browser
 - Keeps users in your app
@@ -531,12 +539,14 @@ struct ModalView: View {
 ```
 
 **Features**
+
 - `Button(role: .close)` renders as X icon with glass effect in toolbars
 - `Button(role: .confirm)` provides system-styled confirmation button
 - No custom label needed
 - Consistent with system modals and sheets
 
 **Use cases**
+
 - Modal dismissal
 - Sheet close buttons
 - Confirmation dialogs
@@ -577,6 +587,7 @@ struct GlassButtonExample: View {
 ```
 
 **Variants**
+
 - `.clear` — Transparent glass effect
 - `.glass` — Standard glass appearance
 - `.tint` — Colored glass (use with `.tint()` modifier)
@@ -609,11 +620,13 @@ struct ButtonLayoutExample: View {
 ```
 
 **Options**
+
 - `.fit` — Button fits label size
 - `.stretch` — Button fills available width
 - `.flexible` — Balanced sizing (context-dependent)
 
 **Works with**
+
 - Plain text buttons
 - Custom labels (icon + text, HStack/VStack)
 - All button styles
@@ -646,12 +659,14 @@ struct SearchView: View {
 ```
 
 **Behavior**
+
 - `.minimize` — Search field compact when unfocused, expands on tap
 - Similar to Tab Bar search pattern
 - Saves toolbar space
 - Cleaner UI when search not in use
 
 **Use cases**
+
 - List/content-heavy screens
 - Crowded navigation bars
 - Tab bar style search on regular screens
@@ -666,6 +681,7 @@ struct SearchView: View {
 ```
 
 **Behavior**
+
 - By default, navigation title hides when search becomes active
 - `.avoidHidingContent` keeps title visible during search
 - Maintains context while searching
@@ -781,6 +797,7 @@ ScrollView(.horizontal) {
 #### New profiling tool in Xcode
 
 Available lanes:
+
 - **Long view body updates** — Identify expensive body computations
 - **Platform view updates** — Track UIKit/AppKit bridging performance
 - Other performance problem areas
@@ -810,6 +827,7 @@ class TripStore {
 **Benefits** Find bugs in concurrent code before they affect your app
 
 #### References
+
 - "Embracing Swift concurrency" (WWDC 2025)
 - "Explore concurrency in SwiftUI" (WWDC 2025)
 
@@ -865,6 +883,7 @@ struct HikingRouteShape: Shape {
 ```
 
 #### Key benefits
+
 - Delete manual `animatableData` property
 - Use `@AnimatableIgnored` for properties to exclude
 - SwiftUI automatically synthesizes animation data
@@ -927,6 +946,7 @@ var body: some View {
 ```
 
 #### References
+
 - "Meet SwiftUI spatial layout" (WWDC 2025)
 - "Set the scene with SwiftUI in visionOS" (WWDC 2025)
 - "What's new in visionOS" (WWDC 2025)
@@ -951,6 +971,7 @@ Scene bridging allows your UIKit and AppKit lifecycle apps to interoperate with 
 ### Scene Modifiers
 
 Works with scene modifiers like:
+
 - `.windowStyle()`
 - `.immersiveEnvironmentBehavior()`
 
@@ -976,6 +997,7 @@ struct MyMacApp: App {
 ```
 
 #### Features
+
 - Mac app renders stereo content on Vision Pro
 - Hover effects and input events supported
 - Uses CompositorServices and Metal
@@ -1138,6 +1160,7 @@ struct BrowserView: View {
 ```
 
 #### WebPage features
+
 - Programmatic navigation (`goBack()`, `goForward()`)
 - Access page properties (`title`, `url`, `canGoBack`, `canGoForward`)
 - Observable — SwiftUI views update automatically
@@ -1176,6 +1199,7 @@ struct CommentView: View {
 ```
 
 #### Features
+
 - Built-in text formatting controls (bold, italic, underline, colors, etc.)
 - Binding to `AttributedString` preserves formatting
 - Automatic toolbar with formatting options
@@ -1183,6 +1207,7 @@ struct CommentView: View {
 ### Advanced AttributedString Features
 
 #### Customization options
+
 - Paragraph styles
 - Attribute transformations
 - Constrain which attributes users can apply
@@ -1326,6 +1351,7 @@ struct ElevationChart: View {
 ```
 
 #### Features
+
 - `Chart3D` container
 - Z-axis specific modifiers (`.chartZScale()`, `.chartZAxis()`, etc.)
 - All existing chart marks with 3D variants
@@ -1407,6 +1433,7 @@ Live Activities now appear on CarPlay displays for glanceable information while 
 ### Deprecated APIs
 
 #### ❌ Remove in iPadOS 26
+
 ```xml
 <key>UIRequiresFullscreen</key>
 <!-- Entire property list key is deprecated (all values) -->
@@ -1450,33 +1477,39 @@ Apps must support resizable windows on iPad.
 ### Performance
 
 #### DO
+
 - Profile with new SwiftUI performance instrument
 - Use lazy stacks in nested ScrollViews
 - Trust automatic list performance improvements
 
 #### DON'T
+
 - Over-optimize - let framework improvements help first
 - Ignore long view body updates in profiler
 
 ### Liquid Glass Design
 
 #### DO
+
 - Recompile and test automatic appearance
 - Use toolbar spacers for logical grouping
 - Apply glass effect to custom views that benefit from reflections
 
 #### DON'T
+
 - Fight the automatic design - embrace consistency
 - Over-tint toolbars (use for prominence only)
 
 ### Layout & Spacing
 
 #### DO
+
 - Use `.safeAreaPadding()` for edge-to-edge content (iOS 17+)
 - Combine `.safeAreaPadding()` with Liquid Glass materials extending edge-to-edge
 - Use `.padding()` for internal spacing between views
 
 #### DON'T
+
 - Use `.padding()` when content extends to screen edges (ignores notch/home indicator)
 - Manually calculate safe area insets with GeometryReader on iOS 17+ (use `.safeAreaPadding()` instead)
 
@@ -1485,22 +1518,26 @@ Apps must support resizable windows on iPad.
 ### Rich Text
 
 #### DO
+
 - Use `AttributedString` binding for `TextEditor`
 - Constrain attributes if needed for your use case
 - Consider localization with rich text
 
 #### DON'T
+
 - Use plain `String` and lose formatting
 - Allow all attributes without considering UX
 
 ### Spatial Layout (visionOS)
 
 #### DO
+
 - Use `Alignment3D` for depth-based layouts
 - Enable `.manipulable()` for objects users should interact with
 - Check scene snapping state for context-aware UI
 
 #### DON'T
+
 - Use 2D alignment APIs for 3D layouts
 - Make all objects manipulable (only what makes sense)
 
@@ -1513,6 +1550,7 @@ Apps must support resizable windows on iPad.
 **Symptom** App still has old design after updating to iOS 26 SDK
 
 #### Solution
+
 1. Clean build folder (Shift-Cmd-K)
 2. Rebuild with Xcode 16+ targeting iOS 26 SDK
 3. Check deployment target is iOS 26+
@@ -1522,6 +1560,7 @@ Apps must support resizable windows on iPad.
 **Symptom** Search remains at top on iPhone
 
 #### Solution
+
 ```swift
 // ✅ CORRECT: searchable on NavigationSplitView
 NavigationSplitView {
@@ -1539,6 +1578,7 @@ List { }
 **Symptom** Compile error "Type does not conform to Animatable"
 
 #### Solution
+
 ```swift
 // Ensure all properties are either:
 // 1. VectorArithmetic conforming types (Double, CGFloat, CGPoint, etc.)
@@ -1559,6 +1599,7 @@ struct MyShape: Shape {
 **Symptom** Rich text formatting disappears
 
 #### Solution
+
 ```swift
 // ✅ CORRECT: Binding to AttributedString
 @State private var text = AttributedString("Hello")
@@ -1574,6 +1615,7 @@ TextEditor(text: $text) // Plain String loses formatting
 **Symptom** Dragging to Dock trash doesn't delete items
 
 #### Solution
+
 ```swift
 // Must include .delete in supported operations
 .dragConfiguration(.init(supportedOperations: [.copy, .delete]))

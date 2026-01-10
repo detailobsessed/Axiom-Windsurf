@@ -10,17 +10,20 @@ Scan your SwiftUI codebase for Liquid Glass adoption opportunities, toolbar impr
 ## What It Scans
 
 ### High Priority (Migration)
+
 - `UIBlurEffect` and `NSVisualEffectView` usage
 - `.blur()` modifier on backgrounds
 - `Material` that could migrate to Liquid Glass
 
 ### Medium Priority (Improvements)
+
 - Toolbar buttons missing `.borderedProminent`
 - `.borderedProminent` without `.tint()`
 - Toolbars that could use `Spacer(.fixed)` for grouping
 - `.searchable()` not in NavigationSplitView
 
 ### Low Priority (Enhancements)
+
 - Custom views that could benefit from `.glassBackgroundEffect()`
 - Search-related tabs missing `.tabRole(.search)`
 

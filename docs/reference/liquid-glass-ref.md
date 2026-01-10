@@ -16,18 +16,21 @@ Liquid Glass is Apple's new material design system for iOS 26+, replacing tradit
 ### Design System Components
 
 #### App-Wide Adoption
+
 - App icons and branding
 - Navigation bars and toolbars
 - Tab bars and bottom sheets
 - Sidebars and split views
 
 #### Interactive Controls
+
 - Buttons and segmented controls
 - Menus and context menus
 - Popovers and alerts
 - Search fields and filters
 
 #### Platform Considerations
+
 - iOS vs iPadOS vs visionOS
 - Light mode vs Dark mode
 - Accessibility (reduce transparency)
@@ -36,12 +39,14 @@ Liquid Glass is Apple's new material design system for iOS 26+, replacing tradit
 ### Migration Strategies
 
 #### From UIBlurEffect
+
 - Replacing `UIVisualEffectView` with `.glassBackgroundEffect()`
 - Material style mapping (light → regular, dark → clear)
 - Animation transitions
 - Backwards compatibility patterns
 
 #### From Custom Blurs
+
 - Recreating custom effects with Liquid Glass APIs
 - Tinting and vibrancy
 - Dynamic thickness adjustments
@@ -49,6 +54,7 @@ Liquid Glass is Apple's new material design system for iOS 26+, replacing tradit
 ## When to Use This Reference
 
 Use this reference when:
+
 - Planning system-wide Liquid Glass adoption
 - Migrating from UIBlurEffect or custom blurs
 - Designing new iOS 26+ features
@@ -85,6 +91,7 @@ TabView {
 This is a **reference skill** — comprehensive guide without mandatory workflows. For discipline-enforcing implementation guidance with pressure scenario defense, use the [liquid-glass skill](/skills/ui-design/liquid-glass).
 
 #### Reference includes
+
 - Complete API catalog
 - Platform-specific patterns
 - Migration checklists
@@ -92,6 +99,7 @@ This is a **reference skill** — comprehensive guide without mandatory workflow
 - Performance optimization
 
 #### Skills include
+
 - Mandatory design review workflows
 - Pressure defense (tight deadlines, authority pressure)
 - Red flags and rationalizations

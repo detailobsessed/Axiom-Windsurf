@@ -325,16 +325,19 @@ Energy spike during specific action?
 Use this when you need fast answers:
 
 ### 30-Second Check
+
 - [ ] Device plugged in? (Power metrics show 0)
 - [ ] Debug build? (Less optimized than release)
 - [ ] Low Power Mode on? (May affect measurements)
 
 ### 5-Minute Check (Power Profiler)
+
 - [ ] Which subsystem is dominant? (CPU/GPU/Network/Display)
 - [ ] Sustained or spiky?
 - [ ] Foreground or background?
 
 ### 15-Minute Investigation
+
 - [ ] If CPU: Run Time Profiler to identify function
 - [ ] If Network: Check request frequency and size
 - [ ] If GPU: Check animation frame rates
@@ -356,16 +359,19 @@ Use this when you need fast answers:
 ## When to Escalate
 
 ### Use `axiom-energy` skill when
+
 - Need full audit checklist
 - Want comprehensive patterns with code
 - Planning proactive optimization
 
 ### Use `axiom-energy-ref` skill when
+
 - Need specific API details
 - Want complete code examples
 - Implementing from scratch
 
 ### Use `energy-auditor` agent when
+
 - Want automated codebase scan
 - Looking for anti-patterns at scale
 - Pre-release energy audit

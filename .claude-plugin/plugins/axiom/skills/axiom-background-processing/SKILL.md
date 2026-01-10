@@ -22,21 +22,27 @@ Background execution is a **privilege**, not a right. iOS actively limits backgr
 Real questions developers ask that this skill answers:
 
 #### 1. "My background task never runs. I register it, schedule it, but nothing happens."
+
 → The skill covers the registration checklist and debugging decision tree for "task never runs" issues
 
 #### 2. "How do I test background tasks? They don't seem to trigger in the simulator."
+
 → The skill covers LLDB debugging commands and simulator limitations
 
 #### 3. "My task gets terminated before it completes. How do I extend the time?"
+
 → The skill covers task types (BGAppRefresh 30s vs BGProcessing minutes), expiration handlers, and incremental progress saving
 
 #### 4. "Should I use BGAppRefreshTask or BGProcessingTask? What's the difference?"
+
 → The skill provides decision tree for choosing the correct task type based on work duration and system requirements
 
 #### 5. "How do I integrate Swift 6 concurrency with background task expiration?"
+
 → The skill covers withTaskCancellationHandler patterns for bridging BGTask expiration to structured concurrency
 
 #### 6. "My background task works in development but not in production."
+
 → The skill covers the 7 scheduling factors, throttling behavior, and production debugging
 
 ---
@@ -53,6 +59,7 @@ If you see ANY of these, suspect registration or scheduling issues:
 - **"No handler registered"**: Handler not registered before first scheduling
 
 #### Difference from energy issues
+
 - **Energy issue**: Task runs but drains battery (see `axiom-energy` skill)
 - **This skill**: Task doesn't run, or terminates before completing work
 
@@ -125,6 +132,7 @@ subsystem:com.apple.backgroundtaskscheduler
 ```
 
 Look for:
+
 - "Registered handler for task with identifier"
 - "Scheduling task with identifier"
 - "Starting task with identifier"
@@ -260,6 +268,7 @@ func handleAppRefresh(task: BGAppRefreshTask) {
 ```
 
 **Key points**:
+
 - Set expiration handler FIRST
 - Schedule next refresh inside handler (continuous pattern)
 - Call `setTaskCompleted` in ALL code paths (success AND failure)
@@ -347,6 +356,7 @@ func handleMaintenance(task: BGProcessingTask) {
 ```
 
 **Key points**:
+
 - Set `requiresExternalPower = true` for CPU-intensive work (prevents battery drain)
 - Save progress incrementally — task may be interrupted
 - Work may never run if user doesn't charge device
@@ -390,6 +400,7 @@ struct MyApp: App {
 ```
 
 **SwiftUI advantages**:
+
 - Implicit task completion when closure returns (no `setTaskCompleted` needed)
 - Native Swift Concurrency support
 - Task automatically cancelled on expiration
@@ -461,6 +472,7 @@ func handleExport(task: BGContinuedProcessingTask) {
 ```
 
 **Key points**:
+
 - Dynamic registration (when user acts, not at launch)
 - Progress reporting is MANDATORY — tasks with no updates auto-expire
 - User can monitor and cancel from system UI
@@ -498,6 +510,7 @@ func applicationDidEnterBackground(_ application: UIApplication) {
 ```
 
 **Key points**:
+
 - Call `endBackgroundTask` AS SOON as work completes (not just in expiration handler)
 - Failing to end task may cause system to terminate your app and impact future launches
 - ~30 seconds max, not guaranteed
@@ -557,6 +570,7 @@ func urlSession(_ session: URLSession,
 ```
 
 **Key points**:
+
 - Work handed off to system daemon (`nsurlsessiond`) — continues after app termination
 - `isDiscretionary = true` for non-urgent (system waits for WiFi, charging)
 - Must handle `handleEventsForBackgroundURLSession` for app relaunch
@@ -600,6 +614,7 @@ func application(_ application: UIApplication,
 ```
 
 **Key points**:
+
 - Silent pushes are rate-limited — don't expect launch on every push
 - System coalesces multiple pushes (14 pushes may result in 7 launches)
 - Budget depletes with each launch and refills throughout day
@@ -649,6 +664,7 @@ func fetchAndProcessData() async throws {
 ```
 
 **Key points**:
+
 - `withTaskCancellationHandler` handles cancellation while task is suspended
 - `Task.checkCancellation()` throws `CancellationError` if cancelled
 - `Task.isCancelled` for non-throwing check
@@ -778,17 +794,20 @@ case .restricted:
 **The temptation**: "Polling is simpler than push notifications. We need real-time updates."
 
 **The reality**:
+
 - iOS will NOT give you 30-second background intervals
 - BGAppRefreshTask runs based on USER behavior patterns, not your schedule
 - If user rarely opens app, task may run once per day or less
 - Polling burns budget quickly — fewer total launches
 
 **Time cost comparison**:
+
 - Implement polling: 30 minutes (won't work as expected)
 - Understand why it doesn't work: 2-4 hours debugging
 - Implement proper push notifications: 3-4 hours
 
 **What actually works**:
+
 - Silent push notifications (server triggers, not polling)
 - BGAppRefreshTask for predicted user behavior (not real-time)
 - BGProcessingTask for deferrable work (overnight)
@@ -802,12 +821,14 @@ case .restricted:
 **The temptation**: "I'll just use beginBackgroundTask and do all my work."
 
 **The reality**:
+
 - beginBackgroundTask: ~30 seconds max
 - BGAppRefreshTask: ~30 seconds
 - BGProcessingTask: Several minutes, but only when charging
 - No API gives you guaranteed 5-minute foreground-quality runtime
 
 **What actually works**:
+
 1. **Chunk your work** — Break into 30-second pieces, save progress
 2. **Use BGProcessingTask** with `requiresExternalPower = true` (runs overnight)
 3. **iOS 26+**: Use BGContinuedProcessingTask for user-initiated work
@@ -823,6 +844,7 @@ case .restricted:
 **The reality**: Debug builds with Xcode attached behave differently than release builds in the wild.
 
 **Common causes**:
+
 1. **Low Power Mode enabled** — limits background activity
 2. **Background App Refresh disabled** — user or parental controls
 3. **App swiped away** — kills all background tasks
@@ -830,6 +852,7 @@ case .restricted:
 5. **Rarely used app** — system deprioritizes
 
 **Debugging steps**:
+
 1. Check `backgroundRefreshStatus` at launch, log it
 2. Log when tasks are scheduled and completed
 3. Use MetricKit to monitor background launches in production
@@ -844,17 +867,20 @@ case .restricted:
 **The temptation**: "Background work is a nice-to-have feature."
 
 **The reality**:
+
 - Users expect content to be fresh when they open the app
 - Competing apps that refresh in background feel more responsive
 - Adding background tasks later requires careful registration timing
 - First impression of stale content drives retention
 
 **Time cost comparison**:
+
 - Add BGAppRefreshTask now: 1-2 hours
 - Retrofit later with proper testing: 4-6 hours
 - Debug "why doesn't it work" issues: Additional hours
 
 **Minimum viable background**:
+
 ```swift
 // In didFinishLaunchingWithOptions
 BGTaskScheduler.shared.register(
@@ -877,6 +903,7 @@ BGTaskScheduler.shared.register(
 **Symptom**: `submit()` succeeds but handler never called.
 
 **Diagnosis**:
+
 ```swift
 // Code uses:
 BGTaskScheduler.shared.register(
@@ -899,6 +926,7 @@ BGTaskScheduler.shared.register(
 **Symptom**: Handler runs, work appears to complete, but next scheduled task never runs.
 
 **Diagnosis**:
+
 ```swift
 func handleRefresh(task: BGAppRefreshTask) {
     fetchData { result in
@@ -929,6 +957,7 @@ case .failure:
 **Symptom**: Users report background sync doesn't work. Developer can't reproduce.
 
 **Diagnosis**:
+
 ```
 User: "I close my apps every night to save battery."
 Developer: "How do you close them?"
@@ -938,6 +967,7 @@ User: "Swipe up in the app switcher."
 **Reality**: Swiping away from App Switcher = force quit = no background tasks until user opens app again.
 
 **Fix**:
+
 1. Educate users (not ideal)
 2. Accept this is iOS behavior
 3. Ensure good first-launch experience when app reopens
@@ -951,6 +981,7 @@ User: "Swipe up in the app switcher."
 **Diagnosis**: User has phone plugged in at night, but task has `requiresExternalPower = true` and user uses wireless charger.
 
 Wait, that's not the issue. Real issue:
+
 ```swift
 let request = BGProcessingTaskRequest(identifier: "com.app.maintenance")
 // Missing: request.requiresExternalPower = true

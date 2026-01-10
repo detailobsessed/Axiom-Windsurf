@@ -17,6 +17,7 @@ Foundation Models issues manifest as context window exceeded errors, guardrail v
 ## Red Flags — Suspect Foundation Models Issue
 
 If you see ANY of these, suspect a Foundation Models misunderstanding, not framework breakage:
+
 - Generation takes >5 seconds
 - Error: `exceededContextWindowSize`
 - Error: `guardrailViolation`
@@ -98,6 +99,7 @@ for entry in session.transcript.entries {
 ```
 
 #### What this tells you
+
 - **Unavailable** → Proceed to Pattern 1a/1b/1c (availability issues)
 - **Context exceeded** → Proceed to Pattern 2a (token limit)
 - **Guardrail error** → Proceed to Pattern 2b (content policy)
@@ -119,6 +121,7 @@ Before changing ANY code, identify ONE of these:
 7. If UI frozen → Calling on main thread (use Task {})
 
 #### If diagnostics are contradictory or unclear
+
 - STOP. Do NOT proceed to patterns yet
 - Add detailed logging to every `respond()` call
 - Run with Instruments Foundation Models template
@@ -184,10 +187,12 @@ Foundation Models problem?
 ### Pattern 1a: Device Not Capable
 
 **Symptom**:
+
 - `SystemLanguageModel.default.availability = .unavailable`
 - Reason: Device not Apple Intelligence-capable
 
 **Diagnosis**:
+
 ```swift
 let availability = SystemLanguageModel.default.availability
 
@@ -201,6 +206,7 @@ case .unavailable(let reason):
 ```
 
 **Fix**:
+
 ```swift
 // ❌ BAD - No availability UI
 let session = LanguageModelSession() // Crashes on unsupported devices
@@ -234,15 +240,18 @@ struct AIFeatureView: View {
 ### Pattern 1b: Regional Availability
 
 **Symptom**:
+
 - Feature works for some users, not others
 - .unavailable due to region restrictions
 
 **Diagnosis**:
 Foundation Models requires:
+
 - Supported region (e.g., US, UK, Australia initially)
 - May expand over time
 
 **Fix**:
+
 ```swift
 // ✅ GOOD - Clear messaging
 switch SystemLanguageModel.default.availability {
@@ -262,6 +271,7 @@ case .unavailable(let reason):
 ### Pattern 1c: User Not Opted In
 
 **Symptom**:
+
 - Device capable, region supported
 - Still .unavailable
 
@@ -269,6 +279,7 @@ case .unavailable(let reason):
 User must opt in to Apple Intelligence in Settings
 
 **Fix**:
+
 ```swift
 // ✅ GOOD - Direct user to settings
 switch SystemLanguageModel.default.availability {
@@ -294,16 +305,19 @@ case .unavailable:
 ### Pattern 2a: Context Window Exceeded
 
 **Symptom**:
+
 ```
 Error: LanguageModelSession.GenerationError.exceededContextWindowSize
 ```
 
 **Diagnosis**:
+
 - 4096 token limit (input + output)
 - Long conversations accumulate tokens
 - Verbose prompts eat into limit
 
 **Fix**:
+
 ```swift
 // ❌ BAD - Unhandled error
 let response = try await session.respond(to: prompt)
@@ -342,16 +356,19 @@ func condensedSession(from previous: LanguageModelSession) -> LanguageModelSessi
 ### Pattern 2b: Guardrail Violation
 
 **Symptom**:
+
 ```
 Error: LanguageModelSession.GenerationError.guardrailViolation
 ```
 
 **Diagnosis**:
+
 - User input triggered content policy
 - Violence, hate speech, illegal activities
 - Model refuses to generate
 
 **Fix**:
+
 ```swift
 // ✅ GOOD - Graceful handling
 do {
@@ -371,6 +388,7 @@ do {
 ### Pattern 2c: Unsupported Language
 
 **Symptom**:
+
 ```
 Error: LanguageModelSession.GenerationError.unsupportedLanguageOrLocale
 ```
@@ -379,6 +397,7 @@ Error: LanguageModelSession.GenerationError.unsupportedLanguageOrLocale
 User input in language model doesn't support
 
 **Fix**:
+
 ```swift
 // ❌ BAD - No language check
 let response = try await session.respond(to: userInput)
@@ -411,6 +430,7 @@ do {
 Unknown error types
 
 **Fix**:
+
 ```swift
 // ✅ GOOD - Comprehensive error handling
 do {
@@ -439,6 +459,7 @@ do {
 ### Pattern 3a: Hallucinated Output (Wrong Use Case)
 
 **Symptom**:
+
 - Model gives factually incorrect answers
 - Makes up information
 
@@ -446,6 +467,7 @@ do {
 Using model for world knowledge (wrong use case)
 
 **Fix**:
+
 ```swift
 // ❌ BAD - Wrong use case
 let prompt = "Who is the president of France?"
@@ -484,6 +506,7 @@ struct GetFactTool: Tool {
 ### Pattern 3b: Wrong Structure (Not Using @Generable)
 
 **Symptom**:
+
 - Parsing errors
 - Invalid JSON
 - Wrong keys
@@ -492,6 +515,7 @@ struct GetFactTool: Tool {
 Manual JSON parsing instead of @Generable
 
 **Fix**:
+
 ```swift
 // ❌ BAD - Manual parsing
 let prompt = "Generate person as JSON"
@@ -520,6 +544,7 @@ let response = try await session.respond(
 ### Pattern 3c: Missing Data (Need Tool)
 
 **Symptom**:
+
 - Model doesn't have required information
 - Output is vague or generic
 
@@ -527,6 +552,7 @@ let response = try await session.respond(
 Need external data (weather, locations, contacts)
 
 **Fix**:
+
 ```swift
 // ❌ BAD - No external data
 let response = try await session.respond(
@@ -565,6 +591,7 @@ let response = try await session.respond(to: "What's the weather in Tokyo?")
 ### Pattern 3d: Inconsistent Output (Sampling)
 
 **Symptom**:
+
 - Different output every time for same prompt
 - Need consistent results for testing
 
@@ -572,6 +599,7 @@ let response = try await session.respond(to: "What's the weather in Tokyo?")
 Random sampling (default behavior)
 
 **Fix**:
+
 ```swift
 // Default: Random sampling
 let response1 = try await session.respond(to: "Write a haiku")
@@ -607,6 +635,7 @@ let response = try await session.respond(
 ### Pattern 4a: Initial Latency (Prewarm)
 
 **Symptom**:
+
 - First generation takes 1-2 seconds to start
 - Subsequent requests faster
 
@@ -614,6 +643,7 @@ let response = try await session.respond(
 Model loading time
 
 **Fix**:
+
 ```swift
 // ❌ BAD - Load on user interaction
 Button("Generate") {
@@ -653,6 +683,7 @@ class ViewModel: ObservableObject {
 ### Pattern 4b: Long Generation (Streaming)
 
 **Symptom**:
+
 - User waits 3-5 seconds seeing nothing
 - Then entire result appears at once
 
@@ -660,6 +691,7 @@ class ViewModel: ObservableObject {
 Not streaming long generations
 
 **Fix**:
+
 ```swift
 // ❌ BAD - No streaming
 let response = try await session.respond(
@@ -695,12 +727,14 @@ for try await partial in stream {
 ### Pattern 4c: Large Schema Overhead
 
 **Symptom**:
+
 - Subsequent requests with same @Generable type slow
 
 **Diagnosis**:
 Schema re-inserted into prompt every time
 
 **Fix**:
+
 ```swift
 // First request - schema inserted automatically
 let first = try await session.respond(
@@ -724,6 +758,7 @@ let second = try await session.respond(
 ### Pattern 4d: Complex Prompt (Break Down)
 
 **Symptom**:
+
 - Generation takes >5 seconds
 - Poor quality results
 
@@ -731,6 +766,7 @@ let second = try await session.respond(
 Prompt too complex for single generation
 
 **Fix**:
+
 ```swift
 // ❌ BAD - One massive prompt
 let prompt = """
@@ -763,6 +799,7 @@ for day in 1...7 {
 ### Pattern 5a: UI Frozen (Main Thread Blocking)
 
 **Symptom**:
+
 - App unresponsive during generation
 - UI freezes for seconds
 
@@ -770,6 +807,7 @@ for day in 1...7 {
 Calling `respond()` on main thread synchronously
 
 **Fix**:
+
 ```swift
 // ❌ BAD - Blocking main thread
 Button("Generate") {
@@ -803,12 +841,14 @@ Button("Generate") {
 ### Context
 
 **Situation**: You just launched an AI-powered feature using Foundation Models. Within 2 hours:
+
 - 20% of users report "AI feature doesn't work"
 - App Store reviews dropping: "New AI broken"
 - VP of Product emailing: "What's the ETA on fix?"
 - Engineering manager: "Should we roll back?"
 
 **Pressure Signals**:
+
 - 🚨 **Revenue impact**: Feature is key selling point for new app version
 - ⏰ **Time pressure**: "Fix it NOW"
 - 👔 **Executive visibility**: VP watching
@@ -884,6 +924,7 @@ case .unavailable(let reason):
 #### Phase 3: Device Requirements (5 minutes)
 
 Verify:
+
 - Apple Intelligence requires iPhone 15 Pro or later
 - Or iPad with M1+ chip
 - Or Mac with Apple silicon
@@ -946,6 +987,7 @@ struct AIFeatureView: View {
 ### Communication Template
 
 **To VP of Product (immediate)**:
+
 ```
 Root cause identified:
 
@@ -967,6 +1009,7 @@ Impact mitigation:
 ```
 
 **To Engineering Team**:
+
 ```
 Post-mortem items:
 1. Add availability check to launch checklist
@@ -1014,10 +1057,12 @@ Post-mortem items:
 ## Cross-References
 
 **Related Axiom Skills**:
+
 - `axiom-foundation-models` — Discipline skill for anti-patterns, proper usage patterns, pressure scenarios
 - `axiom-foundation-models-ref` — Complete API reference with all WWDC 2025 code examples
 
 **Apple Resources**:
+
 - Foundation Models Framework Documentation
 - WWDC 2025-286: Meet the Foundation Models framework
 - WWDC 2025-301: Deep dive into the Foundation Models framework

@@ -17,6 +17,7 @@ Take a screenshot of the currently booted iOS Simulator and display it for analy
 ## Usage
 
 Simply run this command and Claude will:
+
 - Execute: `xcrun simctl io booted screenshot /tmp/axiom-screenshot-<timestamp>.png`
 - Read and display the screenshot
 - Analyze what's visible in the screenshot
@@ -29,31 +30,39 @@ Simply run this command and Claude will:
 ## Common Use Cases
 
 **Debug Visual Issues**:
+
 ```bash
 /axiom:screenshot
 ```
+
 Then ask: "Does the login button look centered?"
 
 **Verify Fixes**:
+
 ```bash
 /axiom:screenshot
 ```
+
 Then ask: "Is the text still clipped?"
 
 **Document Current State**:
+
 ```bash
 /axiom:screenshot
 ```
+
 Claude will capture and describe the current UI state.
 
 ## For More Control
 
 For advanced simulator testing (location, push notifications, video recording, etc.), use:
+
 ```bash
 /axiom:test-simulator
 ```
 
 Or invoke the full simulator-tester agent with natural language:
+
 - "Test my app with location simulation"
 - "Send a test push notification"
 - "Record a video of the app"

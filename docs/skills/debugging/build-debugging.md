@@ -11,6 +11,7 @@ Dependency resolution and build configuration debugging for iOS projects. Covers
 ## When to Use This Skill
 
 Use this skill when you're:
+
 - Getting "No such module" after adding a Swift Package
 - Seeing "Multiple commands produce" the same output file
 - Build works on one machine but fails on another
@@ -33,24 +34,28 @@ Questions you can ask Claude that will draw from this skill:
 ## What's Covered
 
 ### Swift Package Manager Issues
+
 - "No such module" after adding package
 - SPM resolution hangs or times out
 - Package cache clearing (DerivedData + SPM cache)
 - FRAMEWORK_SEARCH_PATHS diagnostics
 
 ### CocoaPods Issues
+
 - Podfile.lock conflicts
 - Post-install build failures
 - Linking errors
 - Version constraint debugging
 
 ### Build Configuration Issues
+
 - "Multiple commands produce" (duplicate target membership)
 - Framework search path issues
 - Environment-specific paths
 - CI vs local differences
 
 ### Resolution Strategies
+
 - Dependency graph analysis
 - Version constraint resolution
 - Reproducible build strategies

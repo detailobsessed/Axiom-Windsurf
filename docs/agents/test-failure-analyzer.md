@@ -5,6 +5,7 @@ Diagnoses WHY tests fail, especially intermittent/flaky failures in Swift Testin
 ## How to Use This Agent
 
 **Natural language (automatic triggering):**
+
 - "My tests fail randomly in CI"
 - "This test passes locally but fails in CI"
 - "I have a flaky test that fails 20% of the time"
@@ -12,6 +13,7 @@ Diagnoses WHY tests fail, especially intermittent/flaky failures in Swift Testin
 - "Test passes individually, fails when run with others"
 
 **Explicit command:**
+
 ```bash
 /axiom:audit test-failures
 ```
@@ -19,18 +21,22 @@ Diagnoses WHY tests fail, especially intermittent/flaky failures in Swift Testin
 ## What It Checks
 
 ### Critical (Will Cause Intermittent Failures)
+
 - **Missing `await confirmation`** — Async callback without proper waiting
 - **Missing `@MainActor`** — Data races when accessing UI types in Swift 6
 
 ### High Priority (Parallel Execution Failures)
+
 - **Shared mutable state** — `static var` in test suites causing race conditions
 - **Order-dependent tests** — Tests that only pass in specific order
 
 ### Medium Priority (Timing Issues)
+
 - **`Task.sleep` in assertions** — Arbitrary waits that fail in CI
 - **Missing `.serialized` trait** — Tests with shared resources run in parallel
 
 ### Low Priority (Edge Cases)
+
 - **Date comparisons** — Timezone/DST-dependent assertions
 
 ## Example Output
@@ -52,13 +58,16 @@ Diagnoses WHY tests fail, especially intermittent/flaky failures in Swift Testin
       #expect(user != nil)  // FLAKY!
   }
   ```
-  - **Root cause**: Test completes before async callback
-  - **Fix**: Wrap in `await confirmation { ... }`
+
+- **Root cause**: Test completes before async callback
+- **Fix**: Wrap in `await confirmation { ... }`
 
 ### HIGH: Shared Mutable State
+
 - `Tests/CacheTests.swift:12` - `static var testCache`
   - **Root cause**: Parallel tests mutate same collection
   - **Fix**: Use instance property instead
+
 ```
 
 ## Verification

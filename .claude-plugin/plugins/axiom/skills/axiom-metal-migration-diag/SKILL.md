@@ -14,6 +14,7 @@ Systematic diagnosis for common Metal porting issues.
 ## When to Use This Diagnostic Skill
 
 Use this skill when:
+
 - Screen is black after porting to Metal
 - Shaders fail to compile in Metal
 - Colors or coordinates are wrong
@@ -80,6 +81,7 @@ Black screen after porting
 ### Common Fixes
 
 **Missing Drawable**:
+
 ```swift
 // BAD: Drawing before view is ready
 override func viewDidLoad() {
@@ -94,6 +96,7 @@ func draw(in view: MTKView) {
 ```
 
 **Wrong Function Names**:
+
 ```swift
 // BAD: Function name doesn't match .metal file
 descriptor.vertexFunction = library.makeFunction(name: "vertexMain")
@@ -104,6 +107,7 @@ descriptor.vertexFunction = library.makeFunction(name: "vertexShader")
 ```
 
 **Missing Resource Binding**:
+
 ```swift
 // BAD: Assumed state persists like OpenGL
 encoder.setRenderPipelineState(pso)
@@ -408,6 +412,7 @@ Xcode → Debug → Capture GPU Frame (Cmd+Opt+Shift+G)
 ```
 
 **Use for**:
+
 - Inspecting buffer contents
 - Viewing intermediate textures
 - Checking draw call sequence
@@ -421,6 +426,7 @@ Instruments → Metal System Trace template
 ```
 
 **Use for**:
+
 - GPU/CPU timeline analysis
 - Finding synchronization stalls
 - Measuring encoder/buffer overhead
@@ -433,6 +439,7 @@ GPU Frame Capture → Select draw call → Debug button
 ```
 
 **Use for**:
+
 - Step through shader execution
 - Inspect variable values per pixel/vertex
 - Find logic errors in shaders
@@ -440,6 +447,7 @@ GPU Frame Capture → Select draw call → Debug button
 ### Validation Messages
 
 Most validation messages include:
+
 - What went wrong
 - Which resource/state
 - What the expected value was

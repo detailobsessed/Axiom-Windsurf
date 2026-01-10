@@ -15,6 +15,7 @@ related: [cloudkit-ref, axiom-icloud-drive-ref, axiom-cloud-sync-diag, axiom-sto
 **Core principle**: Choose the right sync technology for the data shape, then implement offline-first patterns that handle network failures gracefully.
 
 Two fundamentally different sync approaches:
+
 - **CloudKit** — Structured data (records with fields and relationships)
 - **iCloud Drive** — File-based data (documents, images, any file format)
 
@@ -173,6 +174,7 @@ let container = try ModelContainer(for: Note.self)
 ```
 
 **Limitations**:
+
 - Private database only (no public/shared)
 - Automatic sync (less control over timing)
 - No custom conflict resolution

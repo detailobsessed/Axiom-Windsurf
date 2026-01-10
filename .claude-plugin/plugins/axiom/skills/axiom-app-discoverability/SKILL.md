@@ -20,6 +20,7 @@ iOS surfaces apps in Spotlight, Siri suggestions, and system experiences based o
 ## When to Use This Skill
 
 Use this skill when:
+
 - Making your app appear in Spotlight search results
 - Enabling Siri to suggest your app in relevant contexts
 - Adding app actions to Action Button (iPhone/Apple Watch Ultra)
@@ -28,6 +29,7 @@ Use this skill when:
 - Troubleshooting "why isn't my app being suggested?"
 
 Do NOT use this skill when:
+
 - You need detailed API reference (use app-intents-ref, axiom-app-shortcuts-ref, axiom-core-spotlight-ref)
 - You're implementing a specific API (use the reference skills)
 - You just want to add a single App Intent (use app-intents-ref)
@@ -174,12 +176,14 @@ See: **core-spotlight-ref** for eligibility patterns and activity continuation
 Clear descriptions and titles are critical because **Spotlight displays them directly.**
 
 #### ❌ DON'T: Generic or unclear
+
 ```swift
 static var title: LocalizedStringResource = "Do Thing"
 static var description = IntentDescription("Performs action")
 ```
 
 #### ✅ DO: Specific, action-oriented
+
 ```swift
 static var title: LocalizedStringResource = "Order Coffee"
 static var description = IntentDescription("Orders coffee for pickup")
@@ -203,6 +207,7 @@ static var parameterSummary: some ParameterSummary {
 **The system boosts shortcuts and activities that users actually invoke. If nobody uses an intent, the system hides it.**
 
 This is automatic—you don't control it. What you control:
+
 1. **Discoverability** — Make it easy to find (Steps 1-5)
 2. **Utility** — Make it worth using (design good intents)
 3. **Promotion** — Show users available shortcuts (SiriTipView)
@@ -263,6 +268,7 @@ See: **app-shortcuts-ref** for SiriTipView and ShortcutsLink patterns
 For minimal viable discoverability:
 
 ### 1. Define 1-3 Core App Intents (30 minutes)
+
 ```swift
 // Your app's most valuable actions
 struct OrderCoffeeIntent: AppIntent { /* ... */ }
@@ -271,6 +277,7 @@ struct ViewOrdersIntent: AppIntent { /* ... */ }
 ```
 
 ### 2. Create AppShortcutsProvider (15 minutes)
+
 ```swift
 struct CoffeeAppShortcuts: AppShortcutsProvider {
     @AppShortcutsBuilder
@@ -287,6 +294,7 @@ struct CoffeeAppShortcuts: AppShortcutsProvider {
 ```
 
 ### 3. Index Top-Level Content (30 minutes)
+
 ```swift
 // Index most recent/important content only
 func indexRecentOrders() {
@@ -297,6 +305,7 @@ func indexRecentOrders() {
 ```
 
 ### 4. Add NSUserActivity to Detail Screens (30 minutes)
+
 ```swift
 // In your detail view controllers/views
 let activity = NSUserActivity(activityType: "com.app.viewOrder")
@@ -306,6 +315,7 @@ self.userActivity = activity
 ```
 
 ### 5. Test in Spotlight and Shortcuts (15 minutes)
+
 - Open Shortcuts app → Search for your app → Verify shortcuts appear
 - Search Spotlight → Search for your content → Verify results
 - Invoke Siri → "Order coffee in [YourApp]" → Verify works
@@ -413,12 +423,14 @@ activity.appEntityIdentifier = order.id.uuidString
 When reviewing discoverability implementation, verify:
 
 **App Intents:**
+
 - [ ] Intents have clear, action-oriented titles
 - [ ] Descriptions explain what the intent does
 - [ ] Parameter summaries use natural language phrasing
 - [ ] `isDiscoverable = true` for public intents
 
 **App Shortcuts:**
+
 - [ ] AppShortcutsProvider is implemented
 - [ ] Suggested phrases include `\(.applicationName)`
 - [ ] Phrases are short and action-oriented
@@ -426,6 +438,7 @@ When reviewing discoverability implementation, verify:
 - [ ] 3-5 core shortcuts defined (not too many)
 
 **Core Spotlight:**
+
 - [ ] Only valuable content is indexed (not everything)
 - [ ] Unique identifiers are stable and persistent
 - [ ] Domain identifiers group related content
@@ -433,6 +446,7 @@ When reviewing discoverability implementation, verify:
 - [ ] Deletion logic exists (when content removed)
 
 **NSUserActivity:**
+
 - [ ] Only high-value screens marked eligible
 - [ ] `becomeCurrent()` called when screen appears
 - [ ] `resignCurrent()` called when screen disappears
@@ -440,11 +454,13 @@ When reviewing discoverability implementation, verify:
 - [ ] `contentAttributeSet` provides rich metadata
 
 **User Education:**
+
 - [ ] SiriTipView used to promote shortcuts
 - [ ] ShortcutsLink available in settings/help
 - [ ] Onboarding mentions Siri/Spotlight support
 
 **Testing:**
+
 - [ ] Shortcuts appear in Shortcuts app
 - [ ] Siri recognizes suggested phrases
 - [ ] Spotlight returns app content

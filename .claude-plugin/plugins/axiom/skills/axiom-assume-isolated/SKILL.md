@@ -12,12 +12,14 @@ Synchronously access actor-isolated state when you **know** you're already on th
 ## When to Use
 
 ✅ **Use when:**
+
 - Testing MainActor code synchronously (avoiding Task overhead)
 - Legacy delegate callbacks documented to run on main thread
 - Performance-critical code avoiding async hop overhead
 - Protocol conformances where callbacks are guaranteed on specific actor
 
 ❌ **Don't use when:**
+
 - Uncertain about current isolation (use `await` instead)
 - Already in async context (you have isolation)
 - Cross-actor calls needed (use async)

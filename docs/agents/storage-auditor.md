@@ -5,6 +5,7 @@ Automatically scans for file storage mistakes: files in wrong locations, missing
 ## How to Use This Agent
 
 **Natural language (automatic triggering):**
+
 - "Check my file storage usage"
 - "Audit my app for storage issues"
 - "My app backup is too large"
@@ -12,6 +13,7 @@ Automatically scans for file storage mistakes: files in wrong locations, missing
 - "Review my file management code"
 
 **Explicit command:**
+
 ```bash
 /axiom:audit-storage
 ```

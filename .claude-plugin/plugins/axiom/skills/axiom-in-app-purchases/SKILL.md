@@ -16,6 +16,7 @@ version: 1.0
 ## When to Use This Skill
 
 ✅ **Use this skill when**:
+
 - Implementing any in-app purchase functionality (new or existing)
 - Adding consumable products (coins, hints, boosts)
 - Adding non-consumable products (premium features, level packs)
@@ -28,6 +29,7 @@ version: 1.0
 - Family Sharing support
 
 ❌ **Do NOT use this skill for**:
+
 - StoreKit 1 (legacy API) - this skill focuses on StoreKit 2
 - App Store Connect product configuration (separate documentation)
 - Pricing strategy or business model decisions
@@ -43,6 +45,7 @@ If you wrote purchase code before creating `.storekit` configuration, you have t
 Delete all IAP code and follow the testing-first workflow below. This reinforces correct habits and ensures you experience the full benefit of .storekit-first development.
 
 **Why this is best**:
+
 - Validates that you understand the workflow
 - Catches product ID issues you might have missed
 - Builds muscle memory for future IAP implementations
@@ -53,6 +56,7 @@ Delete all IAP code and follow the testing-first workflow below. This reinforces
 Create the `.storekit` file now with your existing product IDs. Test everything works locally. Document in your PR that you tested in sandbox first.
 
 **Trade-offs**:
+
 - ✅ Keeps working code
 - ✅ Adds local testing capability
 - ❌ Misses product ID validation benefit
@@ -66,6 +70,7 @@ Create the `.storekit` file now with your existing product IDs. Test everything 
 Commit without `.storekit` configuration, test only in sandbox.
 
 **Why this is problematic**:
+
 - Teammates can't test purchases locally
 - No validation of product IDs before runtime
 - Harder iteration (requires App Store Connect)
@@ -84,16 +89,19 @@ Commit without `.storekit` configuration, test only in sandbox.
 The recommended workflow is to create `.storekit` configuration before writing any purchase code. This isn't arbitrary - it provides concrete benefits:
 
 **Immediate product ID validation**:
+
 - Typos caught in Xcode, not at runtime
 - Product configuration visible in project
 - No App Store Connect dependency for testing
 
 **Faster iteration**:
+
 - Test purchases in simulator instantly
 - No network requests during development
 - Accelerated subscription renewal for testing
 
 **Team benefits**:
+
 - Anyone can test purchase flows locally
 - Product catalog documented in code
 - Code review includes purchase testing
@@ -117,6 +125,7 @@ StoreKit Config → Local Testing → Production Code → Unit Tests → Sandbox
 ```
 
 **Why this order helps**:
+
 1. **StoreKit Config First**: Defines products without App Store Connect dependency
 2. **Local Testing**: Validates product IDs and purchase flows immediately
 3. **Production Code**: Implements against validated product configuration
@@ -124,6 +133,7 @@ StoreKit Config → Local Testing → Production Code → Unit Tests → Sandbox
 5. **Sandbox Testing**: Final validation in App Store environment
 
 **Benefits of following this workflow**:
+
 - Product IDs validated before writing code
 - Faster development iteration
 - Easier team collaboration
@@ -136,6 +146,7 @@ StoreKit Config → Local Testing → Production Code → Unit Tests → Sandbox
 Before marking IAP implementation complete, **ALL** items must be verified:
 
 ### Phase 1: Testing Foundation
+
 - [ ] Created `.storekit` configuration file with all products
 - [ ] Verified each product type renders correctly in StoreKit preview
 - [ ] Tested successful purchase flow for each product in Xcode
@@ -144,6 +155,7 @@ Before marking IAP implementation complete, **ALL** items must be verified:
 - [ ] For subscriptions: tested renewal, expiration, and upgrade/downgrade
 
 ### Phase 2: Architecture
+
 - [ ] Centralized StoreManager class exists (single source of truth)
 - [ ] StoreManager is ObservableObject (SwiftUI) or uses NotificationCenter
 - [ ] Transaction observer listens for updates via `Transaction.updates`
@@ -152,6 +164,7 @@ Before marking IAP implementation complete, **ALL** items must be verified:
 - [ ] Product loading happens at app launch or before displaying store
 
 ### Phase 3: Purchase Flow
+
 - [ ] Purchase uses new `purchase(confirmIn:options:)` with UI context (iOS 18.2+)
 - [ ] Purchase handles all `PurchaseResult` cases (success, userCancelled, pending)
 - [ ] Purchase verifies transaction signature before granting entitlement
@@ -159,6 +172,7 @@ Before marking IAP implementation complete, **ALL** items must be verified:
 - [ ] appAccountToken set for all purchases (if using server backend)
 
 ### Phase 4: Subscription Management (if applicable)
+
 - [ ] Subscription status tracked via `Product.SubscriptionInfo.Status`
 - [ ] Current entitlements checked via `Transaction.currentEntitlements(for:)`
 - [ ] Renewal info accessed for expiration, renewal date, offer status
@@ -167,6 +181,7 @@ Before marking IAP implementation complete, **ALL** items must be verified:
 - [ ] Grace period and billing retry states handled
 
 ### Phase 5: Restore & Sync
+
 - [ ] Restore purchases implemented (required by App Store Review)
 - [ ] Restore uses `Transaction.currentEntitlements` or `Transaction.all`
 - [ ] Family Sharing transactions identified (if supported)
@@ -174,6 +189,7 @@ Before marking IAP implementation complete, **ALL** items must be verified:
 - [ ] Cross-device entitlement sync tested
 
 ### Phase 6: Error Handling
+
 - [ ] Network errors handled gracefully (retries, user messaging)
 - [ ] Invalid product IDs detected and logged
 - [ ] Purchase failures show user-friendly error messages
@@ -181,6 +197,7 @@ Before marking IAP implementation complete, **ALL** items must be verified:
 - [ ] Refund notifications handled (via App Store Server Notifications)
 
 ### Phase 7: Testing & Validation
+
 - [ ] Unit tests verify purchase logic with mocked Product/Transaction
 - [ ] Unit tests verify subscription status determination
 - [ ] Integration tests with StoreKit configuration pass
@@ -204,6 +221,7 @@ Before marking IAP implementation complete, **ALL** items must be verified:
 Click "+" and add each product type:
 
 #### Consumable
+
 ```
 Product ID: com.yourapp.coins_100
 Reference Name: 100 Coins
@@ -211,6 +229,7 @@ Price: $0.99
 ```
 
 #### Non-Consumable
+
 ```
 Product ID: com.yourapp.premium
 Reference Name: Premium Upgrade
@@ -218,6 +237,7 @@ Price: $4.99
 ```
 
 #### Auto-Renewable Subscription
+
 ```
 Product ID: com.yourapp.pro_monthly
 Reference Name: Pro Monthly
@@ -449,6 +469,7 @@ func handleTransaction(_ result: VerificationResult<Transaction>) async {
 ```
 
 **Why verify**: Prevents granting entitlements for:
+
 - Fraudulent receipts
 - Jailbroken device receipts
 - Man-in-the-middle attacks
@@ -760,6 +781,7 @@ let result = try await product.purchase(confirmIn: scene)
 **If you're in this situation**: See "Already Wrote Code Before Creating .storekit Config?" section above for your options (A, B, or C).
 
 **Why .storekit-first is better**:
+
 - Product ID typos caught in Xcode, not at runtime
 - Faster iteration without network requests
 - Teammates can test locally

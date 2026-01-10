@@ -12,6 +12,7 @@ Comprehensive API reference for SwiftUI animation. Covers VectorArithmetic, Anim
 ## When to Use This Reference
 
 Use this reference when you need:
+
 - Understanding VectorArithmetic and Animatable requirements
 - @Animatable macro usage (iOS 26+)
 - Animation type options (spring, timing curves)
@@ -35,43 +36,51 @@ Questions you can ask Claude that will draw from this reference:
 ## What's Covered
 
 ### VectorArithmetic Protocol
+
 - Required operations for interpolation
 - Built-in conforming types (CGFloat, Double, CGPoint, etc.)
 - Why Int can't be animated
 - Creating custom animatable types
 
 ### Animatable Protocol (iOS 13+)
+
 - animatableData property requirement
 - AnimatablePair for multiple values
 - Manual conformance patterns
 
 ### @Animatable Macro (iOS 26+)
+
 - Automatic animatableData synthesis
 - @AnimatableIgnored for excluded properties
 - When to use macro vs manual conformance
 
 ### Animation Types
+
 - Spring animations (default since iOS 17)
 - Timing curves (linear, easeIn, easeOut, easeInOut)
 - Custom timing with UnitCurve
 - Higher-order animations (repeatForever, delay)
 
 ### Transaction System
+
 - withAnimation and explicit animations
 - Scoped animations (iOS 17+)
 - Transaction customization
 
 ### Zoom Transitions (iOS 18+)
+
 - NavigationTransition.zoom
 - matchedTransitionSource modifier
 - Full-screen zoom presentations
 
 ### UIKit/AppKit Bridging (iOS 18+)
+
 - animate(with:) for UIView
 - Applying SwiftUI animation curves to UIKit
 - Gesture-driven animations
 
 ### Performance
+
 - Off-main-thread rendering
 - Complex shape optimization
 - When to use drawingGroup

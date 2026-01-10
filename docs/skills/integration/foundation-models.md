@@ -14,6 +14,7 @@ On-device AI patterns for iOS 26+ that prevent context overflow, UI blocking, wr
 ## When to Use This Skill
 
 Use this skill when:
+
 - Implementing on-device AI features
 - Using LanguageModelSession for text generation
 - Defining @Generable output types
@@ -23,6 +24,7 @@ Use this skill when:
 ## Anti-Patterns Prevented
 
 ### Manual JSON Parsing
+
 ```swift
 // ❌ WRONG: Manual JSON parsing
 let response = try await session.respond(to: "Return JSON...")
@@ -41,6 +43,7 @@ let result: MyType = try await session.respond(
 ```
 
 ### Blocking Main Thread
+
 ```swift
 // ❌ WRONG: Blocking UI
 let response = try await session.respond(to: longPrompt)
@@ -53,6 +56,7 @@ for try await partial in session.respond(to: prompt, stream: true) {
 ```
 
 ### One Giant Prompt
+
 ```swift
 // ❌ WRONG: Stuffing everything in one prompt
 let response = try await session.respond(
@@ -70,12 +74,14 @@ for chunk in chunks {
 ## Key Patterns
 
 ### Basic Generation
+
 ```swift
 let session = LanguageModelSession()
 let response = try await session.respond(to: "Your prompt")
 ```
 
 ### Structured Output
+
 ```swift
 @Generable
 struct Analysis {
@@ -92,6 +98,7 @@ let analysis: Analysis = try await session.respond(
 ```
 
 ### Streaming
+
 ```swift
 for try await partial in session.respond(to: prompt, stream: true) {
     updateUI(with: partial.content)
@@ -99,6 +106,7 @@ for try await partial in session.respond(to: prompt, stream: true) {
 ```
 
 ### Tool Calling
+
 ```swift
 @Tool
 struct SearchTool: Tool {
@@ -116,18 +124,22 @@ struct SearchTool: Tool {
 ## Pressure Scenarios
 
 ### ChatGPT API Pressure
+
 **Scenario**: Team wants to use ChatGPT API instead of Foundation Models
 
 **Response**:
+
 - Foundation Models: On-device, private, no API costs
 - ChatGPT: Requires network, data leaves device, ongoing costs
 - Foundation Models: Works offline
 - Use Foundation Models for privacy-sensitive features
 
 ### One Big Prompt Pressure
+
 **Scenario**: "Just put everything in one prompt"
 
 **Response**:
+
 - Context limits exist (check documentation)
 - Large prompts = slow generation
 - Chunking provides better results

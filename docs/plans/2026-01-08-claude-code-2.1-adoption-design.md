@@ -24,12 +24,14 @@ Adopt Claude Code 2.1 features to extend Axiom's router architecture, improving 
 **Context:** Supporting content files (CARPLAY.md, LEGACY.md, etc.) needed restructuring.
 
 **Options considered:**
+
 - Option B (references/ subdirectory): Standard plugin-dev pattern, Claude decides what to load
 - Option E (separate skills): Router decides before context consumed
 
 **Decision:** Option E (separate skills) + `user-invocable: false`
 
 **Rationale:**
+
 - Router decides BEFORE any context consumed (maximum efficiency)
 - `user-invocable: false` solves menu clutter that made this impractical before 2.1
 - Aligns with Axiom's proven router architecture
@@ -42,6 +44,7 @@ Adopt Claude Code 2.1 features to extend Axiom's router architecture, improving 
 **Decision:** Remove prompt hook, rely on command hook for error detection.
 
 **Rationale:**
+
 - Prompt hooks cause Claude to reason about every invocation (noisy)
 - Command hooks only output when patterns match (silent otherwise)
 - Command hook already covers build failure patterns
@@ -53,6 +56,7 @@ Adopt Claude Code 2.1 features to extend Axiom's router architecture, improving 
 **Decision:** Add PreToolUse hooks to agent frontmatter rather than global hooks.
 
 **Rationale:**
+
 - Safety warnings only fire within agent lifecycle
 - Reduces noise in normal development
 - Cleaner separation of concerns
@@ -69,6 +73,7 @@ Adopt Claude Code 2.1 features to extend Axiom's router architecture, improving 
 | `axiom-networking-migration` | MIGRATION.md | ios-networking |
 
 Each skill includes:
+
 ```yaml
 ---
 name: axiom-now-playing-carplay
@@ -80,6 +85,7 @@ user-invocable: false
 ### Phase 2: Inline REFERENCES.md Files (4 skills)
 
 Append as `## Resources` section to parent skills:
+
 - axiom-now-playing/REFERENCES.md → axiom-now-playing/SKILL.md
 - axiom-networking/REFERENCES.md → axiom-networking/SKILL.md
 - axiom-foundation-models/REFERENCES.md → axiom-foundation-models/SKILL.md
@@ -88,6 +94,7 @@ Append as `## Resources` section to parent skills:
 ### Phase 3: Add `user-invocable: false` (20 skills)
 
 **Diagnostic skills (15):**
+
 - axiom-accessibility-diag
 - axiom-background-processing-diag
 - axiom-camera-capture-diag
@@ -105,9 +112,11 @@ Append as `## Resources` section to parent skills:
 - axiom-vision-diag
 
 **Internal skill (1):**
+
 - axiom-using-axiom
 
 **New specialized skills (4):**
+
 - axiom-now-playing-carplay
 - axiom-now-playing-musickit
 - axiom-networking-legacy
@@ -116,6 +125,7 @@ Append as `## Resources` section to parent skills:
 ### Phase 4: Fix Hook Bug
 
 Remove lines 8-10 from `hooks.json`:
+
 ```diff
 - {
 -   "type": "prompt",

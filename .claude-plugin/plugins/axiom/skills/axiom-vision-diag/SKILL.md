@@ -15,6 +15,7 @@ Systematic troubleshooting for Vision framework issues: subjects not detected, m
 ## Overview
 
 **Core Principle**: When Vision doesn't work, the problem is usually:
+
 1. **Environment** (lighting, occlusion, edge of frame) - 40%
 2. **Confidence threshold** (ignoring low confidence data) - 30%
 3. **Threading** (blocking main thread causes frozen UI) - 15%
@@ -74,6 +75,7 @@ do {
 ```
 
 **Expected output**:
+
 - ✅ Request succeeded, instance count > 0 → Detection working
 - ⚠️ Request succeeded, instance count = 0 → Nothing detected (see Decision Tree)
 - ❌ Request failed → API availability issue
@@ -96,6 +98,7 @@ if let observation = request.results?.first as? VNHumanHandPoseObservation {
 ```
 
 **Expected output**:
+
 - Most landmarks > 0.5 confidence → Good detection
 - Many landmarks < 0.3 → Poor lighting, occlusion, or edge of frame
 
@@ -112,6 +115,7 @@ if Thread.isMainThread {
 ```
 
 **Expected output**:
+
 - ✅ Background thread → Correct
 - ❌ Main thread → Move to `DispatchQueue.global()`
 
@@ -170,6 +174,7 @@ Vision not working as expected?
 **Symptom**: `try handler.perform([request])` throws error
 
 **Common errors**:
+
 ```
 "VNGenerateForegroundInstanceMaskRequest is only available on iOS 17.0 or newer"
 "VNDetectHumanBodyPose3DRequest is only available on iOS 17.0 or newer"
@@ -211,6 +216,7 @@ UIImageWriteToSavedPhotosAlbum(debugImage, nil, nil, nil)
 ```
 
 **Common causes**:
+
 - Subject too small (resize or crop closer)
 - Subject too blurry (increase lighting, stabilize camera)
 - Low contrast (subject same color as background)
@@ -292,6 +298,7 @@ if let observation = request.results?.first as? VNHumanHandPoseObservation {
 ```
 
 **Common causes**:
+
 | Cause | Confidence Pattern | Fix |
 |-------|-------------------|-----|
 | Hand near edge | Tips have low confidence | Adjust framing |
@@ -337,6 +344,7 @@ if let observation = request.results?.first as? VNHumanBodyPoseObservation {
 ```
 
 **Common causes**:
+
 | Cause | Solution |
 |-------|----------|
 | Person bent over | Prompt user to stand upright |
@@ -368,6 +376,7 @@ if let faces = request.results as? [VNFaceObservation] {
 ```
 
 **Common causes**:
+
 - Face < 10% of image (crop closer)
 - Profile view (use face landmarks request instead)
 - Poor lighting (increase exposure)
@@ -920,11 +929,13 @@ func scaled(_ point: CGPoint, to size: CGSize) -> CGPoint {
 **Situation**: App Store review rejected for "app freezes when tapping analyze button"
 
 **Triage (5 min)**:
+
 1. Confirm Vision running on main thread → Pattern 5a
 2. Verify on older device (iPhone 12) → Freezes
 3. Check profiling: 800ms on main thread
 
 **Fix (15 min)**:
+
 ```swift
 @IBAction func analyzeTapped(_ sender: UIButton) {
     showLoadingIndicator()

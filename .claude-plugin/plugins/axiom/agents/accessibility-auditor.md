@@ -63,6 +63,7 @@ You are an expert at detecting accessibility violations that cause App Store rej
 ## Your Mission
 
 Run a comprehensive accessibility audit and report all issues with:
+
 - File:line references with confidence levels
 - WCAG compliance levels
 - Severity ratings (CRITICAL/HIGH/MEDIUM/LOW)
@@ -71,6 +72,7 @@ Run a comprehensive accessibility audit and report all issues with:
 ## Files to Exclude
 
 Skip these from audit (false positive sources):
+
 - `*Tests.swift` - Test files have different patterns
 - `*Previews.swift` - Preview providers are special cases
 - `*/Pods/*` - Third-party code
@@ -80,11 +82,13 @@ Skip these from audit (false positive sources):
 ## What You Check
 
 ### 1. VoiceOver Labels (CRITICAL - App Store Rejection Risk)
+
 - Missing `accessibilityLabel` on interactive elements
 - Generic labels like "Button" or "Image"
 - Images without labels or `.accessibilityHidden(true)`
 
 ### 2. Dynamic Type (HIGH - Major Usability Impact)
+
 - Fixed font sizes: `.font(.system(size: 17))` without `relativeTo:`
 - Hardcoded `UIFont.systemFont(ofSize:)` without scaling
 - Should use, in order of preference:
@@ -92,6 +96,7 @@ Skip these from audit (false positive sources):
   2. Scaled custom sizes: `.font(.system(size: 24).relativeTo(.title2))`
 
 ### 3. Custom Font Scaling (HIGH - Major Usability Impact)
+
 - Custom UIFont without UIFontMetrics scaling
 - SwiftUI `.custom()` without `relativeTo:` parameter
 - Should use:
@@ -99,25 +104,30 @@ Skip these from audit (false positive sources):
   - SwiftUI: `.custom("FontName", size: X, relativeTo: .body)`
 
 ### 4. Layout Scaling (MEDIUM - Moderate Usability Impact)
+
 - Fixed padding/spacing constants that don't scale with Dynamic Type
 - Should use:
   - SwiftUI: `@ScaledMetric(relativeTo: .body) var spacing: CGFloat = 20`
   - UIKit: `UIFontMetrics(forTextStyle: .body).scaledValue(for: 20.0)`
 
 ### 5. Color Contrast (HIGH)
+
 - Low contrast text/background combinations
 - Missing `.accessibilityDifferentiateWithoutColor`
 - Should meet WCAG 4.5:1 ratio for text, 3:1 for large text
 
 ### 6. Touch Target Sizes (MEDIUM)
+
 - Buttons/tappable areas smaller than 44x44pt
 - Violates WCAG 2.5.5 (Level AAA)
 
 ### 7. Reduce Motion Support (MEDIUM)
+
 - Animations without `UIAccessibility.isReduceMotionEnabled` checks
 - Users with vestibular disorders need this
 
 ### 8. Keyboard Navigation (MEDIUM - iPadOS/macOS)
+
 - Missing keyboard shortcuts
 - Non-focusable interactive elements
 
@@ -126,6 +136,7 @@ Skip these from audit (false positive sources):
 ### Step 1: Find All Swift Files
 
 Use Glob tool to find Swift files:
+
 - Pattern: `**/*.swift`
 
 ### Step 2: Search for Anti-Patterns
@@ -133,6 +144,7 @@ Use Glob tool to find Swift files:
 Run these grep searches:
 
 **Missing VoiceOver Labels**:
+
 ```bash
 # Images without labels (only custom images, not SF Symbols)
 grep -rn 'Image("' --include="*.swift" | grep -v "accessibilityLabel" | grep -v "accessibilityHidden"
@@ -150,6 +162,7 @@ grep -rn 'accessibilityLabel("Image")' --include="*.swift"
 ```
 
 **Fixed Font Sizes**:
+
 ```bash
 # SwiftUI fixed fonts (without relativeTo:)
 # Catches .font(.system(size: X)) without .relativeTo
@@ -165,6 +178,7 @@ grep -rn "\.withSize(" --include="*.swift" | grep -v "UIFontMetrics"
 ```
 
 **Custom Fonts Without Scaling**:
+
 ```bash
 # UIKit custom fonts without UIFontMetrics scaling
 grep -rn "UIFont(name:" --include="*.swift" | grep -v "UIFontMetrics"
@@ -175,6 +189,7 @@ grep -rn "\.custom(" --include="*.swift" | grep -v "relativeTo:"
 ```
 
 **Layout Constants Without Scaling**:
+
 ```bash
 # Check if @ScaledMetric is used for spacing values
 grep -rn "@ScaledMetric" --include="*.swift"
@@ -184,6 +199,7 @@ grep -rn "scaledValue" --include="*.swift"
 ```
 
 **Small Touch Targets**:
+
 ```bash
 # Frames smaller than 44pt (catches 0-43, including single digits)
 grep -rn "\.frame.*width.*\b([0-9]|[1-3][0-9]|4[0-3])\b" --include="*.swift"
@@ -195,6 +211,7 @@ grep -rn "\.frame.*height:" --include="*.swift" | grep -E "height:.*[0-4][0-9]|h
 ```
 
 **Missing Reduce Motion Checks**:
+
 ```bash
 # Animations without motion checks
 grep -rn "withAnimation" --include="*.swift" | grep -v "isReduceMotionEnabled"
@@ -204,22 +221,26 @@ grep -rn "\.animation(" --include="*.swift" | grep -v "isReduceMotionEnabled"
 ### Step 3: Categorize by Severity
 
 **CRITICAL** (App Store Rejection Risk):
+
 - Missing accessibilityLabel on interactive elements
 - Non-accessible custom controls
 
 **HIGH** (Major Usability Impact):
+
 - Fixed font sizes (breaks Dynamic Type)
 - Custom fonts without UIFontMetrics scaling
 - Low color contrast
 - Generic labels
 
 **MEDIUM** (Moderate Usability Impact):
+
 - Layout constants without scaling (@ScaledMetric, scaledValue)
 - Touch targets smaller than 44x44pt
 - Missing keyboard navigation
 - Missing Reduce Motion support
 
 **LOW** (Best Practices):
+
 - Missing hints
 - Could improve labeling
 
@@ -272,12 +293,14 @@ grep -rn "\.animation(" --include="*.swift" | grep -v "isReduceMotionEnabled"
 - `src/Views/HeaderView.swift:45` - Uses `.custom("Avenir", size: 24)` without relativeTo:
   - **WCAG**: 1.4.4 Resize Text (Level AA)
   - **Fix**: Add relativeTo: parameter
+
   ```swift
   Text("Header")
       .font(.custom("Avenir", size: 24, relativeTo: .title2))
   ```
 
 ### Generic Labels
+
 - `src/Views/SettingsView.swift:89` - accessibilityLabel("Button")
   - **WCAG**: 4.1.2 Name, Role, Value (Level A)
   - **Fix**: Use descriptive label like "Open settings"
@@ -285,9 +308,11 @@ grep -rn "\.animation(" --include="*.swift" | grep -v "isReduceMotionEnabled"
 ## MEDIUM Issues
 
 ### Layout Constants Without Scaling
+
 - `src/Views/CardView.swift:18` - Fixed padding value doesn't scale with Dynamic Type
   - **WCAG**: 1.4.4 Resize Text (Level AA)
   - **Fix**: Use @ScaledMetric for spacing
+
   ```swift
   struct CardView: View {
       @ScaledMetric(relativeTo: .body) var padding: CGFloat = 20
@@ -302,17 +327,20 @@ grep -rn "\.animation(" --include="*.swift" | grep -v "isReduceMotionEnabled"
 - `src/Views/CustomLayout.swift:45` - UIKit constraint with fixed constant
   - **WCAG**: 1.4.4 Resize Text (Level AA)
   - **Fix**: Use UIFontMetrics.scaledValue
+
   ```swift
   let metrics = UIFontMetrics(forTextStyle: .body)
   constraint.constant = metrics.scaledValue(for: 20.0)
   ```
 
 ### Touch Targets Too Small
+
 - `src/Views/CloseButton.swift:25` - Frame is 32x32pt (should be 44x44pt)
   - **WCAG**: 2.5.5 Target Size (Level AAA)
   - **Fix**: Use `.frame(minWidth: 44, minHeight: 44)`
 
 ### Missing Reduce Motion Support
+
 - `src/Views/AnimatedView.swift:56` - withAnimation() without Reduce Motion check
   - **WCAG**: 2.3.3 Animation from Interactions (Level AAA)
   - **Fix**: Wrap with `if !UIAccessibility.isReduceMotionEnabled { withAnimation { } }`
@@ -335,6 +363,7 @@ grep -rn "\.animation(" --include="*.swift" | grep -v "isReduceMotionEnabled"
 
 For comprehensive accessibility debugging and testing:
 Use `/skill axiom:accessibility-diag`
+
 ```
 
 ## Output Limits

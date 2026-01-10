@@ -16,6 +16,7 @@ apple_platforms: iOS 5.0+, iPadOS 5.0+, macOS 10.7+
 ## When to Use This Skill
 
 Use this skill when you need to:
+
 - Understand iOS file purging behavior
 - Check available disk space correctly
 - Set purge priorities for cached files
@@ -97,12 +98,14 @@ if checkSpaceBeforeSaving(fileSize: imageData.count, isEssential: true) {
 ### Important vs Opportunistic Capacity
 
 **volumeAvailableCapacityForImportantUsage**:
+
 - Space reserved for **essential** operations
 - Use for: User-created content, must-save data
 - System reserves this space more aggressively
 - Higher threshold
 
 **volumeAvailableCapacityForOpportunisticUsage**:
+
 - Space available for **optional** operations
 - Use for: Caches, thumbnails, pre-fetching
 - Lower threshold (system may already be under pressure)
@@ -166,6 +169,7 @@ func downloadPodcast(url: URL) throws {
 ```
 
 **When to exclude from backup**:
+
 - ✅ Downloaded content that can be re-fetched
 - ✅ Generated thumbnails
 - ✅ Cached API responses

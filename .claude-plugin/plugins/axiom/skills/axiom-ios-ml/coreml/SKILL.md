@@ -30,6 +30,7 @@ Need on-device ML?
 ## Red Flags
 
 Use this skill when you see:
+
 - "Convert PyTorch model to CoreML"
 - "Model too large for device"
 - "Slow inference performance"
@@ -417,6 +418,7 @@ mlmodel = ct.convert(
 **Wrong approach**: Jump straight to 2-bit palettization.
 
 **Right approach**:
+
 1. Start with 8-bit palettization → check accuracy
 2. Try 6-bit → check accuracy
 3. Try 4-bit with `per_grouped_channel` → check accuracy
@@ -428,6 +430,7 @@ mlmodel = ct.convert(
 **Wrong approach**: Try different compute units randomly.
 
 **Right approach**:
+
 1. Profile with Core ML Instrument
 2. Check if load is cached (look for "cached" vs "prepare and cache")
 3. Enable stateful KV-cache
@@ -439,6 +442,7 @@ mlmodel = ct.convert(
 **Wrong approach**: Ship separate models for each adapter.
 
 **Right approach**:
+
 1. Convert each adapter model separately
 2. Use `MultiFunctionDescriptor` to merge with shared base
 3. Load specific function via `config.functionName`

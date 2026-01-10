@@ -19,6 +19,7 @@ version: 1.0.0
 **Realm Device Sync** DEPRECATION DEADLINE = September 30, 2025
 
 If your app uses Realm Sync:
+
 - ⚠️ You MUST migrate by September 30, 2025
 - ✅ SwiftData is the recommended replacement
 - ⏰ Time remaining: Depends on current date, but migrations take 2-8 weeks for production apps
@@ -93,6 +94,7 @@ final class Track {
 ```
 
 **Key differences**:
+
 - Realm: `@Persisted(primaryKey: true)` → SwiftData: `@Attribute(.unique)`
 - Realm: Implicit init → SwiftData: Explicit init required
 - Realm: `Object` base class → SwiftData: `@Model` macro on `final class`
@@ -126,6 +128,7 @@ final class Track {
 ```
 
 **Key differences**:
+
 - Realm: Explicit `RealmSwiftCollection` type → SwiftData: Native `[Track]` array
 - Realm: Manual relationship management → SwiftData: Inverse relationships automatic
 - Realm: No delete rules → SwiftData: `deleteRule: .cascade / .nullify / .deny`
@@ -182,6 +185,7 @@ class RealmDataManager {
 ```
 
 **Problems**:
+
 - Manual DispatchQueue threading error-prone
 - Easy to access objects on wrong thread
 - No compile-time guarantees
@@ -218,6 +222,7 @@ class ViewController: UIViewController {
 ```
 
 **Advantages**:
+
 - No manual DispatchQueue
 - Compile-time thread safety
 - Automatic actor isolation

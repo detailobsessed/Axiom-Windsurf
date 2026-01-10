@@ -9,6 +9,7 @@ Diagnose and fix Xcode build failures using environment-first diagnostics (launc
 ```
 
 ## What It Does
+
 Checks the build environment before looking at code, preventing "rabbit hole" debugging of ghost issues.
 
 1. **Zombie Processes**: Kills stuck `xcodebuild` or `swift-frontend` processes
@@ -17,6 +18,7 @@ Checks the build environment before looking at code, preventing "rabbit hole" de
 4. **SPM Cache**: Validates package resolution state
 
 ## When to Use
+
 - You see `BUILD FAILED` but the error makes no sense
 - "No such module" errors appear after switching branches
 - "Unable to boot simulator" errors occur
@@ -24,5 +26,6 @@ Checks the build environment before looking at code, preventing "rabbit hole" de
 - You suspect a "ghost in the machine" rather than a code error
 
 ## Related
+
 - [/axiom:optimize-build](./optimize-build.md) - Speed up builds after fixing them
 - [xcode-debugging](../../skills/debugging/xcode-debugging.md) - The manual skill behind this agent

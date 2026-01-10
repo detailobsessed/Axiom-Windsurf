@@ -5,6 +5,7 @@ Axiom includes **4 event-driven hooks** that automatically enhance your workflow
 ## What Are Hooks?
 
 Hooks are automatic triggers that:
+
 - Run at specific events (session start, before/after tool use)
 - Provide proactive warnings and suggestions
 - Automate repetitive tasks
@@ -20,6 +21,7 @@ Hooks are automatic triggers that:
 Automatically suggests running `/axiom:fix-build` for environment-first diagnostics.
 
 **Example**:
+
 ```bash
 # You run a build that fails
 xcodebuild build
@@ -38,10 +40,12 @@ xcodebuild build
 **Trigger**: Every time a Claude Code session starts
 
 Checks for common environment issues:
+
 - **Zombie xcodebuild processes** (warns if >5 running)
 - **Large Derived Data** (warns if >10GB)
 
 **Example output** (only shown if issues detected):
+
 ```
 Axiom Environment Check:
 ⚠️ 12 xcodebuild processes running (consider: killall xcodebuild)
@@ -60,6 +64,7 @@ Axiom Environment Check:
 Warns about migration planning risks and suggests running `/axiom:audit-core-data` after changes.
 
 **Example**:
+
 ```swift
 // You start editing MyModel.xcdatamodeld
 
@@ -80,11 +85,13 @@ Warns about migration planning risks and suggests running `/axiom:audit-core-dat
 Automatically runs `swiftformat` to ensure consistent code style.
 
 **Requirements**: [swiftformat](https://github.com/nicklockwood/SwiftFormat) must be installed:
+
 ```bash
 brew install swiftformat
 ```
 
 **Example**:
+
 ```swift
 // You write or edit a Swift file
 // Hook automatically formats it with swiftformat
@@ -126,11 +133,13 @@ Hooks are defined in `plugins/axiom/hooks/hooks.json`:
 ### Hook Types
 
 **Prompt Hooks** (`type: "prompt"`):
+
 - Use LLM (Haiku) to analyze context
 - Make intelligent decisions
 - Add contextual warnings or suggestions
 
 **Command Hooks** (`type: "command"`):
+
 - Execute bash scripts
 - Fast, deterministic behavior
 - Direct system interaction
@@ -148,6 +157,7 @@ Alternatively, you can disable all Axiom hooks by removing the `"hooks"` field f
 ## Future Hooks
 
 Potential future hooks based on community feedback:
+
 - Pre-commit git safety checks
 - Automatic test running on code changes
 - Performance profiling suggestions

@@ -13,6 +13,7 @@ Performance optimization for SwiftUI using the new SwiftUI Instrument in Instrum
 ## When to Use This Skill
 
 Use this skill when you're:
+
 - App feels less responsive (hitches, hangs, delayed scrolling)
 - Animations pause or jump during execution
 - Scrolling performance is poor
@@ -35,18 +36,21 @@ Questions you can ask Claude that will draw from this skill:
 ## What's Covered
 
 ### SwiftUI Instrument (Instruments 26)
+
 - Four track lanes: Update Groups, Long View Body Updates, Long Representable Updates, Other Long Updates
 - Color-coding: Red (investigate first) → Orange → Gray
 - Cause & Effect Graph for data flow visualization
 - Integration with Time Profiler
 
 ### Problem 1: Long View Body Updates
+
 - Identifying with Long View Body Updates lane
 - Time Profiler integration for CPU analysis
 - Common expensive operations: formatters, calculations, I/O, image processing
 - Caching patterns for expensive work
 
 ### Problem 2: Unnecessary View Updates
+
 - Counting updates (more than expected?)
 - Cause & Effect Graph to trace data flow
 - Whole array/collection dependencies
@@ -54,12 +58,14 @@ Questions you can ask Claude that will draw from this skill:
 - @Observable dependency tracking
 
 ### iOS 26 Framework Improvements
+
 - 6x faster list loading (macOS, 100k+ items)
 - 16x faster list updates
 - Reduced dropped frames during scrolling
 - Nested ScrollView lazy loading optimization
 
 ### Production Crisis Decision-Making
+
 - When to profile vs when to guess
 - 30-minute diagnostic protocol
 - Time cost comparison (guess vs diagnose)

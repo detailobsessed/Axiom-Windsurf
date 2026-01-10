@@ -5,12 +5,14 @@ Automatically scans for VoiceOver label issues, Dynamic Type violations, color c
 ## How to Use This Agent
 
 **Natural language (automatic triggering):**
+
 - "Check my code for accessibility issues"
 - "I need to submit to the App Store soon, can you review accessibility?"
 - "Review my code for accessibility compliance"
 - "Check if my UI follows WCAG guidelines"
 
 **Explicit command:**
+
 ```bash
 /axiom:audit-accessibility
 ```

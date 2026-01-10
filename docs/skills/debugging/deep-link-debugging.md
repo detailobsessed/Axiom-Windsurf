@@ -12,6 +12,7 @@ Debug-only deep links for automated testing and simulator-based verification. En
 ## When to Use This Skill
 
 Use this skill when you're:
+
 - Adding debug-only deep links for simulator testing
 - Enabling automated navigation to specific screens
 - Integrating with the simulator-tester agent
@@ -19,6 +20,7 @@ Use this skill when you're:
 - Need programmatic navigation without production deep links
 
 **Do NOT use for:**
+
 - Production deep linking (use [swiftui-nav](/skills/ui-design/swiftui-nav) instead)
 - Universal links or App Clips
 - Complex routing architectures
@@ -35,17 +37,20 @@ Questions you can ask Claude that will draw from this skill:
 ## What's Covered
 
 ### Debug URL Scheme Setup
+
 - SwiftUI .onOpenURL handler
 - #if DEBUG conditional compilation
 - URL parsing and routing
 - NotificationCenter for navigation triggers
 
 ### Simulator Integration
+
 - xcrun simctl openurl commands
 - Query parameter passing
 - Integration with screenshot capture
 
 ### Time Savings
+
 - Without debug links: 2-3 minutes per test iteration
 - With debug links: 45 seconds per iteration (60-75% faster)
 

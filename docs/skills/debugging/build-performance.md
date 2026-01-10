@@ -24,6 +24,7 @@ Comprehensive build performance optimization with Build Timeline analysis, type 
 ## What This Skill Provides
 
 ### Build Timeline Analysis
+
 - **Critical Path Optimization** — Identify and shorten the longest chain of dependent tasks
 - **Timeline Visualization** — Interpret empty vertical space (idle cores), long horizontal bars (slow tasks)
 - **Parallelization Gaps** — Detect targets waiting unnecessarily
@@ -46,6 +47,7 @@ Comprehensive build performance optimization with Build Timeline analysis, type 
 ### Xcode 26 Features
 
 **Compilation Caching** — Reuse compiled artifacts across clean builds:
+
 ```
 Build Settings → COMPILATION_CACHE_ENABLE_CACHING → YES
 ```

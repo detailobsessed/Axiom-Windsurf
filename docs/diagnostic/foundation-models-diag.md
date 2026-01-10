@@ -14,6 +14,7 @@ Diagnostic workflows for Foundation Models issues covering context exceeded erro
 ## When to Use This Diagnostic
 
 Use this diagnostic when:
+
 - Generation fails with context exceeded
 - Content triggers guardrail violations
 - Generation is slower than expected
@@ -26,6 +27,7 @@ Use this diagnostic when:
 ## Diagnostic Decision Tree
 
 ### Model Won't Start
+
 1. Check device compatibility (A17+ or M-series)
 2. Verify iOS 26+ version
 3. Check available disk space
@@ -34,12 +36,14 @@ Use this diagnostic when:
 ### Generation Fails
 
 #### Context Exceeded
+
 - Reduce input size
 - Chunk large documents
 - Use summarization first
 - Implement sliding window
 
 #### Guardrail Violation
+
 - Check content for prohibited topics
 - Avoid generating personal information
 - Review @Guide constraints
@@ -48,23 +52,27 @@ Use this diagnostic when:
 ### Output Wrong Format
 
 #### @Generable Parsing Fails
+
 - Verify all properties have defaults or are Optional
 - Check @Guide descriptions are clear
 - Simplify nested types
 - Add explicit examples in prompt
 
 #### Missing Fields
+
 - Make fields Optional
 - Provide clearer @Guide descriptions
 - Use simpler types (String vs custom enum)
 
 ### Too Slow
+
 - Profile with Instruments
 - Reduce output size limits
 - Use streaming for perceived performance
 - Consider chunking long responses
 
 ### UI Frozen
+
 - Use async/await properly
 - Never block main thread
 - Show loading state
@@ -86,17 +94,20 @@ Use this diagnostic when:
 **Scenario**: AI feature launches, 20% of users see errors
 
 ### Immediate Triage (First 15 Minutes)
+
 1. Check device distribution — errors on older devices?
 2. Check error types — context exceeded vs guardrail?
 3. Check input sources — specific content triggering issues?
 
 ### Quick Mitigations
+
 - Add fallback UI for errors
 - Implement retry with exponential backoff
 - Cache successful responses
 - Add input length validation
 
 ### Root Cause Analysis
+
 - Review error logs by device type
 - Test with production-like inputs
 - Profile with Instruments on affected device class
@@ -104,11 +115,13 @@ Use this diagnostic when:
 ## Pressure Defense
 
 ### When PM Demands "Just Ship It"
+
 - Document specific failure rates
 - Show user impact (crashes, bad UX)
 - Propose staged rollout with monitoring
 
 ### When Tempted to Disable AI Feature
+
 - Consider graceful degradation instead
 - Add feature flags for problematic inputs
 - Implement client-side guardrails

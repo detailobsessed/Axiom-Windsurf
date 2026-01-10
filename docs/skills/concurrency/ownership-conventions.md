@@ -12,6 +12,7 @@ description: Parameter ownership modifiers for performance optimization — borr
 ## When to Use This Skill
 
 ✅ **Use this skill when**:
+
 - Large value types being passed read-only (avoid copies)
 - Working with noncopyable types (`~Copyable`)
 - Reducing ARC retain/release traffic
@@ -19,6 +20,7 @@ description: Parameter ownership modifiers for performance optimization — borr
 - Performance-critical code where copies show in profiling
 
 ❌ **Do NOT use this skill for**:
+
 - Simple types (Int, Bool, small structs)
 - Compiler optimization is sufficient (most cases)
 - You're not certain about the performance impact

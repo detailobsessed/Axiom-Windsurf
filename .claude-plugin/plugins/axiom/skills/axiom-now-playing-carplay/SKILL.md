@@ -81,6 +81,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate, CPTemplateApplicationSc
 CarPlay requires an entitlement in your Xcode project:
 
 **Info.plist:**
+
 ```xml
 <key>UIBackgroundModes</key>
 <array>
@@ -89,6 +90,7 @@ CarPlay requires an entitlement in your Xcode project:
 ```
 
 **Entitlements file:**
+
 ```xml
 <key>com.apple.developer.carplay-audio</key>
 <true/>
@@ -109,6 +111,7 @@ Without the entitlement, CarPlay won't show your app at all.
 ## Testing CarPlay
 
 **Simulator (Xcode 12+):**
+
 1. I/O → External Displays → CarPlay
 2. Tap CarPlay display
 3. Find your app in Audio section

@@ -19,6 +19,7 @@ SwiftData schema migrations move your data safely when models change. **Core pri
 ### Lightweight Migrations (Automatic)
 
 SwiftData can migrate automatically for:
+
 - ✅ Adding new optional properties
 - ✅ Adding new required properties with default values
 - ✅ Removing properties
@@ -29,6 +30,7 @@ SwiftData can migrate automatically for:
 ### Custom Migrations (This Skill)
 
 You need custom migrations for:
+
 - ❌ Changing property types (`String` → `AttributedString`, `Int` → `String`)
 - ❌ Making optional properties required (must populate existing nulls)
 - ❌ Complex relationship restructuring
@@ -40,27 +42,35 @@ You need custom migrations for:
 These are real questions developers ask that this skill is designed to answer:
 
 #### 1. "I need to change a property from String to AttributedString. How do I migrate existing data with relationships intact?"
+
 → The skill shows the two-stage migration pattern that works around the willMigrate/didMigrate limitation
 
 #### 2. "My model has a one-to-many relationship with cascade delete. How do I preserve this during a type change migration?"
+
 → The skill explains relationship prefetching and maintaining inverse relationships across schema versions
 
 #### 3. "I have a many-to-many relationship between Tags and Notes. The migration is failing with 'Expected only Arrays for Relationships'. What's wrong?"
+
 → The skill covers explicit inverse relationship requirements and iOS 17.0 alphabetical naming bug
 
 #### 4. "I need to rename a model but keep all its relationships intact."
+
 → The skill shows `@Attribute(originalName:)` patterns for lightweight migration
 
 #### 5. "My migration works in the simulator but crashes on a real device with existing data."
+
 → The skill emphasizes real-device testing and explains why simulator success doesn't guarantee production safety
 
 #### 6. "Why do I have to copy ALL my models into each VersionedSchema, even ones that haven't changed?"
+
 → The skill explains SwiftData's design: each VersionedSchema is a complete snapshot, not a diff
 
 #### 7. "I'm getting 'The model used to open the store is incompatible with the one used to create the store' error."
+
 → The skill provides debugging steps for schema version mismatches
 
 #### 8. "How do I test my SwiftData migration before releasing to production?"
+
 → The skill covers migration testing workflow, real device testing requirements, and validation strategies
 
 ---
@@ -179,6 +189,7 @@ enum NotesSchemaV1: VersionedSchema {
 ```
 
 #### Key patterns
+
 - **Complete snapshot** All models included, even unchanged ones
 - **Semantic versioning** Use Schema.Version(major, minor, patch)
 - **Explicit init** SwiftData doesn't synthesize initializers
@@ -680,6 +691,7 @@ enum TripMigrationPlan: SchemaMigrationPlan {
 #### 1. Create Test Data Sets
 
 Prepare test data representing pre-migration state:
+
 - **Minimal dataset** - 10-20 records with all relationship types
 - **Realistic dataset** - 1,000+ records matching production scale
 - **Edge cases** - Empty relationships, max relationship counts, optional fields
@@ -687,6 +699,7 @@ Prepare test data representing pre-migration state:
 #### 2. Test in Simulator
 
 Run migration with test data:
+
 ```swift
 // Create test data in V1 schema
 let v1Container = try ModelContainer(for: Schema(versionedSchema: SchemaV1.self))
@@ -700,6 +713,7 @@ let v2Container = try ModelContainer(
 ```
 
 Verify:
+
 - All relationships preserved
 - No data loss (count records before/after)
 - New fields populated correctly
@@ -726,6 +740,7 @@ Verify:
 #### 4. Validate with Production Data (If Possible)
 
 If you have access to production data:
+
 - Copy production database to development environment
 - Run migration against copy
 - Verify no data corruption

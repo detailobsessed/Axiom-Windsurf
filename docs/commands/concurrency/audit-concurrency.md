@@ -20,6 +20,7 @@ Scan your Swift codebase for common Swift 6 concurrency anti-patterns and violat
 ## When to Use
 
 Run this command when:
+
 - Migrating to Swift 6 strict concurrency
 - Seeing "data race" warnings or actor isolation errors
 - Experiencing crashes with multithreaded access
@@ -31,6 +32,7 @@ Run this command when:
 ### 🔴 Critical (Crashes/Memory Leaks)
 
 #### Missing @MainActor on UI Classes
+
 ```swift
 // ❌ DATA RACE: Can be accessed from any thread
 class ProfileViewModel: ObservableObject {
@@ -45,6 +47,7 @@ class ProfileViewModel: ObservableObject {
 ```
 
 #### Unsafe Task Self Capture
+
 ```swift
 // ❌ LEAKS: Task captures self strongly
 var loadTask: Task<Void, Never>?
@@ -62,6 +65,7 @@ loadTask = Task { [weak self] in
 ### 🟡 High Priority (Data Races)
 
 #### Sendable Violations
+
 ```swift
 // ❌ DATA RACE: Non-Sendable type crossing actor boundary
 class UserData {
@@ -79,6 +83,7 @@ struct UserData: Sendable {
 ```
 
 #### Improper Actor Isolation
+
 ```swift
 // ❌ DATA RACE: Using actor data without isolation
 let result = await dataActor.getData()
@@ -92,6 +97,7 @@ result.mutate()  // Safe - working with copy
 ### 🟢 Medium Priority (Warnings)
 
 #### Thread Confinement Violations
+
 ```swift
 // ❌ WARNING: MainActor property accessed in detached task
 Task.detached {
@@ -113,6 +119,7 @@ Task.detached {
 ```
 
 The command will:
+
 1. Find all Swift files in your project
 2. Scan for the 6 concurrency patterns above
 3. Report findings with `file:line` references
@@ -157,6 +164,7 @@ For detailed fix patterns, use the [swift-concurrency](/skills/concurrency/swift
 ```
 
 The skill provides copy-paste templates for:
+
 - Pattern 1: Sendable types
 - Pattern 2: Value capture before task
 - Pattern 3: Weak self in tasks
@@ -166,11 +174,13 @@ The skill provides copy-paste templates for:
 ## Real-World Impact
 
 #### Before audit
+
 - 2-4 hours debugging mysterious crashes
 - Data races discovered in production
 - Actor isolation errors blocking Swift 6 migration
 
 #### After audit
+
 - 5-10 minutes to identify all concurrency issues
 - Fix most issues with ~5 lines of code
 - Smooth Swift 6 strict concurrency migration

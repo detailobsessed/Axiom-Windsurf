@@ -11,6 +11,7 @@ user-invocable: false
 ## When to Use
 
 Use this router when:
+
 - App feels slow or laggy
 - Memory usage grows over time
 - Battery drains quickly
@@ -25,12 +26,14 @@ Use this router when:
 ### Memory Issues
 
 **Memory leaks (Swift)** → `/skill axiom-memory-debugging`
+
 - Systematic leak diagnosis
 - 5 common leak patterns
 - Instruments workflows
 - deinit not called
 
 **Memory leaks (Objective-C blocks)** → `/skill axiom-objc-block-retain-cycles`
+
 - Block retain cycles
 - Weak-strong pattern
 - Network callback leaks
@@ -38,6 +41,7 @@ Use this router when:
 ### Performance Profiling
 
 **Performance profiling** → `/skill axiom-performance-profiling`
+
 - Time Profiler (CPU)
 - Allocations (memory growth)
 - Core Data profiling (N+1 queries)
@@ -46,18 +50,21 @@ Use this router when:
 ### Energy Issues
 
 **Battery drain, axiom-high energy** → `/skill axiom-energy`
+
 - Power Profiler workflow
 - Subsystem diagnosis (CPU/GPU/Network/Location/Display)
 - Anti-pattern fixes
 - Background execution optimization
 
 **Symptom-based diagnosis** → `/skill axiom-energy-diag`
+
 - "App at top of Battery Settings"
 - "Device gets hot"
 - "Background battery drain"
 - Time-cost analysis for each path
 
 **API reference with code** → `/skill axiom-energy-ref`
+
 - Complete WWDC code examples
 - Timer, network, location efficiency
 - BGContinuedProcessingTask (iOS 26)
@@ -85,17 +92,20 @@ User reports performance issue
 ## Critical Patterns
 
 **Memory Debugging** (memory-debugging):
+
 - 6 leak patterns: timers, observers, closures, delegates, view callbacks, PhotoKit
 - Instruments workflows
 - Leak vs caching distinction
 
 **Performance Profiling** (performance-profiling):
+
 - Time Profiler for CPU bottlenecks
 - Allocations for memory growth
 - Core Data SQL logging for N+1 queries
 - Self Time vs Total Time
 
 **Energy Optimization** (energy):
+
 - Power Profiler subsystem diagnosis
 - 8 anti-patterns: timers, polling, location, animations, background, network, GPU, disk
 - Audit checklists by subsystem

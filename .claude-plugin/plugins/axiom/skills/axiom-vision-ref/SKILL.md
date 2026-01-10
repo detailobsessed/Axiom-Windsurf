@@ -32,6 +32,7 @@ Comprehensive reference for Vision framework computer vision: subject segmentati
 Vision provides computer vision algorithms for still images and video:
 
 **Core workflow**:
+
 1. Create request (e.g., `VNDetectHumanHandPoseRequest()`)
 2. Create handler with image (`VNImageRequestHandler(cgImage: image)`)
 3. Perform request (`try handler.perform([request])`)
@@ -86,6 +87,7 @@ if instance == 0 {
 **createScaledMask(for:croppedToInstancesContent:)**
 
 Parameters:
+
 - `for`: `IndexSet` of instances to include
 - `croppedToInstancesContent`:
   - `false` = Output matches input resolution (for compositing)
@@ -156,6 +158,7 @@ imageView.addInteraction(interaction)
 ```
 
 **Interaction types**:
+
 - `.automatic`: Subject lifting + Live Text + data detectors
 - `.imageSubject`: Subject lifting only (no interactive text)
 
@@ -262,6 +265,7 @@ let person1Mask = try observation.createScaledMask(
 ```
 
 **Limitations**:
+
 - Segments up to 4 people
 - With >4 people: may miss people or combine them (typically background people)
 - Use `VNDetectFaceRectanglesRequest` to count faces if you need to handle crowded scenes
@@ -293,12 +297,14 @@ for observation in request.results as? [VNHumanHandPoseObservation] ?? [] {
 **Wrist**: 1 landmark
 
 **Thumb** (4 landmarks):
+
 - `.thumbTip`
 - `.thumbIP` (interphalangeal joint)
 - `.thumbMP` (metacarpophalangeal joint)
 - `.thumbCMC` (carpometacarpal joint)
 
 **Fingers** (4 landmarks each):
+
 - Tip (`.indexTip`, `.middleTip`, `.ringTip`, `.littleTip`)
 - DIP (distal interphalangeal joint)
 - PIP (proximal interphalangeal joint)
@@ -379,19 +385,23 @@ for observation in request.results as? [VNHumanBodyPoseObservation] ?? [] {
 ### Body Landmarks (18 points)
 
 **Face** (5 landmarks):
+
 - `.nose`, `.leftEye`, `.rightEye`, `.leftEar`, `.rightEar`
 
 **Arms** (6 landmarks):
+
 - Left: `.leftShoulder`, `.leftElbow`, `.leftWrist`
 - Right: `.rightShoulder`, `.rightElbow`, `.rightWrist`
 
 **Torso** (7 landmarks):
+
 - `.neck` (between shoulders)
 - `.leftShoulder`, `.rightShoulder` (also in arm groups)
 - `.leftHip`, `.rightHip`
 - `.root` (between hips)
 
 **Legs** (6 landmarks):
+
 - Left: `.leftHip`, `.leftKnee`, `.leftAnkle`
 - Right: `.rightHip`, `.rightKnee`, `.rightAnkle`
 
@@ -445,6 +455,7 @@ let localPosition = leftWrist.localPosition  // Relative to parent joint
 #### 3D Observation Properties
 
 **bodyHeight**: Estimated height in meters
+
 - With depth data: Measured height
 - Without depth data: Reference height (1.8m)
 
@@ -531,6 +542,7 @@ for observation in request.results as? [VNFaceObservation] ?? [] {
 ```
 
 **Revisions**:
+
 - Revision 1: Basic landmarks
 - Revision 2: Detects upside-down faces
 - Revision 3+: Pupil locations
@@ -581,6 +593,7 @@ let output = filter.outputImage  // Composited result
 ```
 
 **Parameters**:
+
 - **Input image**: Original image to mask
 - **Mask image**: Vision's soft segmentation mask
 - **Background image**: New background (or empty image for transparency)
@@ -699,6 +712,7 @@ for barcode in request.results as? [VNBarcodeObservation] ?? [] {
 #### Symbologies
 
 **1D Barcodes**:
+
 - `.codabar` (iOS 15+)
 - `.code39`, `.code39Checksum`, `.code39FullASCII`, `.code39FullASCIIChecksum`
 - `.code93`, `.code93i`
@@ -710,6 +724,7 @@ for barcode in request.results as? [VNBarcodeObservation] ?? [] {
 - `.upce`
 
 **2D Codes**:
+
 - `.aztec`
 - `.dataMatrix`
 - `.microPDF417` (iOS 15+)
@@ -933,6 +948,7 @@ let corners = [
 ```
 
 **vs VNDetectRectanglesRequest**:
+
 - Document: ML-based, trained specifically on documents
 - Rectangle: Edge-based, finds any quadrilateral
 

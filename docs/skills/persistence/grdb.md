@@ -11,6 +11,7 @@ Direct SQLite access using [GRDB.swift](https://github.com/groue/GRDB.swift). Ty
 ## When to Use This Skill
 
 Use this skill when you're:
+
 - Writing complex SQL joins across multiple tables
 - Creating custom aggregation queries (GROUP BY, HAVING)
 - Using ValueObservation for reactive queries
@@ -35,33 +36,39 @@ Questions you can ask Claude that will draw from this skill:
 ## What's Covered
 
 ### Database Setup
+
 - DatabaseQueue (single connection) vs DatabasePool (concurrent access)
 - File-based and in-memory databases
 - When to use Queue vs Pool
 
 ### Record Types
+
 - Codable structs for fetch/insert
 - FetchableRecord and PersistableRecord protocols
 - Mapping to/from database rows
 
 ### Querying
+
 - Raw SQL with fetchAll, fetchOne
 - Type-safe queries with QueryInterfaceRequest
 - Complex JOINs with associations
 - Aggregations: COUNT, SUM, GROUP BY
 
 ### ValueObservation
+
 - Reactive queries that update on database changes
 - Scheduling on main thread for UI
 - Combining observations
 
 ### DatabaseMigrator
+
 - Registering migrations
 - Migration order and versioning
 - Safe rollback patterns
 - Data transforms during migration
 
 ### Performance
+
 - EXPLAIN QUERY PLAN for profiling
 - database.trace for logging
 - Index creation

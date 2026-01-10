@@ -61,6 +61,7 @@ You are an expert at detecting in-app purchase implementation issues that cause 
 ## Your Mission
 
 Run a comprehensive IAP audit and report all issues with:
+
 - File:line references for easy fixing
 - Severity ratings (CRITICAL/HIGH/MEDIUM/LOW)
 - Specific fix recommendations
@@ -69,51 +70,61 @@ Run a comprehensive IAP audit and report all issues with:
 ## What You Check
 
 ### 1. Transaction Finishing (CRITICAL - Revenue Impact)
+
 - Missing `transaction.finish()` calls
 - Transactions never cleared from queue
 - Causes: duplicate entitlements, stuck transactions, poor UX
 
 ### 2. Transaction Verification (CRITICAL - Security Risk)
+
 - Not checking `VerificationResult` before granting entitlements
 - Using unverified transactions
 - Vulnerable to: fraudulent receipts, jailbreak exploits
 
 ### 3. Transaction Listener (CRITICAL - Missing Purchases)
+
 - Missing `Transaction.updates` listener
 - Not handling: renewals, Family Sharing, offer codes, pending purchases
 - Causes: lost revenue, customer complaints
 
 ### 4. Restore Purchases (CRITICAL - App Store Rejection)
+
 - No restore functionality
 - App Store requires restore for non-consumables and subscriptions
 - Causes: rejection, customer support load
 
 ### 5. Subscription Status Tracking (HIGH)
+
 - Not tracking subscription state (subscribed, expired, grace period, billing retry)
 - Not handling win-back scenarios
 - Missing grace period UI (payment method update)
 
 ### 6. StoreKit Configuration (HIGH - Development Efficiency)
+
 - No `.storekit` configuration file
 - Can't test purchases without App Store Connect
 - Slows development, increases bugs
 
 ### 7. Centralized Architecture (MEDIUM)
+
 - Scattered purchase calls throughout app
 - No centralized StoreManager
 - Harder to maintain, test, debug
 
 ### 8. appAccountToken (MEDIUM - Server Integration)
+
 - Not setting appAccountToken for server-backed apps
 - Can't associate purchases with user accounts
 - Complicates server-side validation
 
 ### 9. Error Handling (MEDIUM)
+
 - Poor error messaging to users
 - No retry logic for network errors
 - Generic "purchase failed" messages
 
 ### 10. Testing Coverage (MEDIUM)
+
 - No unit tests for purchase logic
 - No StoreKit testing in CI
 - Bugs reach production
@@ -133,6 +144,7 @@ grep -rl "Product\|Transaction" --include="*.swift" | grep -v "\.build/"
 ### Step 2: Search for Critical Issues
 
 **Missing transaction.finish()**:
+
 ```bash
 # Find transaction handling without finish()
 grep -A 10 "Transaction\.updates\|PurchaseResult\|handleTransaction" --include="*.swift" | grep -v "\.finish()"
@@ -143,6 +155,7 @@ grep -rn "let transaction.*Transaction" --include="*.swift"
 ```
 
 **Missing VerificationResult checks**:
+
 ```bash
 # Direct Transaction usage without verification
 grep -rn "for await.*Transaction\." --include="*.swift" | grep -v "VerificationResult"
@@ -152,6 +165,7 @@ grep -B 5 "grantEntitlement\|unlockFeature\|addCoins" --include="*.swift" | grep
 ```
 
 **Missing Transaction.updates listener**:
+
 ```bash
 # Check if Transaction.updates exists anywhere
 grep -rn "Transaction\.updates" --include="*.swift"
@@ -160,6 +174,7 @@ grep -rn "Transaction\.updates" --include="*.swift"
 ```
 
 **Missing restore functionality**:
+
 ```bash
 # Check for restore implementation
 grep -rn "AppStore\.sync\|Transaction\.all\|restorePurchases" --include="*.swift"
@@ -171,6 +186,7 @@ grep -rn "Restore.*Purchase\|restore.*purchase" --include="*.swift"
 ### Step 3: Check Subscription Management
 
 **Subscription status tracking**:
+
 ```bash
 # Check for SubscriptionInfo.Status usage
 grep -rn "SubscriptionInfo\.Status\|subscriptionStatus" --include="*.swift"
@@ -180,6 +196,7 @@ grep -rn "\.subscribed\|\.expired\|\.inGracePeriod\|\.inBillingRetryPeriod" --in
 ```
 
 **RenewalInfo usage**:
+
 ```bash
 # Check for renewal info access
 grep -rn "RenewalInfo\|renewalInfo" --include="*.swift"
@@ -193,9 +210,11 @@ grep -rn "expirationReason\|didNotConsentToPriceIncrease" --include="*.swift"
 **StoreKit configuration file**:
 
 Use Glob to find StoreKit configuration:
+
 - Pattern: `**/*.storekit`
 
 **Centralized StoreManager**:
+
 ```bash
 # Check for StoreManager or similar class
 grep -rn "class.*Store.*Manager\|class.*PurchaseManager\|class.*IAPManager" --include="*.swift"
@@ -206,6 +225,7 @@ grep -rn "product\.purchase\|Product\.purchase" --include="*.swift"
 ```
 
 **appAccountToken usage**:
+
 ```bash
 # Check if appAccountToken is set
 grep -rn "appAccountToken" --include="*.swift"
@@ -216,10 +236,12 @@ grep -rn "appAccountToken" --include="*.swift"
 **Unit tests**:
 
 Use Glob to find test files:
+
 - Pattern: `**/*Tests.swift`
 
 Check for IAP testing
 grep -rn "StoreManager\|Purchase.*Test\|Transaction.*Test" *Tests.swift
+
 ```
 
 **StoreKit testing configuration**:
@@ -233,22 +255,26 @@ grep -rn "StoreManager\|Purchase.*Test\|Transaction.*Test" *Tests.swift
 Generate a detailed report with:
 
 ### Critical Issues
+
 - Missing transaction.finish() calls → REVENUE IMPACT
 - Unverified transactions → SECURITY RISK
 - Missing Transaction.updates → LOST PURCHASES
 - No restore functionality → APP STORE REJECTION
 
 ### High Priority Issues
+
 - Missing subscription status tracking
 - No StoreKit configuration file
 - No server integration (appAccountToken)
 
 ### Medium Priority Issues
+
 - Scattered purchase architecture
 - Poor error handling
 - Missing tests
 
 ### Recommendations
+
 - Create StoreManager class
 - Implement Transaction.updates listener
 - Add .storekit configuration file
@@ -302,6 +328,7 @@ Revenue Risk: HIGH (missing purchases, rejections)
 ## Post-Audit Actions
 
 After reporting issues:
+
 1. Prioritize CRITICAL fixes (revenue/rejection risk)
 2. Suggest StoreManager refactoring if architecture is scattered
 3. Recommend `axiom-in-app-purchases` skill for implementation guidance

@@ -5,6 +5,7 @@ Automatically scans SwiftUI code for performance anti-patterns that cause frame 
 ## How to Use This Agent
 
 **Natural language (automatic triggering):**
+
 - "My SwiftUI app has janky scrolling"
 - "Check my code for performance issues"
 - "My views are updating too often"
@@ -12,6 +13,7 @@ Automatically scans SwiftUI code for performance anti-patterns that cause frame 
 - "Review my SwiftUI code for optimization opportunities"
 
 **Explicit command:**
+
 ```bash
 /axiom:audit-swiftui-performance
 ```
@@ -19,25 +21,30 @@ Automatically scans SwiftUI code for performance anti-patterns that cause frame 
 ## What It Checks
 
 ### Critical Issues (Frame Drops Guaranteed)
+
 1. **File I/O in view body** — Data(contentsOf:), String(contentsOf:)
 2. **Creating formatters in view body** — DateFormatter(), NumberFormatter()
 
 ### High Priority (Likely Frame Drops)
-3. **Image processing in view body** — Resizing, filtering, transformations
-4. **Whole-collection dependencies** — .contains(), .filter() on arrays
-5. **Navigation performance issues** — NavigationPath recreation, large models in navigation state
+
+1. **Image processing in view body** — Resizing, filtering, transformations
+2. **Whole-collection dependencies** — .contains(), .filter() on arrays
+3. **Navigation performance issues** — NavigationPath recreation, large models in navigation state
 
 ### Medium Priority (Performance Degradation)
-6. **Missing lazy loading** — VStack with 100+ items instead of LazyVStack
-7. **Frequently changing environment values** — Updates entire hierarchy every frame
-8. **Missing view identity** — ForEach without explicit id
+
+1. **Missing lazy loading** — VStack with 100+ items instead of LazyVStack
+2. **Frequently changing environment values** — Updates entire hierarchy every frame
+3. **Missing view identity** — ForEach without explicit id
 
 ### Low Priority (Optimization Opportunities)
-9. **Old ObservableObject pattern** — Should use @Observable (iOS 17+)
+
+1. **Old ObservableObject pattern** — Should use @Observable (iOS 17+)
 
 ## Example Detections
 
 ### File I/O in View Body
+
 ```swift
 // ❌ BAD: Blocks main thread
 var body: some View {
@@ -61,6 +68,7 @@ var body: some View {
 ```
 
 ### Creating Formatters
+
 ```swift
 // ❌ BAD: Creates every update (1-2ms each)
 var body: some View {
@@ -80,12 +88,14 @@ private static let dateFormatter: DateFormatter = {
 ## Performance Risk Score
 
 Calculates risk (0-10):
+
 - CRITICAL issues: +3 points each
 - HIGH issues: +2 points each
 - MEDIUM issues: +1 point each
 - LOW issues: +0.5 points each
 
 **Interpretation**:
+
 - 0-2: Low risk, good performance
 - 3-5: Medium risk, noticeable issues likely
 - 6-8: High risk, performance problems expected
@@ -94,6 +104,7 @@ Calculates risk (0-10):
 ## Common Findings
 
 From auditing 100+ SwiftUI apps:
+
 - 70% create formatters in view body
 - 50% use VStack instead of LazyVStack for long lists
 - 40% have whole-collection dependencies
@@ -111,5 +122,6 @@ From auditing 100+ SwiftUI apps:
 ## Related Skills
 
 For detailed SwiftUI performance optimization:
+
 - **swiftui-performance** skill — Step-by-step profiling with Instruments 26
 - **swiftui-debugging** skill — Systematic view update diagnosis

@@ -5,6 +5,7 @@ Launch simulator testing agent for automated test scenarios and visual verificat
 ## What It Does
 
 Launches the **simulator-tester** agent for comprehensive simulator testing with:
+
 - Screenshot and video capture
 - Location simulation
 - Push notification testing
@@ -19,6 +20,7 @@ Launches the **simulator-tester** agent for comprehensive simulator testing with
 ```
 
 Then describe what you want to test:
+
 - "Take a screenshot to verify the login button fix"
 - "Set location to San Francisco and test the map feature"
 - "Send a test push notification and screenshot the result"
@@ -27,27 +29,35 @@ Then describe what you want to test:
 ## Capabilities
 
 ### Screenshot Capture
+
 Visual verification and debugging with Claude's multimodal analysis.
 
 ### Video Recording
+
 Record complex workflows (background process with proper cleanup).
 
 ### Location Simulation
+
 Test GPS-based features with specific coordinates or GPX files.
 
 ### Push Notification Testing
+
 Send test push notifications without a server.
 
 ### Permission Management
+
 Grant/revoke permissions without manual tapping.
 
 ### Deep Link Navigation
+
 Navigate to specific screens programmatically.
 
 ### Status Bar Override
+
 Clean screenshots for documentation/App Store.
 
 ### Log Analysis
+
 Monitor console for crashes and errors.
 
 ## Common Scenarios
@@ -61,6 +71,7 @@ Monitor console for crashes and errors.
 "Take a screenshot to verify the login button fix"
 
 **Agent automatically**:
+
 1. Boots simulator if needed
 2. Navigates to login screen (if deep link available)
 3. Captures screenshot
@@ -77,6 +88,7 @@ Monitor console for crashes and errors.
 "Set location to San Francisco and test the map feature"
 
 **Agent automatically**:
+
 1. Sets location: `37.7749, -122.4194`
 2. Grants location permission
 3. Launches app
@@ -94,6 +106,7 @@ Monitor console for crashes and errors.
 "Send a test push notification and screenshot the result"
 
 **Agent automatically**:
+
 1. Creates test payload JSON
 2. Sends push notification
 3. Waits for notification
@@ -111,6 +124,7 @@ Monitor console for crashes and errors.
 "Test the camera permission dialog"
 
 **Agent automatically**:
+
 1. Resets permissions
 2. Launches app
 3. Screenshots permission dialog
@@ -122,6 +136,7 @@ Monitor console for crashes and errors.
 ## Prefer Natural Language?
 
 Instead of using this command, you can simply say:
+
 - "Can you take a screenshot of the app?"
 - "Test my app with location simulation"
 - "Check if the push notification handling works"

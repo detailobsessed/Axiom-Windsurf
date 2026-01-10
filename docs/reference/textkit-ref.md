@@ -10,6 +10,7 @@ This reference helps you work with Apple's TextKit 2 framework for custom text r
 ## When to Use This Reference
 
 Use this reference when you're:
+
 - Building custom text views or rich text editors
 - Migrating from TextKit 1 to TextKit 2
 - Integrating Writing Tools (iOS 18+)
@@ -32,23 +33,27 @@ Questions you can ask Claude that will draw from this reference:
 ## What's Covered
 
 ### Core Architecture
+
 - Three-layer MVC pattern (Model, Controller, View)
 - NSTextContentManager, NSTextLayoutManager, NSTextViewportLayoutController
 - Object-based ranges (NSTextLocation, NSTextRange) vs integer indices
 
 ### Migration from TextKit 1
+
 - Paradigm shift from glyphs to elements
 - NSRange ↔ NSTextRange conversion patterns
 - Fallback triggers to avoid (accessing `.layoutManager` causes one-way fallback)
 - Why glyph APIs are dangerous for international text
 
 ### Writing Tools (iOS 18+)
+
 - TextKit 2 requirement for full experience
 - Lifecycle delegate methods
 - Protected ranges for code blocks and quotes
 - Writing Tools Coordinator for custom text engines (iOS 26+)
 
 ### SwiftUI TextEditor (iOS 26+)
+
 - AttributedString binding
 - Custom formatting definitions
 - Value constraints

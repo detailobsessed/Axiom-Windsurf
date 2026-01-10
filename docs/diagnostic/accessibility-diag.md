@@ -16,6 +16,7 @@ Diagnostic workflows for VoiceOver testing, Dynamic Type support, color contrast
 ### Mandatory Accessibility Checks
 
 #### VoiceOver Testing
+
 - Missing accessibility labels
 - Poor label quality (technical vs user-friendly)
 - Button vs image traits
@@ -23,6 +24,7 @@ Diagnostic workflows for VoiceOver testing, Dynamic Type support, color contrast
 - Navigation order
 
 #### Dynamic Type Support
+
 - Fixed font sizes blocking text scaling
 - Layout breaking at larger sizes
 - Missing `.minimumScaleFactor`
@@ -30,12 +32,14 @@ Diagnostic workflows for VoiceOver testing, Dynamic Type support, color contrast
 - Horizontal scrolling required
 
 #### Color Contrast
+
 - WCAG AA compliance (4.5:1 for text)
 - WCAG AAA targets (7:1 for text)
 - Insufficient contrast in dark mode
 - Rely on color alone for information
 
 #### Touch Targets
+
 - Minimum 44×44pt hit areas (Apple HIG)
 - WCAG 2.5.5 Target Size (24×24pt minimum)
 - Spacing between tappable elements
@@ -46,12 +50,14 @@ Diagnostic workflows for VoiceOver testing, Dynamic Type support, color contrast
 #### Guideline 2.5.2 - Accessibility
 
 Common rejection scenarios:
+
 - "App is not accessible to users with disabilities"
 - "VoiceOver cannot access key features"
 - "Text does not scale with Dynamic Type"
 - "Insufficient color contrast in UI"
 
 #### 48-Hour Resubmit Pressure
+
 - Systematic issue identification
 - Priority triage (blockers vs enhancements)
 - Compliance verification workflow
@@ -60,6 +66,7 @@ Common rejection scenarios:
 ## When to Use This Diagnostic
 
 Use this diagnostic when:
+
 - App Store rejected for accessibility (Guideline 2.5.2)
 - Preparing for App Store submission
 - Accessibility audit requested by legal/compliance
@@ -100,6 +107,7 @@ Use this diagnostic when:
 **Scenario**: Designer insists on 12pt font that breaks Dynamic Type
 
 **Framework**:
+
 1. **Cite Apple HIG**: "All text must support Dynamic Type"
 2. **Show compliance**: "App Store Review Guideline 2.5.2"
 3. **Demonstrate issue**: Record VoiceOver navigation breaking
@@ -109,6 +117,7 @@ Use this diagnostic when:
 **Scenario**: Design requires color-only information (red/green status)
 
 **Framework**:
+
 1. **Cite WCAG**: "Success Criterion 1.4.1 - Use of Color"
 2. **Show impact**: "8% of males are colorblind"
 3. **Demonstrate issue**: Screenshot in grayscale
@@ -118,18 +127,21 @@ Use this diagnostic when:
 ## Tools and Resources
 
 ### Xcode Accessibility Inspector
+
 - VoiceOver preview
 - Contrast ratio calculator
 - Audit scans
 - Element hierarchy
 
 ### System Settings
+
 - VoiceOver (Settings → Accessibility → VoiceOver)
 - Display & Text Size (larger text, bold text)
 - Reduce Motion
 - Increase Contrast
 
 ### Third-Party Tools
+
 - Sim Daltonism (colorblindness simulator)
 - Contrast (contrast checker app)
 - WAVE (web accessibility checker)
@@ -145,6 +157,7 @@ Use this diagnostic when:
 This is a **diagnostic skill** — mandatory workflows with pressure defense scenarios.
 
 #### Diagnostic includes
+
 - Step-by-step troubleshooting
 - App Store rejection defense
 - Design review push-back frameworks

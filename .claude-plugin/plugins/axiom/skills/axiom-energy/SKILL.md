@@ -25,18 +25,23 @@ Energy issues manifest as battery drain, hot devices, and poor App Store reviews
 Real questions developers ask that this skill answers:
 
 #### 1. "My app is always at the top of Battery Settings. How do I find what's draining power?"
+
 → The skill covers Power Profiler workflow to identify dominant subsystem and targeted fixes
 
 #### 2. "Users report my app makes their phone hot. Where do I start debugging?"
+
 → The skill provides decision tree: CPU vs GPU vs Network diagnosis with specific patterns
 
 #### 3. "I have timers and location updates. Are they causing battery drain?"
+
 → The skill covers timer tolerance, location accuracy trade-offs, and audit checklists
 
 #### 4. "My app drains battery in the background even when users aren't using it."
+
 → The skill covers background execution patterns, BGTasks, and EMRCA principles
 
 #### 5. "How do I measure if my optimization actually improved battery life?"
+
 → The skill demonstrates before/after Power Profiler comparison workflow
 
 ---
@@ -54,6 +59,7 @@ If you see ANY of these, suspect energy inefficiency:
 - **Location icon**: Appears in status bar when app shouldn't need location
 
 #### Difference from normal energy use
+
 - **Normal**: App uses energy during active use, minimal when backgrounded
 - **Problem**: App uses significant energy even when user isn't interacting
 
@@ -94,6 +100,7 @@ Expand the Power Profiler track and examine per-app metrics:
 Once you identify the dominant subsystem, use the decision trees below.
 
 #### What this tells you
+
 - **CPU dominant** → Check timers, polling, JSON parsing, eager loading
 - **GPU dominant** → Check animations, blur effects, frame rates
 - **Network dominant** → Check request frequency, polling vs push
@@ -101,6 +108,7 @@ Once you identify the dominant subsystem, use the decision trees below.
 - **Location** (shown in CPU) → Check accuracy, update frequency
 
 #### Why diagnostics first
+
 - Finding root cause with Power Profiler: **15-20 minutes**
 - Guessing and testing random optimizations: **4+ hours, often wrong subsystem**
 
@@ -171,6 +179,7 @@ User reports energy issue?
 **Problem**: Timers wake the CPU from idle states, consuming significant energy.
 
 #### ❌ Anti-Pattern — Timer without tolerance
+
 ```swift
 // BAD: Timer fires exactly every 1.0 seconds
 // Prevents system from batching with other timers
@@ -180,6 +189,7 @@ Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
 ```
 
 #### ✅ Fix — Set tolerance for timer batching
+
 ```swift
 // GOOD: 10% tolerance allows system to batch timers
 let timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
@@ -197,6 +207,7 @@ Timer.publish(every: 1.0, tolerance: 0.1, on: .main, in: .default)
 ```
 
 #### ✅ Best — Use event-driven instead of polling
+
 ```swift
 // BEST: Don't use timer at all — react to events
 NotificationCenter.default.publisher(for: .dataDidUpdate)
@@ -207,6 +218,7 @@ NotificationCenter.default.publisher(for: .dataDidUpdate)
 ```
 
 **Key points**:
+
 - Set tolerance to **at least 10%** of interval
 - Timer tolerance allows system to batch multiple timers into single wake
 - Prefer event-driven patterns over polling timers
@@ -219,6 +231,7 @@ NotificationCenter.default.publisher(for: .dataDidUpdate)
 **Problem**: Polling (checking server every N seconds) keeps radios active and drains battery.
 
 #### ❌ Anti-Pattern — Polling every 5 seconds
+
 ```swift
 // BAD: Polls server every 5 seconds
 // Radio stays active, massive battery drain
@@ -228,6 +241,7 @@ Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) { [weak self] _ in
 ```
 
 #### ✅ Fix — Use background push notifications
+
 ```swift
 // GOOD: Server pushes when data changes
 // Radio only active when there's actual new data
@@ -257,6 +271,7 @@ func application(_ application: UIApplication,
 ```
 
 **Server payload for background push**:
+
 ```json
 {
     "aps": {
@@ -267,6 +282,7 @@ func application(_ application: UIApplication,
 ```
 
 **Key points**:
+
 - Background pushes are **discretionary** — system delivers at optimal time
 - Use `apns-priority: 5` for non-urgent updates (energy efficient)
 - Use `apns-priority: 10` only for time-sensitive alerts
@@ -279,6 +295,7 @@ func application(_ application: UIApplication,
 **Problem**: Loading all data upfront causes CPU spikes and memory pressure.
 
 #### ❌ Anti-Pattern — Eager loading (from WWDC25-226)
+
 ```swift
 // BAD: Creates and renders ALL views upfront
 // From WWDC25-226: This caused CPU spike and hang
@@ -290,6 +307,7 @@ VStack {
 ```
 
 #### ✅ Fix — Lazy loading
+
 ```swift
 // GOOD: Only creates visible views
 // From WWDC25-226: Reduced CPU power impact from 21 to 4.3
@@ -301,6 +319,7 @@ LazyVStack {
 ```
 
 #### ❌ Anti-Pattern — Repeated parsing (from WWDC25-226)
+
 ```swift
 // BAD: Parses JSON file on every location update
 // From WWDC25-226: Caused continuous CPU drain during commute
@@ -313,6 +332,7 @@ func videoSuggestionsForLocation(_ location: CLLocation) -> [Video] {
 ```
 
 #### ✅ Fix — Cache parsed data
+
 ```swift
 // GOOD: Parse once, reuse cached result
 // From WWDC25-226: Eliminated CPU drain
@@ -327,6 +347,7 @@ func videoSuggestionsForLocation(_ location: CLLocation) -> [Video] {
 ```
 
 **Key points**:
+
 - Use `LazyVStack`, `LazyHStack`, `LazyVGrid` for large collections
 - Cache parsed JSON, decoded data, computed results
 - Move expensive operations out of frequently-called methods
@@ -338,6 +359,7 @@ func videoSuggestionsForLocation(_ location: CLLocation) -> [Video] {
 **Problem**: Continuous location updates keep GPS active, draining battery rapidly.
 
 #### ❌ Anti-Pattern — Continuous high-accuracy updates
+
 ```swift
 // BAD: Continuous updates with best accuracy
 // GPS stays active constantly, massive battery drain
@@ -347,6 +369,7 @@ locationManager.startUpdatingLocation()  // Never stops!
 ```
 
 #### ✅ Fix — Appropriate accuracy and significant-change
+
 ```swift
 // GOOD: Reduced accuracy, significant-change monitoring
 let locationManager = CLLocationManager()
@@ -368,6 +391,7 @@ func stopTracking() {
 ```
 
 #### ✅ Better — iOS 26+ CLLocationUpdate with stationary detection
+
 ```swift
 // BEST: Modern async API with automatic stationary detection
 for try await update in CLLocationUpdate.liveUpdates() {
@@ -381,6 +405,7 @@ for try await update in CLLocationUpdate.liveUpdates() {
 ```
 
 **Accuracy comparison (battery impact)**:
+
 | Accuracy | Battery Impact | Use Case |
 |----------|---------------|----------|
 | `kCLLocationAccuracyBest` | Very High | Navigation apps only |
@@ -398,6 +423,7 @@ for try await update in CLLocationUpdate.liveUpdates() {
 #### EMRCA Principles (from WWDC25-227)
 
 Your background work must be:
+
 - **E**fficient — Design lightweight, purpose-driven tasks
 - **M**inimal — Keep background work to a minimum
 - **R**esilient — Save incremental progress; respond to expiration signals
@@ -405,6 +431,7 @@ Your background work must be:
 - **A**daptive — Understand and adapt to system priorities
 
 #### ❌ Anti-Pattern — Long-running background task
+
 ```swift
 // BAD: Requests unlimited background time
 // System will terminate after ~30 seconds anyway
@@ -421,6 +448,7 @@ func applicationDidEnterBackground(_ application: UIApplication) {
 ```
 
 #### ✅ Fix — Proper background task handling
+
 ```swift
 // GOOD: Finish quickly, save progress, notify system
 var backgroundTask: UIBackgroundTaskIdentifier = .invalid
@@ -445,6 +473,7 @@ func applicationDidEnterBackground(_ application: UIApplication) {
 ```
 
 #### ✅ For Long Operations — Use BGProcessingTask
+
 ```swift
 // BEST: Let system schedule at optimal time (charging, WiFi)
 func scheduleBackgroundProcessing() {
@@ -465,6 +494,7 @@ BGTaskScheduler.shared.register(
 ```
 
 #### ✅ iOS 26+ — BGContinuedProcessingTask for user-initiated work
+
 ```swift
 // NEW iOS 26: Continue user-initiated tasks with progress UI
 let request = BGContinuedProcessingTaskRequest(
@@ -483,6 +513,7 @@ try? BGTaskScheduler.shared.submit(request)
 **Problem**: Secondary animations running at higher frame rates than needed increase GPU power.
 
 #### ❌ Anti-Pattern — Uncontrolled frame rates
+
 ```swift
 // BAD: Secondary animation runs at 60fps
 // When primary content only needs 30fps, this wastes power
@@ -494,6 +525,7 @@ UIView.animate(withDuration: 2.0, delay: 0, options: [.repeat]) {
 ```
 
 #### ✅ Fix — Control frame rate with CADisplayLink
+
 ```swift
 // GOOD: Explicitly set preferred frame rate
 let displayLink = CADisplayLink(target: self, selector: #selector(updateAnimation))
@@ -512,6 +544,7 @@ displayLink.add(to: .current, forMode: .default)
 ## Audit Checklists
 
 ### Timer Audit
+
 - [ ] All timers have tolerance set (≥10% of interval)?
 - [ ] Timers invalidated when no longer needed?
 - [ ] Using Combine Timer instead of NSTimer where possible?
@@ -519,6 +552,7 @@ displayLink.add(to: .current, forMode: .default)
 - [ ] Timers stopped when app enters background?
 
 ### Network Audit
+
 - [ ] Requests batched instead of many small requests?
 - [ ] Using discretionary URLSession for non-urgent downloads?
 - [ ] `waitsForConnectivity` set to avoid failed connection attempts?
@@ -526,6 +560,7 @@ displayLink.add(to: .current, forMode: .default)
 - [ ] Push notifications instead of polling?
 
 ### Location Audit
+
 - [ ] Using appropriate accuracy (not `kCLLocationAccuracyBest` unless navigation)?
 - [ ] `distanceFilter` set to reduce update frequency?
 - [ ] Stopping updates when no longer needed?
@@ -533,6 +568,7 @@ displayLink.add(to: .current, forMode: .default)
 - [ ] Background location justified and explained to users?
 
 ### Background Execution Audit
+
 - [ ] `endBackgroundTask` called promptly when work completes?
 - [ ] Long operations use `BGProcessingTask` with `requiresExternalPower`?
 - [ ] Background modes in Info.plist limited to what's actually needed?
@@ -540,6 +576,7 @@ displayLink.add(to: .current, forMode: .default)
 - [ ] EMRCA principles followed?
 
 ### Display/GPU Audit
+
 - [ ] Dark Mode supported (70% OLED power savings)?
 - [ ] Animations stopped when view not visible?
 - [ ] Secondary animations use appropriate frame rates?
@@ -547,6 +584,7 @@ displayLink.add(to: .current, forMode: .default)
 - [ ] Metal rendering has frame limiting?
 
 ### Disk I/O Audit
+
 - [ ] Writes batched instead of frequent small writes?
 - [ ] SQLite using WAL journaling mode?
 - [ ] Avoiding rapid file creation/deletion?
@@ -561,12 +599,14 @@ displayLink.add(to: .current, forMode: .default)
 **The temptation**: "Push notifications are complex. Polling is simpler."
 
 **The reality**:
+
 - Polling every 5 seconds: Radio active **100% of time**
 - Push notifications: Radio active **only when data changes**
 - Users WILL see your app at top of Battery Settings
 - App Store reviews WILL mention "battery hog"
 
 **Time cost comparison**:
+
 - Implement polling: 30 minutes
 - Implement push: 2-4 hours
 - Fix bad reviews + reputation damage: Weeks
@@ -580,11 +620,13 @@ displayLink.add(to: .current, forMode: .default)
 **The temptation**: "Users expect accurate location. Let's use `kCLLocationAccuracyBest`."
 
 **The reality**:
+
 - `kCLLocationAccuracyBest`: GPS + WiFi + Cellular triangulation = **massive drain**
 - `kCLLocationAccuracyHundredMeters`: Good enough for 95% of use cases
 - Location icon in status bar = users checking Battery Settings
 
 **Time cost comparison**:
+
 - Implement high accuracy: 10 minutes
 - Debug "why does my app drain battery" complaints: Hours
 - Refactor to appropriate accuracy: 30 minutes
@@ -598,11 +640,13 @@ displayLink.add(to: .current, forMode: .default)
 **The temptation**: "Animations make the app feel alive and polished."
 
 **The reality**:
+
 - Animations running when view not visible = pure waste
 - High frame rate secondary animations = GPU drain
 - GPU power is significant portion of total device power
 
 **Time cost comparison**:
+
 - Add animation: 15 minutes
 - Add visibility checks: 5 minutes extra
 - Debug "phone gets hot" reports: Hours
@@ -616,12 +660,14 @@ displayLink.add(to: .current, forMode: .default)
 **The temptation**: "Energy optimization is polish. We can do it in v1.1."
 
 **The reality**:
+
 - Battery drain is **immediately visible** to users
 - First impressions drive reviews
 - "Battery hog" reputation is hard to shake
 - Power Profiler baseline takes **15 minutes**
 
 **Time cost comparison**:
+
 - Power Profiler check before launch: 15 minutes
 - Fix energy issues post-launch: Days (plus reputation damage)
 - Regain user trust: Months
@@ -637,12 +683,14 @@ displayLink.add(to: .current, forMode: .default)
 **Symptom**: CPU power impact jumped from 1 to 21 when opening Library pane. UI hung.
 
 **Diagnosis using Power Profiler**:
+
 1. Recorded trace while opening Library pane
 2. CPU Power Impact lane showed massive spike
 3. Time Profiler showed `VideoCardView` body called hundreds of times
 4. Root cause: `VStack` creating ALL video thumbnails upfront
 
 **Fix**:
+
 ```swift
 // Before: VStack (eager)
 VStack {
@@ -668,12 +716,14 @@ LazyVStack {
 **Symptom**: User commuting reported massive battery drain. Developer couldn't reproduce at desk.
 
 **Diagnosis using on-device Power Profiler**:
+
 1. User collected trace during commute (Settings → Developer → Performance Trace)
 2. Trace showed periodic CPU spikes correlating with movement
 3. Time Profiler showed `videoSuggestionsForLocation` consuming CPU
 4. Root cause: JSON file parsed on EVERY location update
 
 **Fix**:
+
 ```swift
 // Before: Parse on every call
 func videoSuggestionsForLocation(_ location: CLLocation) -> [Video] {
@@ -702,11 +752,13 @@ func videoSuggestionsForLocation(_ location: CLLocation) -> [Video] {
 **Symptom**: App drains battery even when not playing music.
 
 **Diagnosis**:
+
 1. Power Profiler showed sustained background CPU activity
 2. Audio session remained active after playback stopped
 3. System kept audio hardware powered on
 
 **Fix**:
+
 ```swift
 // Before: Never deactivate
 func playTrack(_ track: Track) {
@@ -801,6 +853,7 @@ class EnergyMetricsManager: NSObject, MXMetricManagerSubscriber {
 ### Xcode Organizer
 
 Check **Battery Usage** pane in Xcode Organizer for field data:
+
 - Foreground vs background energy breakdown
 - Category breakdown (Audio, Networking, Processing, Display, etc.)
 - Version comparison to detect regressions
@@ -810,6 +863,7 @@ Check **Battery Usage** pane in Xcode Organizer for field data:
 ## Quick Reference
 
 ### Power Profiler Workflow
+
 ```
 1. Connect device wirelessly
 2. Product → Profile → Blank → Add Power Profiler
@@ -820,6 +874,7 @@ Check **Battery Usage** pane in Xcode Organizer for field data:
 ```
 
 ### Key Energy Savings
+
 | Optimization | Potential Savings |
 |--------------|------------------|
 | Dark Mode on OLED | Up to 70% display power |
@@ -830,6 +885,7 @@ Check **Battery Usage** pane in Xcode Organizer for field data:
 | Lazy loading | Eliminates startup CPU spikes |
 
 ### Related Skills
+
 - `axiom-energy-ref` — Complete API reference with all code examples
 - `axiom-energy-diag` — Symptom-based troubleshooting decision trees
 - `axiom-background-processing` — Background task mechanics (why tasks don't run)

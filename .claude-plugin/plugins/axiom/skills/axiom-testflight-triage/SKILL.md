@@ -649,8 +649,8 @@ func suspectFunction() {
 }
 ```
 
-5. Ship instrumented build to TestFlight
-6. Wait for reproduction with better context
+1. Ship instrumented build to TestFlight
+2. Wait for reproduction with better context
 
 **Why this matters:** Understanding beats guessing. Logging beats speculation. It's okay to say "I need more information" rather than shipping a random change.
 

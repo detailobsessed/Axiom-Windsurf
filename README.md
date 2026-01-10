@@ -5,12 +5,14 @@ Battle-tested Claude Code skills, commands, and references for modern xOS (iOS, 
 ## What's New Recently
 
 #### Latest (WWDC 2025 Updates)
+
 - **SwiftUI 26 Features** — Comprehensive guide to iOS 26 SwiftUI: Liquid Glass, WebView, AttributedString rich text, @Animatable macro, 3D charts, scene bridging, and more
 - **SwiftUI Performance Enhancements** — iOS 26 framework improvements: 6x/16x faster lists, improved scrolling, nested ScrollView optimization
 - **Liquid Glass APIs** — New iOS 26 APIs: `.glassBackgroundEffect()`, toolbar spacers, bottom-aligned search, search tab role
 - **App Intents Integration** — Siri, Apple Intelligence, Shortcuts, Spotlight integration with WWDC 2025-260 guidance
 
 #### Recent Skills
+
 - **Energy Optimization** — Power Profiler workflows, subsystem diagnosis (CPU/GPU/Network/Location/Display), anti-pattern fixes for battery drain
 - **Accessibility Audit & Debugging** — Comprehensive WCAG compliance scanning, VoiceOver testing, Dynamic Type support, color contrast validation
 - **Realm to SwiftData Migration** — Migrate before Device Sync sunset (Sept 30, 2025) without losing user data or breaking threading patterns
@@ -51,6 +53,7 @@ Use `/plugin` and select "Manage and install" to see installed plugins. Axiom sh
 Skills are **automatically suggested by Claude Code** based on your questions and context. Simply ask questions that match the skill's purpose:
 
 #### Examples
+
 - "I'm getting BUILD FAILED in Xcode" → activates `axiom-xcode-debugging`
 - "How do I fix Swift 6 concurrency errors?" → activates `axiom-swift-concurrency`
 - "I need to add a database column safely" → activates `axiom-database-migration`
@@ -63,9 +66,11 @@ Skills are **automatically suggested by Claude Code** based on your questions an
 ### UI & Design
 
 #### `axiom-liquid-glass`
+
 Apple's new material design system for iOS 26+. Comprehensive coverage of Liquid Glass visual properties, implementation patterns, and design principles.
 
 #### Key Features
+
 - **Expert Review Checklist** — 7-section validation checklist for reviewing Liquid Glass implementations (material appropriateness, variant selection, legibility, layering, accessibility, performance)
 - Regular vs Clear variant decision criteria
 - Layered system architecture (highlights, shadows, glow, tinting)
@@ -82,9 +87,11 @@ Apple's new material design system for iOS 26+. Comprehensive coverage of Liquid
 ---
 
 #### `axiom-swiftui-performance`
+
 Master SwiftUI performance optimization using the new SwiftUI Instrument in Instruments 26.
 
 #### Key Features
+
 - New SwiftUI Instrument walkthrough (4 track lanes, color-coding, integration with Time Profiler)
 - **Cause & Effect Graph** — Visualize data flow and dependencies to eliminate unnecessary updates
 - Problem 1: Long View Body Updates (formatter caching, expensive operations)
@@ -99,9 +106,11 @@ Master SwiftUI performance optimization using the new SwiftUI Instrument in Inst
 ---
 
 #### `axiom-swiftui-26-ref`
+
 Comprehensive reference guide to all iOS 26 SwiftUI features from WWDC 2025-256.
 
 #### Key Features
+
 - **Liquid Glass Design System** — Toolbar spacers, tinted prominent buttons, glass effect for custom views, bottom-aligned search, search tab role
 - **Performance Improvements** — 6x/16x faster lists (macOS), improved scrolling, nested ScrollView optimization
 - **@Animatable Macro** — Automatic animatableData synthesis with @AnimatableIgnored
@@ -120,9 +129,11 @@ Comprehensive reference guide to all iOS 26 SwiftUI features from WWDC 2025-256.
 ---
 
 #### `axiom-ui-testing`
+
 Reliable UI testing with condition-based waiting patterns and new Recording UI Automation features from Xcode 26.
 
 #### Key Features
+
 - **Recording UI Automation** — Record interactions as Swift code, replay across devices/languages/configurations, review video recordings
 - Three phases: Record → Replay → Review
 - Condition-based waiting (eliminates flaky tests from sleep() timeouts)
@@ -137,9 +148,11 @@ Reliable UI testing with condition-based waiting patterns and new Recording UI A
 ---
 
 #### `axiom-swiftui-debugging`
+
 Diagnostic decision trees for SwiftUI view updates, preview crashes, and layout issues. Includes 3 real-world examples.
 
 #### Key Features
+
 - **View Not Updating Decision Tree** — Diagnose struct mutation, binding identity, view recreation, missing observers
 - **Preview Crashes Decision Tree** — Identify missing dependencies, state init failures, cache corruption
 - **Layout Issues Quick Reference** — ZStack ordering, GeometryReader sizing, SafeArea, frame/fixedSize
@@ -153,9 +166,11 @@ Diagnostic decision trees for SwiftUI view updates, preview crashes, and layout 
 ---
 
 #### `axiom-performance-profiling`
+
 Instruments decision trees and profiling workflows for CPU, memory, and battery optimization. Includes 3 real-world examples.
 
 #### Key Features
+
 - **Performance Decision Tree** — Choose the right tool (Time Profiler, Allocations, Core Data, Energy Impact)
 - **Time Profiler Deep Dive** — CPU analysis, hot spots, Self Time vs Total Time distinction
 - **Allocations Deep Dive** — Memory growth diagnosis, object counts, leak vs caching
@@ -172,9 +187,11 @@ Instruments decision trees and profiling workflows for CPU, memory, and battery 
 ### Debugging & Performance
 
 #### `accessibility-debugging`
+
 Comprehensive accessibility diagnostics with WCAG compliance, VoiceOver testing, Dynamic Type support, color contrast validation, and App Store Review preparation.
 
 #### Key Features
+
 - 7 critical accessibility issues (VoiceOver labels, Dynamic Type, color contrast, touch targets, keyboard navigation, Reduce Motion, common violations)
 - WCAG compliance levels (A, AA, AAA) with code examples
 - Accessibility Inspector workflows
@@ -188,6 +205,7 @@ Comprehensive accessibility diagnostics with WCAG compliance, VoiceOver testing,
 ---
 
 #### `axiom-xcode-debugging`
+
 Environment-first diagnostics for mysterious Xcode issues. Prevents 30+ minute rabbit holes by checking build environment before debugging code.
 
 **When to use** BUILD FAILED, test crashes, simulator hangs, stale builds, zombie xcodebuild processes, "Unable to boot simulator", "No such module" after SPM changes
@@ -195,6 +213,7 @@ Environment-first diagnostics for mysterious Xcode issues. Prevents 30+ minute r
 ---
 
 #### `axiom-memory-debugging`
+
 Systematic memory leak diagnosis with Instruments. 5 leak patterns covering 90% of real-world issues.
 
 **When to use** App memory grows over time, seeing multiple instances of same class, crashes with memory limit exceeded, Instruments shows retain cycles
@@ -204,6 +223,7 @@ Systematic memory leak diagnosis with Instruments. 5 leak patterns covering 90% 
 ---
 
 #### `axiom-build-debugging`
+
 Dependency resolution for CocoaPods and Swift Package Manager conflicts.
 
 **When to use** Dependency conflicts, CocoaPods/SPM resolution failures, "Multiple commands produce" errors, framework version mismatches
@@ -213,9 +233,11 @@ Dependency resolution for CocoaPods and Swift Package Manager conflicts.
 ### Concurrency & Async
 
 #### `axiom-swift-concurrency`
+
 Progressive journey from single-threaded to concurrent Swift code. **Enhanced with WWDC 2025-268** covering `@concurrent` attribute, isolated conformances, task interleaving, and approachable concurrency patterns.
 
 #### Key Features
+
 - **4-Step Progressive Journey** — Single-threaded → Async → Concurrent → Actors
 - **`@concurrent` attribute** (Swift 6.2+) — Force background execution
 - **Isolated conformances** — Protocol conformances with specific actor isolation
@@ -232,6 +254,7 @@ Progressive journey from single-threaded to concurrent Swift code. **Enhanced wi
 ### Data & Persistence
 
 #### `axiom-database-migration`
+
 Safe database schema evolution for SQLite/GRDB/SwiftData. Prevents data loss with additive migrations and testing workflows.
 
 **When to use** Adding/modifying database columns, encountering "FOREIGN KEY constraint failed", "no such column", "cannot add NOT NULL column" errors
@@ -239,6 +262,7 @@ Safe database schema evolution for SQLite/GRDB/SwiftData. Prevents data loss wit
 ---
 
 #### `axiom-sqlitedata`
+
 SQLiteData (Point-Free) patterns, critical gotchas, batch performance, and CloudKit sync.
 
 **When to use** Working with SQLiteData @Table models, @FetchAll/@FetchOne queries, StructuredQueries crashes, batch imports
@@ -246,6 +270,7 @@ SQLiteData (Point-Free) patterns, critical gotchas, batch performance, and Cloud
 ---
 
 #### `axiom-grdb`
+
 Raw GRDB for complex queries, ValueObservation, DatabaseMigrator patterns.
 
 **When to use** Writing raw SQL queries, complex joins, ValueObservation for reactive queries, dropping down from SQLiteData for performance
@@ -253,6 +278,7 @@ Raw GRDB for complex queries, ValueObservation, DatabaseMigrator patterns.
 ---
 
 #### `axiom-swiftdata`
+
 SwiftData with iOS 26+ features, @Model definitions, @Query patterns, Swift 6 concurrency with @MainActor. Enhanced with CloudKit integration patterns, performance optimization, and migration strategies from Realm/Core Data.
 
 **When to use** Working with SwiftData @Model definitions, @Query in SwiftUI, @Relationship macros, ModelContext patterns, CloudKit integration, performance optimization
@@ -264,9 +290,11 @@ SwiftData with iOS 26+ features, @Model definitions, @Query patterns, Swift 6 co
 ### Apple Intelligence & Integration
 
 #### `axiom-app-intents-ref`
+
 Comprehensive guide to App Intents framework for Siri, Apple Intelligence, Shortcuts, and Spotlight integration. Covers AppIntent, AppEntity, parameter handling, entity queries, and debugging.
 
 #### Key Features
+
 - Three building blocks: AppIntent, AppEntity, AppEnum
 - Parameter validation and natural language summaries
 - Entity queries for content discovery
@@ -285,6 +313,7 @@ Comprehensive guide to App Intents framework for Siri, Apple Intelligence, Short
 ### Data & Persistence (Continued)
 
 #### `realm-to-swiftdata-migration`
+
 Comprehensive migration guide for Realm users facing Device Sync sunset (Sept 30, 2025). Complete path from Realm to SwiftData with pattern equivalents, threading model conversion, schema strategies, and testing checklist.
 
 **When to use** Migrating from Realm to SwiftData, planning data migration, understanding threading differences, handling CloudKit sync transition, testing for production readiness
@@ -312,4 +341,3 @@ This is a preview release. Feedback is welcome!
 - [Apple Developer Documentation](https://developer.apple.com/)
   - [Liquid Glass Design System](https://developer.apple.com/design/human-interface-guidelines/)
   - [SwiftUI Performance](https://developer.apple.com/videos/)
-

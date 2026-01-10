@@ -16,12 +16,14 @@ Diagnostic workflows for debugging Network.framework connections using NWConnect
 ### Connection State Issues
 
 #### Never Reaches Ready
+
 - Stuck in preparing → DNS failure
 - Waiting state → No connectivity
 - Posix 61 error → Connection refused
 - Posix 50 error → Network down
 
 #### Ready Then Fails
+
 - After network change → Viability handler
 - TLS -9806 → Certificate invalid
 - Timeout → Receiver not processing
@@ -30,12 +32,14 @@ Diagnostic workflows for debugging Network.framework connections using NWConnect
 ### Data Transmission Problems
 
 #### Data Missing or Corrupted
+
 - Not received → Framing problem
 - Partial data → Min/max bytes
 - Corrupted → TLS disabled
 - Intermittent → Race condition
 
 #### Performance Issues
+
 - High latency → TCP congestion
 - Low throughput → Network transition
 - High CPU → Missing batching
@@ -51,6 +55,7 @@ Diagnostic workflows for debugging Network.framework connections using NWConnect
 ## When to Use This Diagnostic
 
 Use this diagnostic when:
+
 - Connection times out after 60 seconds
 - TLS handshake fails with certificate errors
 - Data sent but never arrives
@@ -91,6 +96,7 @@ Use this diagnostic when:
 **Scenario**: iOS update causes 15% connection failures, 10K affected users, CEO asking for ETA
 
 **Mandatory Protocol**:
+
 1. **Establish Baseline** (5 min) - What worked before vs now
 2. **Reproduce Production** (10 min) - Same iOS version, network conditions
 3. **Check Recent Changes** (5 min) - Framework updates, API changes
@@ -98,6 +104,7 @@ Use this diagnostic when:
 5. **Deploy Hotfix** (20 min) - Fast-track release
 
 **Communication Template**:
+
 ```
 "Identified root cause: [specific issue].
 Affects: [%] on [specific condition].
@@ -110,21 +117,25 @@ Workaround: [if available]."
 ## Diagnostic Patterns
 
 ### Pattern 1: DNS Failure (Preparing Stuck)
+
 **Symptom**: Connection stuck in `.preparing` state
 **Diagnosis**: `nslookup hostname` fails
 **Fix**: Check hostname spelling, DNS configuration
 
 ### Pattern 2: TLS Certificate Error (-9806)
+
 **Symptom**: Connection fails with posix error -9806
 **Diagnosis**: `openssl s_client -connect host:port`
 **Fix**: Update certificate, check date/time, validate chain
 
 ### Pattern 3: Framing Problem (Partial Data)
+
 **Symptom**: Only partial messages received
 **Diagnosis**: Check TLV framing configuration
 **Fix**: Implement proper message boundaries
 
 ### Pattern 4: IPv6-Only Cellular
+
 **Symptom**: Works on WiFi, fails on cellular
 **Diagnosis**: Hardcoded IPv4 address
 **Fix**: Use hostname, enable IPv6 support
@@ -142,12 +153,14 @@ Workaround: [if available]."
 ## Tools and Resources
 
 ### Xcode Tools
+
 - Network Instruments template
 - Console app with NWLoggingEnabled
 - System Log for debugging
 - Network Link Conditioner
 
 ### Command Line
+
 - `nslookup` - DNS resolution
 - `openssl s_client` - TLS validation
 - `netstat` - Port checking
@@ -164,6 +177,7 @@ Workaround: [if available]."
 This is a **diagnostic skill** — mandatory workflows with production crisis defense.
 
 #### Diagnostic includes
+
 - 8+ diagnostic patterns with symptom/diagnosis/fix
 - Production crisis scenario with communication templates
 - Network logging interpretation guide

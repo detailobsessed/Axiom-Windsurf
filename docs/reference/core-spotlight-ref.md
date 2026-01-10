@@ -101,6 +101,7 @@ let item = CSSearchableItem(appEntity: orderEntity)
 ```
 
 **Benefits:**
+
 - Automatic "Find" actions in Shortcuts
 - Direct entity results in Spotlight search
 - Automatic Siri suggestions based on app entities

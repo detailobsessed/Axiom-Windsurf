@@ -12,6 +12,7 @@ apple_platforms: iOS 26+, macOS 26+, iPadOS 26+, axiom-visionOS 26+
 ## When to Use This Skill
 
 Use when:
+
 - Implementing on-device AI features with Foundation Models
 - Adding text summarization, classification, or extraction capabilities
 - Creating structured output from LLM responses
@@ -21,6 +22,7 @@ Use when:
 - Deciding between Foundation Models vs server LLMs (ChatGPT, Claude, etc.)
 
 #### Related Skills
+
 - Use `axiom-foundation-models-diag` for systematic troubleshooting (context exceeded, guardrail violations, availability problems)
 - Use `axiom-foundation-models-ref` for complete API reference with all WWDC code examples
 
@@ -29,9 +31,11 @@ Use when:
 ## Red Flags — Anti-Patterns That Will Fail
 
 ### ❌ Using for World Knowledge
+
 **Why it fails**: The on-device model is 3 billion parameters, optimized for summarization, extraction, classification — **NOT** world knowledge or complex reasoning.
 
 **Example of wrong use**:
+
 ```swift
 // ❌ BAD - Asking for world knowledge
 let session = LanguageModelSession()
@@ -45,9 +49,11 @@ let response = try await session.respond(to: "What's the capital of France?")
 ---
 
 ### ❌ Blocking Main Thread
+
 **Why it fails**: `session.respond()` is `async` but if called synchronously on main thread, freezes UI for seconds.
 
 **Example of wrong use**:
+
 ```swift
 // ❌ BAD - Blocking main thread
 Button("Generate") {
@@ -58,6 +64,7 @@ Button("Generate") {
 **Why**: Generation takes 1-5 seconds. User sees frozen app, bad reviews follow.
 
 **Correct approach**:
+
 ```swift
 // ✅ GOOD - Async on background
 Button("Generate") {
@@ -71,9 +78,11 @@ Button("Generate") {
 ---
 
 ### ❌ Manual JSON Parsing
+
 **Why it fails**: Prompting for JSON and parsing with JSONDecoder leads to hallucinated keys, invalid JSON, no type safety.
 
 **Example of wrong use**:
+
 ```swift
 // ❌ BAD - Manual JSON parsing
 let prompt = "Generate a person with name and age as JSON"
@@ -85,6 +94,7 @@ let person = try JSONDecoder().decode(Person.self, from: data) // CRASHES!
 **Why**: Model might output `{firstName: "John"}` when you expect `{name: "John"}`. Or invalid JSON entirely.
 
 **Correct approach**:
+
 ```swift
 // ✅ GOOD - @Generable guarantees structure
 @Generable
@@ -103,15 +113,18 @@ let response = try await session.respond(
 ---
 
 ### ❌ Ignoring Availability Check
+
 **Why it fails**: Foundation Models only runs on Apple Intelligence devices in supported regions. App crashes or shows errors without check.
 
 **Example of wrong use**:
+
 ```swift
 // ❌ BAD - No availability check
 let session = LanguageModelSession() // Might fail!
 ```
 
 **Correct approach**:
+
 ```swift
 // ✅ GOOD - Check first
 switch SystemLanguageModel.default.availability {
@@ -126,9 +139,11 @@ case .unavailable(let reason):
 ---
 
 ### ❌ Single Huge Prompt
+
 **Why it fails**: 4096 token context window (input + output). One massive prompt hits limit, gives poor results.
 
 **Example of wrong use**:
+
 ```swift
 // ❌ BAD - Everything in one prompt
 let prompt = """
@@ -143,9 +158,11 @@ let prompt = """
 ---
 
 ### ❌ Not Handling Context Overflow
+
 **Why it fails**: Multi-turn conversations grow transcript. Eventually exceeds 4096 tokens, throws error, conversation ends.
 
 **Must handle**:
+
 ```swift
 // ✅ GOOD - Handle overflow
 do {
@@ -159,9 +176,11 @@ do {
 ---
 
 ### ❌ Not Handling Guardrail Violations
+
 **Why it fails**: Model has content policy. Certain prompts trigger guardrails, throw error.
 
 **Must handle**:
+
 ```swift
 // ✅ GOOD - Handle guardrails
 do {
@@ -174,9 +193,11 @@ do {
 ---
 
 ### ❌ Not Handling Unsupported Language
+
 **Why it fails**: Model supports specific languages. User input might be unsupported, throws error.
 
 **Must check**:
+
 ```swift
 // ✅ GOOD - Check supported languages
 let supported = SystemLanguageModel.default.supportedLanguages
@@ -193,6 +214,7 @@ guard supported.contains(Locale.current.language) else {
 Before writing any Foundation Models code, complete these steps:
 
 ### 1. Check Availability
+
 ```swift
 switch SystemLanguageModel.default.availability {
 case .available:
@@ -205,6 +227,7 @@ case .unavailable(let reason):
 ```
 
 **Why**: Foundation Models requires:
+
 - Apple Intelligence-enabled device
 - Supported region
 - User opted in to Apple Intelligence
@@ -214,6 +237,7 @@ case .unavailable(let reason):
 ---
 
 ### 2. Identify Use Case
+
 **Ask yourself**: What is my primary goal?
 
 | Use Case | Foundation Models? | Alternative |
@@ -231,6 +255,7 @@ case .unavailable(let reason):
 ---
 
 ### 3. Design @Generable Schema
+
 If you need structured output (not just plain text):
 
 **Bad approach**: Prompt for "JSON" and parse manually
@@ -249,7 +274,9 @@ struct SearchSuggestions {
 ---
 
 ### 4. Consider Tools for External Data
+
 If your feature needs external information:
+
 - Weather → WeatherKit tool
 - Locations → MapKit tool
 - Contacts → Contacts API tool
@@ -261,6 +288,7 @@ If your feature needs external information:
 ---
 
 ### 5. Plan Streaming for Long Generations
+
 If generation takes >1 second, use streaming:
 
 ```swift
@@ -329,6 +357,7 @@ Need on-device AI?
 ### Core Concepts
 
 **LanguageModelSession**:
+
 - Stateful — retains transcript of all interactions
 - Instructions vs prompts:
   - **Instructions** (from developer): Define model's role, static guidance
@@ -413,12 +442,14 @@ do {
 ### When to Use This Pattern
 
 ✅ **Good for**:
+
 - Simple Q&A
 - Text summarization
 - Content analysis
 - Single-turn generation
 
 ❌ **Not good for**:
+
 - Structured output (use Pattern 2)
 - Long conversations (will hit context limit)
 - External data needs (use Pattern 4)
@@ -437,6 +468,7 @@ do {
 ### The Problem
 
 Without @Generable:
+
 ```swift
 // ❌ BAD - Unreliable
 let prompt = "Generate a person with name and age as JSON"
@@ -479,9 +511,11 @@ let person = response.content // Type-safe Person instance!
 ### Supported Types
 
 **Primitives**:
+
 - `String`, `Int`, `Float`, `Double`, `Bool`
 
 **Arrays**:
+
 ```swift
 @Generable
 struct SearchSuggestions {
@@ -490,6 +524,7 @@ struct SearchSuggestions {
 ```
 
 **Nested/Composed**:
+
 ```swift
 @Generable
 struct Itinerary {
@@ -506,6 +541,7 @@ struct DayPlan {
 // WWDC 286:6:18
 
 **Enums with Associated Values**:
+
 ```swift
 @Generable
 struct NPC {
@@ -523,6 +559,7 @@ struct NPC {
 // WWDC 301:10:49
 
 **Recursive Types**:
+
 ```swift
 @Generable
 struct Itinerary {
@@ -536,6 +573,7 @@ struct Itinerary {
 Control generated values with @Guide:
 
 **Natural Language Description**:
+
 ```swift
 @Generable
 struct NPC {
@@ -545,6 +583,7 @@ struct NPC {
 ```
 
 **Numeric Ranges**:
+
 ```swift
 @Generable
 struct Character {
@@ -556,6 +595,7 @@ struct Character {
 // WWDC 301:11:20
 
 **Array Count**:
+
 ```swift
 @Generable
 struct Suggestions {
@@ -567,6 +607,7 @@ struct Suggestions {
 // WWDC 286:5:32
 
 **Maximum Count**:
+
 ```swift
 @Generable
 struct Result {
@@ -576,6 +617,7 @@ struct Result {
 ```
 
 **Regex Patterns**:
+
 ```swift
 @Generable
 struct NPC {
@@ -600,6 +642,7 @@ struct NPC {
 ### Property Order Matters
 
 Properties generated **in declaration order**:
+
 ```swift
 @Generable
 struct Itinerary {
@@ -622,6 +665,7 @@ struct Itinerary {
 ### The Problem
 
 Without streaming:
+
 ```swift
 // User waits 3-5 seconds seeing nothing
 let response = try await session.respond(to: prompt, generating: Itinerary.self)
@@ -654,6 +698,7 @@ for try await partial in stream {
 ### PartiallyGenerated Type
 
 `@Generable` macro automatically creates `PartiallyGenerated` type:
+
 ```swift
 // Compiler generates:
 extension Itinerary {
@@ -708,6 +753,7 @@ struct ItineraryView: View {
 ### Animations & Transitions
 
 **Add polish**:
+
 ```swift
 if let name = itinerary?.name {
     Text(name)
@@ -727,6 +773,7 @@ if let days = itinerary?.days {
 ### View Identity
 
 **Critical for arrays**:
+
 ```swift
 // ✅ GOOD - Stable identity
 ForEach(days, id: \.id) { day in
@@ -763,12 +810,14 @@ struct Itinerary {
 ### When to Use Streaming
 
 ✅ **Use for**:
+
 - Itineraries
 - Stories
 - Long descriptions
 - Multi-section content
 
 ❌ **Skip for**:
+
 - Simple Q&A (< 1 sentence)
 - Quick classification
 - Content tagging
@@ -846,6 +895,7 @@ print(response.content)
 // WWDC 286:15:03
 
 **Model autonomously**:
+
 1. Recognizes it needs weather data
 2. Calls `GetWeatherTool`
 3. Receives real temperature
@@ -874,11 +924,13 @@ protocol Tool {
 **Two forms**:
 
 1. **Natural language** (String):
+
 ```swift
 return ToolOutput("Temperature is 71°F")
 ```
 
-2. **Structured** (GeneratedContent):
+1. **Structured** (GeneratedContent):
+
 ```swift
 let content = GeneratedContent(properties: ["temperature": 71])
 return ToolOutput(content)
@@ -969,11 +1021,13 @@ class FindContactTool: Tool {
 ### Tool Calling Guarantees
 
 ✅ **Guaranteed**:
+
 - Valid tool names (no hallucinated tools)
 - Valid arguments (via @Generable)
 - Structural correctness
 
 ❌ **Not guaranteed**:
+
 - Tool will be called (model might not need it)
 - Specific argument values (model decides based on context)
 
@@ -1018,6 +1072,7 @@ struct FindPointsOfInterestTool: Tool {
 ### When to Use Tools
 
 ✅ **Use for**:
+
 - Weather data
 - Map/location queries
 - Contact information
@@ -1025,6 +1080,7 @@ struct FindPointsOfInterestTool: Tool {
 - External APIs
 
 ❌ **Don't use for**:
+
 - Data model already has
 - Information in prompt/instructions
 - Simple calculations (model can do these)
@@ -1055,6 +1111,7 @@ for i in 1...100 {
 **Average**: ~3 characters per token in English
 
 **Rough calculation**:
+
 - 4096 tokens ≈ 12,000 characters
 - ≈ 2,000-3,000 words total
 
@@ -1063,6 +1120,7 @@ for i in 1...100 {
 ### Handling Context Overflow
 
 #### Basic: Start fresh session
+
 ```swift
 var session = LanguageModelSession()
 
@@ -1113,6 +1171,7 @@ func condensedSession(from previous: LanguageModelSession) -> LanguageModelSessi
 // WWDC 301:3:55
 
 **Why this works**:
+
 - Instructions always preserved
 - Recent context retained
 - Total tokens drastically reduced
@@ -1155,6 +1214,7 @@ func condensedSession(from previous: LanguageModelSession) -> LanguageModelSessi
 ### Preventing Context Overflow
 
 **1. Keep prompts concise**:
+
 ```swift
 // ❌ BAD
 let prompt = """
@@ -1171,6 +1231,7 @@ let prompt = "Summarize this article's key points"
 Instead of putting entire dataset in prompt, use tools to fetch on-demand.
 
 **3. Break complex tasks into steps**:
+
 ```swift
 // ❌ BAD - One massive generation
 let response = try await session.respond(
@@ -1189,6 +1250,7 @@ for day in 1...7 {
 "Each token in instructions and prompt adds latency. Longer outputs take longer."
 
 **Use Instruments** (Foundation Models template) to:
+
 - See token counts
 - Identify verbose prompts
 - Optimize context usage
@@ -1208,6 +1270,7 @@ for day in 1...7 {
 ### Understanding Sampling
 
 Model generates output **one token at a time**:
+
 1. Creates probability distribution for next token
 2. Samples from distribution
 3. Picks token
@@ -1227,6 +1290,7 @@ let response = try await session.respond(
 // WWDC 301:6:14
 
 **Use cases**:
+
 - Repeatable demos
 - Testing/debugging
 - Consistent results required
@@ -1236,6 +1300,7 @@ let response = try await session.respond(
 ### Temperature Control
 
 **Low variance** (conservative, focused):
+
 ```swift
 let response = try await session.respond(
     to: prompt,
@@ -1244,6 +1309,7 @@ let response = try await session.respond(
 ```
 
 **High variance** (creative, diverse):
+
 ```swift
 let response = try await session.respond(
     to: prompt,
@@ -1254,27 +1320,32 @@ let response = try await session.respond(
 // WWDC 301:6:14
 
 **Temperature scale**:
+
 - `0.1-0.5`: Very focused, predictable
 - `1.0` (default): Balanced
 - `1.5-2.0`: Creative, varied
 
 **Example use cases**:
+
 - **Low temp**: Fact extraction, classification
 - **High temp**: Creative writing, brainstorming
 
 ### When to Adjust Sampling
 
 ✅ **Greedy for**:
+
 - Unit tests
 - Demos
 - Consistency critical
 
 ✅ **Low temperature for**:
+
 - Factual tasks
 - Classification
 - Extraction
 
 ✅ **High temperature for**:
+
 - Creative content
 - Story generation
 - Varied NPC dialog
@@ -1292,11 +1363,13 @@ let response = try await session.respond(
 **Context**: You're implementing a new AI feature. PM suggests using ChatGPT API for "better results."
 
 **Pressure signals**:
+
 - 👔 **Authority**: PM outranks you
 - 💸 **Existing integration**: Team already uses OpenAI for other features
 - ⏰ **Speed**: "ChatGPT is proven, Foundation Models is new"
 
 **Rationalization traps**:
+
 - "PM knows best"
 - "ChatGPT gives better answers"
 - "Faster to implement with existing code"
@@ -1320,6 +1393,7 @@ let response = try await session.respond(
    - Foundation Models: On-device, <100ms startup
 
 **When ChatGPT IS appropriate**:
+
 - World knowledge required (e.g. "Who is the president of France?")
 - Complex reasoning (multi-step logic, math proofs)
 - Very long context (>4096 tokens)
@@ -1357,11 +1431,13 @@ Privacy compliance review for ChatGPT: 2-4 weeks."
 **Context**: Teammate suggests prompting for JSON, parsing with JSONDecoder. Claims it's "simple and familiar."
 
 **Pressure signals**:
+
 - ⏰ **Deadline**: Ship in 2 days
 - 📚 **Familiarity**: "Everyone knows JSON"
 - 🔧 **Existing code**: Already have JSON parsing utilities
 
 **Rationalization traps**:
+
 - "JSON is standard"
 - "We parse JSON everywhere already"
 - "Faster than learning new API"
@@ -1373,15 +1449,18 @@ Privacy compliance review for ChatGPT: 2-4 weeks."
    - No compile-time safety
 
 2. **Invalid JSON**: Model might output:
+
    ```
    Here's the person: {name: "John", age: 30}
    ```
+
    - Not valid JSON (preamble text)
    - Parsing fails
 
 3. **No type safety**: Manual string parsing, prone to errors
 
 **Real-world example**:
+
 ```swift
 // ❌ BAD - Will fail
 let prompt = "Generate a person with name and age as JSON"
@@ -1395,6 +1474,7 @@ let response = try await session.respond(to: prompt)
 **Debugging time**: 2-4 hours finding edge cases, writing parsing hacks
 
 **Correct approach**:
+
 ```swift
 // ✅ GOOD - 15 minutes, guaranteed to work
 @Generable
@@ -1441,11 +1521,13 @@ Swift's type safety prevents entire categories of bugs."
 **Context**: Feature requires extracting name, date, amount, category from invoice. Teammate suggests one prompt: "Extract all information."
 
 **Pressure signals**:
+
 - 🏗️ **Architecture**: "Simpler with one API call"
 - ⏰ **Speed**: "Why make it complicated?"
 - 📉 **Complexity**: "More prompts = more code"
 
 **Rationalization traps**:
+
 - "Simpler is better"
 - "One prompt means less code"
 - "Model is smart enough"
@@ -1620,6 +1702,7 @@ struct Article {
 ### 4. Foundation Models Instrument (~100 words)
 
 **Use Instruments app** with Foundation Models template to:
+
 - Profile latency of each request
 - See token counts (input/output)
 - Identify optimization opportunities
@@ -1636,6 +1719,7 @@ struct Article {
 Before shipping Foundation Models features:
 
 ### Required Checks
+
 - [ ] **Availability checked** before creating session
 - [ ] **Using @Generable** for structured output (not manual JSON)
 - [ ] **Handling context overflow** (`exceededContextWindowSize`)
@@ -1647,6 +1731,7 @@ Before shipping Foundation Models features:
 - [ ] **Prewarmed session** if latency-sensitive
 
 ### Best Practices
+
 - [ ] Instructions are concise (not verbose)
 - [ ] Never interpolating user input into instructions
 - [ ] Property order optimized for streaming UX
@@ -1658,6 +1743,7 @@ Before shipping Foundation Models features:
 - [ ] Tested with long conversations (context handling)
 
 ### Model Capability
+
 - [ ] **Not** using for world knowledge
 - [ ] **Not** using for complex reasoning
 - [ ] Use case is: summarization, extraction, classification, or generation

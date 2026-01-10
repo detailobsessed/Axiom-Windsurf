@@ -12,6 +12,7 @@ Custom schema migrations for SwiftData when lightweight migrations aren't enough
 ## When to Use This Skill
 
 Use this skill when you're:
+
 - Changing property types (String → AttributedString, Int → String)
 - Making optional properties required (must populate existing nulls)
 - Complex relationship restructuring
@@ -38,27 +39,32 @@ Questions you can ask Claude that will draw from this skill:
 ## What's Covered
 
 ### The willMigrate/didMigrate Limitation
+
 - willMigrate sees only OLD models
 - didMigrate sees only NEW models
 - You can never access both simultaneously
 - This shapes all migration strategies
 
 ### VersionedSchema Pattern
+
 - Each schema is a complete snapshot (not a diff)
 - All models must be copied to each version
 - @Attribute(originalName:) for lightweight renames
 
 ### Two-Stage Migration Pattern
+
 - Stage 1: Old model saves data to temporary storage
 - Stage 2: New model reads from temporary storage
 - Required for type changes
 
 ### Relationship Preservation
+
 - One-to-many with cascade delete
 - Many-to-many inverse relationships
 - iOS 17.0 alphabetical naming bug
 
 ### Testing Migrations
+
 - Real device testing (simulator success ≠ production safety)
 - Pre-migration database backup
 - Validation strategies

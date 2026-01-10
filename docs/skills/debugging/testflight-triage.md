@@ -10,6 +10,7 @@ Systematic workflow for investigating TestFlight crashes and reviewing beta feed
 ## When to Use This Skill
 
 Use this skill when you're:
+
 - A beta tester reports that your app crashed
 - You see crash counts in App Store Connect but don't know how to investigate
 - Crash logs in Organizer aren't symbolicated (showing hex addresses)
@@ -34,6 +35,7 @@ Questions you can ask Claude that will draw from this skill:
 ## What's Covered
 
 ### Xcode Organizer Walkthrough
+
 - Opening Organizer (Window → Organizer)
 - UI layout: sidebar, crashes list, log view, inspector
 - Filters: time period, version, product, release type
@@ -41,29 +43,35 @@ Questions you can ask Claude that will draw from this skill:
 - Feedback Inspector for tester comments
 
 ### Triage Questions Workflow
+
 Before diving into code, ask yourself:
+
 1. How long has this been an issue? (check inspector graph)
 2. Is this affecting production or just TestFlight? (use Release filter)
 3. What was the user doing? (check Feedback Inspector)
 
 ### Symbolication
+
 - Why crashes aren't symbolicated (missing dSYM)
 - Quick check: symbolicated vs unsymbolicated
 - Manual symbolication with `atos`
 - Common failures and fixes
 
 ### Common Crash Patterns
+
 - **EXC_BAD_ACCESS** — null pointer, deallocated object
 - **EXC_CRASH (SIGABRT)** — assertions, uncaught exceptions
 - **Watchdog (0x8badf00d)** — main thread blocked too long
 - **Jetsam** — memory pressure kill (no crash report)
 
 ### Terminations Without Crash Reports
+
 - Terminations Organizer for non-crash kills
 - Launch timeout, memory limit, CPU limit categories
 - MetricKit integration for better diagnostics
 
 ### Claude-Assisted Interpretation
+
 - Effective prompts for crash analysis
 - What to include (full report, user context, code)
 - What Claude helps with vs. what requires your judgment
@@ -92,6 +100,7 @@ Thread 0 Crashed:
 ```
 
 **Translation:**
+
 - `EXC_BAD_ACCESS` with low address (0x10) = nil dereference
 - Crashed accessing `currentUser` property
 - Called during view setup

@@ -5,6 +5,7 @@ Automatically scans for iCloud integration issues: missing NSFileCoordinator, un
 ## How to Use This Agent
 
 **Natural language (automatic triggering):**
+
 - "Check my iCloud integration"
 - "Audit my CloudKit code"
 - "My iCloud sync isn't working"
@@ -12,6 +13,7 @@ Automatically scans for iCloud integration issues: missing NSFileCoordinator, un
 - "Check for iCloud Drive issues"
 
 **Explicit command:**
+
 ```bash
 /axiom:audit-icloud
 ```

@@ -10,6 +10,7 @@ Complete API reference for modern Core Location (iOS 17+). Covers CLLocationUpda
 ## When to Use This Reference
 
 Use this reference when you need:
+
 - CLLocationUpdate AsyncSequence patterns
 - CLMonitor geofencing implementation
 - CLServiceSession declarative authorization (iOS 18+)
@@ -34,6 +35,7 @@ Questions you can ask Claude that will draw from this reference:
 ## What's Covered
 
 ### Modern APIs (iOS 17+)
+
 - CLLocationUpdate with AsyncSequence
 - LiveConfiguration options
 - isStationary for automatic pause/resume
@@ -42,6 +44,7 @@ Questions you can ask Claude that will draw from this reference:
 - 20-condition limit management
 
 ### CLServiceSession (iOS 18+)
+
 - Declarative authorization goals
 - fullAccuracyPurposeKey for temporary precision
 - Implicit sessions from liveUpdates iteration
@@ -49,18 +52,21 @@ Questions you can ask Claude that will draw from this reference:
 - Session layering patterns
 
 ### Background Location
+
 - CLBackgroundActivitySession setup
 - Background mode capability requirements
 - App lifecycle through suspend/terminate
 - Session recovery on relaunch
 
 ### Authorization
+
 - Authorization levels and state machine
 - Accuracy authorization (full vs reduced)
 - Required Info.plist keys
 - Legacy requestWhenInUseAuthorization patterns
 
 ### Legacy APIs (iOS 12-16)
+
 - CLLocationManager delegate pattern
 - Accuracy constants
 - Region monitoring (deprecated)

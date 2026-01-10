@@ -39,6 +39,7 @@ Check these in order when stuck at 60fps on ProMotion:
 ```
 
 Without this key:
+
 - Your `preferredFrameRateRange` hints are ignored above 60Hz
 - Other animations may affect your CADisplayLink callback rate
 - iPad Pro does NOT require this key
@@ -171,6 +172,7 @@ class MetalRenderer: NSObject, CAMetalDisplayLinkDelegate {
 | Use case | General animation | Metal-specific rendering |
 
 **When to use CAMetalDisplayLink:**
+
 - Need precise control over render timing window
 - Want to minimize input latency
 - Building games or intensive Metal apps
@@ -405,21 +407,25 @@ At 120Hz, each phase has ~8.33ms. Miss any deadline = hitch.
 ### Commit Hitch vs Render Hitch
 
 **Commit Hitch**: App process misses commit deadline
+
 - Cause: Main thread work takes too long
 - Fix: Move work off main thread, reduce view complexity
 
 **Render Hitch**: Render server misses presentation deadline
+
 - Cause: GPU work too complex (blur, shadows, layers)
 - Fix: Simplify visual effects, reduce overdraw
 
 ### Double vs Triple Buffering
 
 **Double Buffer (default)**:
+
 - Frame lifetime: 2 vsync intervals
 - Tighter deadlines
 - Lower latency
 
 **Triple Buffer (system may enable)**:
+
 - Frame lifetime: 3 vsync intervals
 - Render server gets 2 vsync intervals
 - Higher latency but more headroom
@@ -467,11 +473,13 @@ let maxFPS = UIScreen.main.maximumFramesPerSecond
 Enable on-device real-time performance overlay:
 
 **Via Xcode scheme:**
+
 1. Edit Scheme → Run → Diagnostics
 2. Enable "Show Graphics Overview"
 3. Optionally enable "Log Graphics Overview"
 
 **Via environment variable:**
+
 ```bash
 MTL_HUD_ENABLED=1
 ```
@@ -480,6 +488,7 @@ MTL_HUD_ENABLED=1
 Settings → Developer → Graphics HUD → Show Graphics HUD
 
 **HUD shows:**
+
 - FPS (average)
 - GPU time per frame
 - Frame interval chart (last 120 frames)
@@ -515,6 +524,7 @@ MXMetricManager.shared.add(metricsManager)
 ```
 
 **What to track:**
+
 - `scrollHitchTimeRatio`: Time spent hitching while scrolling (UIScrollView only)
 - `hitchTimeRatio` (iOS 17+): Time spent hitching in all tracked animations
 

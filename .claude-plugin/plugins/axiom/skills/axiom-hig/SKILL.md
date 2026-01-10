@@ -12,6 +12,7 @@ minimum_versions: iOS 13+ (Dark Mode), iOS 17+ (latest semantic colors), iOS 26+
 ## When to Use This Skill
 
 Use when:
+
 - Making visual design decisions (colors, backgrounds, typography)
 - Reviewing UI for HIG compliance
 - Answering "Should I use a dark background?"
@@ -20,6 +21,7 @@ Use when:
 - Quick lookups for common design questions
 
 #### Related Skills
+
 - Use `axiom-hig-ref` for comprehensive details and code examples
 - Use `axiom-liquid-glass` for iOS 26 material design implementation
 - Use `axiom-liquid-glass-ref` for iOS 26 app-wide adoption guide
@@ -90,18 +92,21 @@ Which font weight should I use?
 **Verify every screen passes these checks:**
 
 #### Appearance
+
 - [ ] Works in Light Mode
 - [ ] Works in Dark Mode
 - [ ] Passes with Increased Contrast enabled
 - [ ] Passes with Reduce Transparency enabled
 
 #### Typography
+
 - [ ] Supports Dynamic Type (text scales to 200%)
 - [ ] No light font weights (Regular minimum)
 - [ ] Hierarchy clear at all text sizes
 - [ ] No truncation at large text sizes
 
 #### Accessibility
+
 - [ ] Contrast ratio ≥ 4.5:1 minimum
 - [ ] Contrast ratio ≥ 7:1 for small text (recommended)
 - [ ] Touch targets ≥ 44x44 points
@@ -109,11 +114,13 @@ Which font weight should I use?
 - [ ] VoiceOver labels for all interactive elements
 
 #### Motion
+
 - [ ] Respects Reduce Motion setting
 - [ ] Animations can be canceled/skipped
 - [ ] No auto-playing video without controls
 
 #### Localization
+
 - [ ] No hardcoded strings in images
 - [ ] Right-to-left language support
 - [ ] Proper text directionality
@@ -127,6 +134,7 @@ Which font weight should I use?
 **A:** Only for media-focused apps (photos, videos, music) where content should be the hero. Use system backgrounds for everything else.
 
 **Apple's own apps:**
+
 | App | Background | Reason |
 |-----|------------|--------|
 | Music | Dark | Album art is focus |
@@ -136,6 +144,7 @@ Which font weight should I use?
 | Settings | System | Utilitarian |
 
 **Code:**
+
 ```swift
 // ❌ WRONG - Don't override unless media-focused
 .background(Color.black)
@@ -149,6 +158,7 @@ Which font weight should I use?
 **A:** Use `systemBackground` which adapts to light/dark automatically. For grouped content (like iOS Settings), use `systemGroupedBackground`.
 
 **Color hierarchy:**
+
 - Primary: `systemBackground` - Main background
 - Secondary: `secondarySystemBackground` - Grouping elements
 - Tertiary: `tertiarySystemBackground` - Grouping within secondary
@@ -169,6 +179,7 @@ List { }
 **A:** Use semantic label colors, maintain 4.5:1 contrast, avoid light font weights.
 
 **Label hierarchy:**
+
 ```swift
 // Most prominent
 Text("Title").foregroundStyle(.primary)
@@ -188,6 +199,7 @@ Text("Disabled").foregroundStyle(.quaternary)
 **A:** SF Symbols unless you need brand-specific imagery. They scale with Dynamic Type and adapt to appearance automatically.
 
 **Benefits of SF Symbols:**
+
 - 5,000+ symbols included (SF Symbols 5)
 - Automatic light/dark adaptation
 - Scale with Dynamic Type
@@ -195,6 +207,7 @@ Text("Disabled").foregroundStyle(.quaternary)
 - Nine weights matching San Francisco font
 
 **When to use custom:**
+
 - Brand-specific imagery
 - App-specific concepts not in SF Symbols
 - Unique visual style requirement
@@ -210,6 +223,7 @@ Text("Disabled").foregroundStyle(.quaternary)
 **A:** 4.5:1 minimum for normal text, 7:1 recommended for small text.
 
 **WCAG Contrast Standards:**
+
 - **AA (required):** 4.5:1 for normal text, 3:1 for large text (18pt+/14pt+ bold)
 - **AAA (enhanced):** 7:1 for normal text, 4.5:1 for large text
 - **Apple guidance:** Use semantic colors which automatically meet AA requirements
@@ -221,6 +235,7 @@ Text("Disabled").foregroundStyle(.quaternary)
 **A:** 44x44 points on iOS/iPadOS, with spacing between targets.
 
 **Platform-specific:**
+
 - iOS/iPadOS: 44x44 points minimum
 - macOS: 20x20 points minimum; larger for primary actions
 - watchOS: Use system controls (optimized for small screen)
@@ -235,17 +250,20 @@ Text("Disabled").foregroundStyle(.quaternary)
 Use this checklist for design reviews, App Store submissions, or stakeholder presentations:
 
 #### Content-First Design
+
 - [ ] Does UI defer to content? (Not competing for attention)
 - [ ] Is branding restrained? (No logo on every screen)
 - [ ] Are backgrounds content-appropriate? (Media apps dark, others system)
 
 #### Platform Consistency
+
 - [ ] Does it feel native to iOS/iPad/Mac?
 - [ ] Uses system colors and fonts?
 - [ ] Standard gestures work as expected?
 - [ ] Navigation patterns familiar?
 
 #### Accessibility Compliance
+
 - [ ] All contrast ratios meet requirements?
 - [ ] All touch targets ≥ 44x44 points?
 - [ ] Information conveyed beyond color?
@@ -253,12 +271,14 @@ Use this checklist for design reviews, App Store submissions, or stakeholder pre
 - [ ] Dynamic Type supported?
 
 #### Light & Dark Modes
+
 - [ ] Works in both appearance modes?
 - [ ] Colors adapt automatically?
 - [ ] No hardcoded color values?
 - [ ] Increased Contrast tested?
 
 #### Localization-Ready
+
 - [ ] No hardcoded strings in images?
 - [ ] RTL language support?
 - [ ] Text doesn't truncate?
@@ -271,6 +291,7 @@ Use this checklist for design reviews, App Store submissions, or stakeholder pre
 ### The Problem
 
 In design reviews, you'll hear:
+
 - "Let's add our logo to every screen for brand consistency"
 - "Use light font weights—they look more elegant"
 - "Make a custom appearance toggle—some users prefer dark"
@@ -303,11 +324,13 @@ Apple explicitly recommends against this because..."
 #### Step 2: Demonstrate the Risk
 
 **For contrast issues:**
+
 - Show the design at 4.5:1 contrast (passing)
 - Show their proposal (failing)
 - Explain App Store rejection risk
 
 **For appearance toggles:**
+
 - Show iOS Settings → Display & Brightness
 - Explain users already have this control
 - Demonstrate confusion of two separate settings
@@ -361,6 +384,7 @@ Every design decision should support these principles:
 **Definition:** Content should be paramount, interface elements should defer to content.
 
 **In practice:**
+
 - White space is your friend
 - Every element has a purpose
 - Remove anything that doesn't serve the user
@@ -371,6 +395,7 @@ Every design decision should support these principles:
 **Definition:** Use standard UI elements and familiar patterns.
 
 **In practice:**
+
 - Standard gestures work as expected
 - Navigation follows platform conventions
 - Colors and fonts use system values
@@ -381,6 +406,7 @@ Every design decision should support these principles:
 **Definition:** UI shouldn't compete with content for attention.
 
 **In practice:**
+
 - Subtle backgrounds, not bold
 - Navigation recedes when not needed
 - Content is the hero
@@ -393,36 +419,42 @@ Every design decision should support these principles:
 ## Platform-Specific Quick Tips
 
 ### iOS
+
 - Portrait-first design
 - One-handed reachability
 - Bottom tab bar for primary navigation
 - Swipe back gesture
 
 ### iPadOS
+
 - Sidebar-adaptable layouts
 - Split view support
 - Pointer interactions
 - Arbitrary window sizing (iOS 26+)
 
 ### macOS
+
 - Menu bar for commands
 - Dense layouts acceptable
 - Pointer-first interactions
 - Window chrome and controls
 
 ### watchOS
+
 - Glanceable interfaces
 - Full-bleed content
 - Minimal padding
 - Digital Crown interactions
 
 ### tvOS
+
 - Focus-based navigation
 - 10-foot viewing distance
 - Large touch targets
 - Gestural remote
 
 ### visionOS
+
 - Spatial layout
 - Glass materials
 - Comfortable viewing depth

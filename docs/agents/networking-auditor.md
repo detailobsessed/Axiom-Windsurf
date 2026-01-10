@@ -5,12 +5,14 @@ Automatically scans for deprecated networking APIs and anti-patterns that cause 
 ## How to Use This Agent
 
 **Natural language (automatic triggering):**
+
 - "Can you check my networking code for deprecated APIs?"
 - "Review my code for Network.framework best practices"
 - "I'm getting App Store review warnings about networking"
 - "Scan for networking anti-patterns before submission"
 
 **Explicit command:**
+
 ```bash
 /axiom:audit-networking
 ```
@@ -18,6 +20,7 @@ Automatically scans for deprecated networking APIs and anti-patterns that cause 
 ## What It Checks
 
 ### Deprecated APIs
+
 1. **SCNetworkReachability** (HIGH) — Race conditions, App Store concern
 2. **CFSocket** (MEDIUM) — 30% CPU penalty, no smart connection
 3. **NSStream / CFStream** (MEDIUM) — No TLS integration
@@ -25,11 +28,12 @@ Automatically scans for deprecated networking APIs and anti-patterns that cause 
 5. **Manual DNS** (MEDIUM) — getaddrinfo, gethostbyname
 
 ### Anti-Patterns
-6. **Reachability Before Connect** (HIGH) — Race condition
-7. **Hardcoded IP Addresses** (MEDIUM) — Breaks VPN/proxy
-8. **Missing [weak self]** (MEDIUM) — Memory leaks in callbacks
-9. **Blocking Socket Calls** (HIGH) — ANR risk
-10. **Not Handling Waiting State** (LOW) — Poor UX
+
+1. **Reachability Before Connect** (HIGH) — Race condition
+2. **Hardcoded IP Addresses** (MEDIUM) — Breaks VPN/proxy
+3. **Missing [weak self]** (MEDIUM) — Memory leaks in callbacks
+4. **Blocking Socket Calls** (HIGH) — ANR risk
+5. **Not Handling Waiting State** (LOW) — Poor UX
 
 ## Model & Tools
 

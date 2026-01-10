@@ -163,6 +163,7 @@ print("Orphaned notes (should be 0 if cascade delete worked): \(orphanedNotes.co
 ### What Successful Migration Looks Like
 
 **Console Output:**
+
 ```
 Post-migration count: 1523  // Matches pre-migration
 Sample note title: Test Note  // Not "MISSING"
@@ -173,6 +174,7 @@ Orphaned notes: 0
 ```
 
 **If you see:**
+
 - Record count differs → Data loss (check willMigrate logic)
 - "MISSING" records → Schema mismatch or fetch error
 - Relationships nil → Inverse configuration or prefetching issue
@@ -226,6 +228,7 @@ SwiftData migration problem suspected?
 **PRINCIPLE** Many-to-many relationships require explicit inverse declarations.
 
 #### ❌ WRONG (Causes "Expected only Arrays" error)
+
 ```swift
 @Model
 final class Note {
@@ -239,6 +242,7 @@ final class Tag {
 ```
 
 #### ✅ CORRECT (Explicit inverse)
+
 ```swift
 @Model
 final class Note {
@@ -264,6 +268,7 @@ final class Tag {
 **PRINCIPLE** In iOS 17.0, many-to-many relationships could fail if model names were in alphabetical order.
 
 #### ❌ WRONG (Crashes in iOS 17.0)
+
 ```swift
 @Model
 final class Actor {
@@ -280,6 +285,7 @@ final class Movie {
 ```
 
 #### ✅ CORRECT (Works in iOS 17.0+)
+
 ```swift
 @Model
 final class Actor {
@@ -305,6 +311,7 @@ final class Movie {
 **PRINCIPLE** Migration plan's schemas array must include ALL versions in order.
 
 #### ❌ WRONG (Missing version causes crash)
+
 ```swift
 enum MigrationPlan: SchemaMigrationPlan {
     static var schemas: [any VersionedSchema.Type] {
@@ -318,6 +325,7 @@ enum MigrationPlan: SchemaMigrationPlan {
 ```
 
 #### ✅ CORRECT (All versions in order)
+
 ```swift
 enum MigrationPlan: SchemaMigrationPlan {
     static var schemas: [any VersionedSchema.Type] {
@@ -339,6 +347,7 @@ enum MigrationPlan: SchemaMigrationPlan {
 **PRINCIPLE** Old models only accessible in willMigrate, new models only in didMigrate.
 
 #### ❌ WRONG (Tries to access old models in didMigrate)
+
 ```swift
 static let migrate = MigrationStage.custom(
     fromVersion: SchemaV1.self,
@@ -354,6 +363,7 @@ static let migrate = MigrationStage.custom(
 ```
 
 #### ✅ CORRECT (Transform in willMigrate)
+
 ```swift
 static let migrate = MigrationStage.custom(
     fromVersion: SchemaV1.self,
@@ -442,6 +452,7 @@ import SwiftData
 **PRINCIPLE** Fetch relationships eagerly during migration to avoid faulting errors.
 
 #### ❌ WRONG (Relationships may fault and break)
+
 ```swift
 static let migrate = MigrationStage.custom(
     fromVersion: SchemaV1.self,
@@ -459,6 +470,7 @@ static let migrate = MigrationStage.custom(
 ```
 
 #### ✅ CORRECT (Prefetch relationships)
+
 ```swift
 static let migrate = MigrationStage.custom(
     fromVersion: SchemaV1.self,
@@ -523,6 +535,7 @@ When migration fails, verify ALL of these:
 If you've spent >30 minutes and the migration issue persists:
 
 #### STOP. You either
+
 1. Skipped mandatory diagnostics (most common)
 2. Misidentified the actual problem
 3. Applied wrong pattern for your symptom
@@ -540,6 +553,7 @@ If you've spent >30 minutes and the migration issue persists:
 - [ ] I checked relationship inverse declarations
 
 #### If ALL boxes are checked and still broken
+
 - You need two-stage migration (covered in `axiom-swiftdata-migration` skill)
 - Time cost: 30-60 minutes for complex type change migration
 - Ask: "What data transformation is actually needed?" and implement two-stage pattern
@@ -559,6 +573,7 @@ If you've spent >30 minutes and the migration issue persists:
 ## Real-World Impact
 
 **Before** SwiftData migration debugging 2-8 hours per issue
+
 - App crashes on launch in production
 - Data loss for existing users
 - Relationships broken after migration
@@ -566,6 +581,7 @@ If you've spent >30 minutes and the migration issue persists:
 - Customer trust damaged
 
 **After** 15-45 minutes with systematic diagnosis
+
 - Identify problem type with diagnostics (5 min)
 - Apply correct pattern (5-10 min)
 - Test on real device (15-30 min)

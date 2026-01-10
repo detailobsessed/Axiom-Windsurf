@@ -17,18 +17,23 @@ Check dependencies BEFORE blaming code. **Core principle** 80% of persistent bui
 These are real questions developers ask that this skill is designed to answer:
 
 #### 1. "I added a Swift Package but I'm getting 'No such module' errors. The package is in my Xcode project but won't compile."
+
 → The skill covers SPM resolution workflows, package cache clearing, and framework search path diagnostics
 
 #### 2. "The build is failing with 'Multiple commands produce' the same output file. How do I figure out which files are duplicated?"
+
 → The skill shows how to identify duplicate target membership and resolve file conflicts in build settings
 
 #### 3. "CocoaPods installed dependencies successfully but the build still fails. How do I debug CocoaPods issues?"
+
 → The skill covers Podfile.lock conflict resolution, linking errors, and version constraint debugging
 
 #### 4. "My build works on my Mac but fails on the CI server. Both machines have the latest Xcode. What's different?"
+
 → The skill explains dependency caching differences, environment-specific paths, and reproducible build strategies
 
 #### 5. "I'm getting framework version conflicts and I don't know which dependency is causing it. How do I resolve this?"
+
 → The skill demonstrates dependency graph analysis and version constraint resolution strategies for complex dependency trees
 
 ---
@@ -36,6 +41,7 @@ These are real questions developers ask that this skill is designed to answer:
 ## Red Flags — Dependency/Build Issues
 
 If you see ANY of these, suspect dependency problem:
+
 - "No such module" after adding package
 - "Multiple commands produce" same output file
 - Build succeeds on one machine, fails on another
@@ -69,12 +75,14 @@ Build failing?
 **Symptom**: "No such module PackageName" after adding Swift Package
 
 **❌ WRONG**:
+
 ```bash
 # Rebuilding without cleaning
 xcodebuild build
 ```
 
 **✅ CORRECT**:
+
 ```bash
 # Reset package caches first
 rm -rf ~/Library/Developer/Xcode/DerivedData
@@ -92,6 +100,7 @@ xcodebuild clean build -scheme YourScheme
 **Symptom**: Pod install succeeds but build fails with framework errors
 
 **Check Podfile.lock**:
+
 ```bash
 # See what versions were actually installed
 cat Podfile.lock | grep -A 2 "PODS:"
@@ -101,6 +110,7 @@ cat Podfile | grep "pod "
 ```
 
 **Fix version conflicts**:
+
 ```ruby
 # Podfile - be explicit about versions
 pod 'Alamofire', '~> 5.8.0'  # Not just 'Alamofire'
@@ -108,6 +118,7 @@ pod 'SwiftyJSON', '5.0.1'     # Exact version if needed
 ```
 
 **Clean reinstall**:
+
 ```bash
 # Remove all pods
 rm -rf Pods/
@@ -127,6 +138,7 @@ open YourApp.xcworkspace
 **Cause**: Same file added to multiple targets or build phases
 
 **Fix**:
+
 1. Open Xcode
 2. Select file in navigator
 3. File Inspector → Target Membership
@@ -138,12 +150,14 @@ open YourApp.xcworkspace
 **Symptom**: "Framework not found" or "Linker command failed"
 
 **Check build settings**:
+
 ```bash
 # Show all build settings
 xcodebuild -showBuildSettings -scheme YourScheme | grep FRAMEWORK_SEARCH_PATHS
 ```
 
 **Fix in Xcode**:
+
 1. Target → Build Settings
 2. Search "Framework Search Paths"
 3. Add path: `$(PROJECT_DIR)/Frameworks` (recursive)
@@ -154,6 +168,7 @@ xcodebuild -showBuildSettings -scheme YourScheme | grep FRAMEWORK_SEARCH_PATHS
 **Symptom**: Package resolution fails with version conflicts
 
 **See dependency graph**:
+
 ```bash
 # In project directory
 swift package show-dependencies
@@ -163,6 +178,7 @@ cat Package.resolved
 ```
 
 **Fix conflicts**:
+
 ```swift
 // Package.swift - be explicit
 .package(url: "https://github.com/owner/repo", exact: "1.2.3")  // Exact version
@@ -171,6 +187,7 @@ cat Package.resolved
 ```
 
 **Reset resolution**:
+
 ```bash
 # Clear package caches
 rm -rf .build
@@ -187,12 +204,14 @@ swift package resolve
 When stability matters more than latest features:
 
 **CocoaPods**:
+
 ```ruby
 pod 'Alamofire', '5.8.0'      # Exact version
 pod 'SwiftyJSON', '~> 5.0.0'  # Any 5.0.x
 ```
 
 **SPM**:
+
 ```swift
 .package(url: "...", exact: "1.2.3")
 ```
@@ -202,12 +221,14 @@ pod 'SwiftyJSON', '~> 5.0.0'  # Any 5.0.x
 When you want bug fixes but not breaking changes:
 
 **CocoaPods**:
+
 ```ruby
 pod 'Alamofire', '~> 5.8'     # 5.8.x but not 5.9
 pod 'SwiftyJSON', '>= 5.0', '< 6.0'  # Range
 ```
 
 **SPM**:
+
 ```swift
 .package(url: "...", from: "1.2.0")              // 1.2.0 and higher
 .package(url: "...", .upToNextMajor(from: "1.0.0"))  // 1.x.x but not 2.0.0
@@ -231,6 +252,7 @@ git clone https://github.com/yourname/package.git
 When a dependency's dependency conflicts:
 
 **SPM (not directly supported, use workarounds)**:
+
 ```swift
 // Instead of this:
 .package(url: "https://github.com/problematic/package")
@@ -239,6 +261,7 @@ When a dependency's dependency conflicts:
 ```
 
 **CocoaPods**:
+
 ```ruby
 # Exclude specific subspecs
 pod 'Firebase/Core'  # Not all of Firebase
@@ -252,6 +275,7 @@ pod 'Firebase/Analytics'
 **Symptom**: Builds in Debug, fails in Release (or vice versa)
 
 **Check optimization settings**:
+
 ```bash
 # Compare Debug and Release settings
 xcodebuild -showBuildSettings -configuration Debug > debug.txt
@@ -260,6 +284,7 @@ diff debug.txt release.txt
 ```
 
 **Common culprits**:
+
 - SWIFT_OPTIMIZATION_LEVEL (-Onone vs -O)
 - ENABLE_TESTABILITY (YES in Debug, NO in Release)
 - DEBUG preprocessor flag
@@ -268,6 +293,7 @@ diff debug.txt release.txt
 ### Workspace vs Project
 
 **Always open workspace with CocoaPods**:
+
 ```bash
 # ❌ WRONG
 open YourApp.xcodeproj
@@ -277,6 +303,7 @@ open YourApp.xcworkspace
 ```
 
 **Check which you're building**:
+
 ```bash
 # For workspace
 xcodebuild -workspace YourApp.xcworkspace -scheme YourScheme build
@@ -290,6 +317,7 @@ xcodebuild -project YourApp.xcodeproj -scheme YourScheme build
 ### The Problem
 
 Under deadline pressure, senior engineers and teammates provide "quick fixes" based on pattern-matching:
+
 - "Just regenerate the lock file"
 - "Increment the build number"
 - "Delete DerivedData and rebuild"
@@ -315,6 +343,7 @@ If you hear ANY of these, pause 5 minutes before executing:
 When someone senior suggests a fix under time pressure:
 
 #### Step 1: Ask (Don't argue)
+
 ```
 "I understand the pressure. Before we regenerate lock files,
 can we spend 5 minutes comparing the broken build to our
@@ -322,11 +351,13 @@ working build? I want to know what we're fixing."
 ```
 
 #### Step 2: Demand Evidence
+
 - "What makes you think it's a lock file issue?"
 - "What changed between our last successful build and this failure?"
 - "Can we see the actual error from App Store build vs our build?"
 
 #### Step 3: Document the Gamble
+
 ```
 If we try "pod install":
 - Time to execute: 10 minutes
@@ -339,6 +370,7 @@ Cost of spending 1 hour on diagnosis: Low
 ```
 
 #### Step 4: Push Back Professionally
+
 ```
 "I want to move fast too. A 1-hour diagnosis now means we
 won't waste another 24-hour cycle. Let's document what we're
@@ -346,6 +378,7 @@ testing before we submit."
 ```
 
 #### Why this works
+
 - You're not questioning their expertise
 - You're asking for evidence (legitimate request)
 - You're showing you understand the pressure
@@ -358,10 +391,12 @@ testing before we submit."
 **Senior says** "Regenerate lock file and resubmit (7 days buffer)"
 
 #### What you do
+
 1. ❌ WRONG: Execute immediately, fail after 24 hours, now 6 days left
 2. ✅ RIGHT: Spend 1 hour comparing builds first
 
 #### Comparison checklist
+
 ```
 Local build that works:
 - Pod versions in Podfile.lock: [list them]
@@ -376,6 +411,7 @@ App Store build that fails:
 ```
 
 #### After comparison
+
 - If versions match: Lock file isn't the issue. Skip the quick fix.
 - If versions differ: Now you understand what to fix.
 
@@ -391,25 +427,28 @@ Quick fixes are safe ONLY when:
 - [ ] You have >48 hours buffer (so failure costs less)
 - [ ] You documented the fix in case you need to explain it later
 
-#### In production crises, NONE of these are usually true.
+#### In production crises, NONE of these are usually true
 
 ---
 
 ## Testing Checklist
 
 ### When Adding Dependencies
+
 - [ ] Specify exact versions or ranges (not just latest)
 - [ ] Check for known conflicts with existing deps
 - [ ] Test clean build after adding
 - [ ] Commit lockfile (Podfile.lock or Package.resolved)
 
 ### When Builds Fail
+
 - [ ] Run mandatory environment checks (xcode-debugging skill)
 - [ ] Check dependency lockfiles for changes
 - [ ] Verify using correct workspace/project file
 - [ ] Compare working vs broken build settings
 
 ### Before Shipping
+
 - [ ] Test both Debug and Release builds
 - [ ] Verify all dependencies have compatible licenses
 - [ ] Check binary size impact of dependencies
@@ -418,6 +457,7 @@ Quick fixes are safe ONLY when:
 ## Common Mistakes
 
 ### ❌ Not Committing Lockfiles
+
 ```bash
 # ❌ BAD: .gitignore includes lockfiles
 Podfile.lock
@@ -427,6 +467,7 @@ Package.resolved
 **Why**: Team members get different versions, builds differ
 
 ### ❌ Using "Latest" Version
+
 ```ruby
 # ❌ BAD: No version specified
 pod 'Alamofire'
@@ -435,6 +476,7 @@ pod 'Alamofire'
 **Why**: Breaking changes when dependency updates
 
 ### ❌ Mixing Package Managers
+
 ```
 Project uses both:
 - CocoaPods (Podfile)
@@ -445,6 +487,7 @@ Project uses both:
 **Why**: Conflicts are inevitable, pick one primary manager
 
 ### ❌ Not Cleaning After Dependency Changes
+
 ```bash
 # ❌ BAD: Just rebuild
 xcodebuild build
@@ -454,6 +497,7 @@ xcodebuild clean build
 ```
 
 ### ❌ Opening Project Instead of Workspace
+
 When using CocoaPods, always open .xcworkspace not .xcodeproj
 
 ## Command Reference
@@ -487,12 +531,14 @@ xcodebuild -showBuildSettings  # Show all build settings
 ## Real-World Impact
 
 **Before** (trial-and-error with dependencies):
+
 - Dependency issue: 2-4 hours debugging
 - Clean builds not run consistently
 - Version conflicts surprise team
 - CI failures from dependency mismatches
 
 **After** (systematic dependency management):
+
 - Dependency issue: 15-30 minutes (check lockfile → resolve)
 - Clean builds mandatory after dep changes
 - Explicit version constraints prevent surprises

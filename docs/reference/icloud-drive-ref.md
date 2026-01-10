@@ -44,6 +44,7 @@ iCloud Container/
 ### File Coordination (Critical)
 
 **Always use NSFileCoordinator** for iCloud files to prevent:
+
 - Race conditions with sync
 - Data corruption
 - Lost updates

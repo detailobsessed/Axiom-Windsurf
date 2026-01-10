@@ -5,6 +5,7 @@ Automated simulator testing with visual verification for closed-loop debugging.
 ## How to Use This Agent
 
 **Natural language (automatic triggering):**
+
 - "Can you test my app with location simulation?"
 - "Take a screenshot to verify this fix"
 - "Check if the push notification handling works"
@@ -13,6 +14,7 @@ Automated simulator testing with visual verification for closed-loop debugging.
 - "Test my app's permission dialogs"
 
 **Explicit command:**
+
 ```bash
 /axiom:test-simulator
 ```
@@ -20,6 +22,7 @@ Automated simulator testing with visual verification for closed-loop debugging.
 ## What It Does
 
 ### Testing Capabilities
+
 1. **Screenshot capture** — Visual verification and debugging
 2. **Video recording** — Capture complex workflows
 3. **Location simulation** — Test GPS-based features
@@ -31,6 +34,7 @@ Automated simulator testing with visual verification for closed-loop debugging.
 9. **Log analysis** — Monitor console for crashes/errors
 
 ### Test Scenarios Fixed
+
 - Visual verification → Screenshot capture + Claude analysis
 - Location testing → Set coordinates + grant permission
 - Push notifications → Send test payload + capture result
@@ -42,6 +46,7 @@ Automated simulator testing with visual verification for closed-loop debugging.
 **Core Principle**: The simulator is a verification mechanism for closed-loop debugging.
 
 **Workflow**:
+
 1. Check simulator state (boot if needed)
 2. Set up test scenario (location, permissions, etc.)
 3. Capture evidence (screenshots, video, logs)
@@ -95,18 +100,21 @@ Automated simulator testing with visual verification for closed-loop debugging.
 ## Key Features
 
 ### Visual Verification
+
 - Claude can **read screenshots** (multimodal analysis)
 - Before/after comparison for fixes
 - UI state verification
 - Error message capture
 
 ### Test Automation
+
 - Programmatic navigation via deep links
 - Automated test scenario setup
 - Background process management
 - Log capture and analysis
 
 ### Integration
+
 - Works with `/axiom:screenshot` for quick captures
 - Integrates with `axiom-deep-link-debugging` skill for navigation
 - Referenced in enhanced debugging skills

@@ -11,6 +11,7 @@ user-invocable: false
 ## When to Use
 
 Use this router when you encounter:
+
 - Writing new unit tests or UI tests
 - Swift Testing framework (@Test, #expect, @Suite)
 - XCTest or XCUITest questions
@@ -28,6 +29,7 @@ This router invokes specialized skills based on the specific testing need:
 ### 1. Unit Tests / Fast Tests → **swift-testing**
 
 **Triggers**:
+
 - Writing new unit tests
 - Swift Testing framework (`@Test`, `#expect`, `#require`, `@Suite`)
 - Making tests run without simulator
@@ -48,6 +50,7 @@ This router invokes specialized skills based on the specific testing need:
 ### 2. UI Tests / XCUITest → **ui-testing**
 
 **Triggers**:
+
 - Recording UI Automation (Xcode 26)
 - XCUIApplication, XCUIElement
 - Flaky UI tests
@@ -66,6 +69,7 @@ This router invokes specialized skills based on the specific testing need:
 ### 3. Flaky Tests / Race Conditions → **test-failure-analyzer** (Agent)
 
 **Triggers**:
+
 - Tests fail randomly in CI
 - Tests pass locally but fail in CI
 - Flaky tests (pass sometimes, fail sometimes)
@@ -84,6 +88,7 @@ This router invokes specialized skills based on the specific testing need:
 ### 4. Async Testing Patterns → **testing-async**
 
 **Triggers**:
+
 - Testing async/await functions
 - `confirmation` for callbacks (Swift Testing)
 - `expectedCount` for multiple callbacks
@@ -101,6 +106,7 @@ This router invokes specialized skills based on the specific testing need:
 ### 5. Test Crashes / Environment Issues → **xcode-debugging**
 
 **Triggers**:
+
 - Tests crash before assertions run
 - Simulator won't boot for tests
 - Tests hang indefinitely
@@ -153,6 +159,7 @@ User has testing question
 ## Anti-Rationalization
 
 **Do NOT skip this router for:**
+
 - "Simple" test questions (proper patterns prevent future pain)
 - "I know XCTest" (Swift Testing is significantly better for unit tests)
 - "Tests are slow but it's fine" (fast tests enable TDD and better feedback)

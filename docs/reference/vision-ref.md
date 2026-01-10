@@ -7,6 +7,7 @@ Comprehensive reference for Vision framework people-focused computer vision: sub
 Vision provides computer vision algorithms for still images and video. This reference covers all people-focused APIs with complete code examples.
 
 **Core workflow**:
+
 1. Create request (e.g., `VNDetectHumanHandPoseRequest()`)
 2. Create handler with image (`VNImageRequestHandler(cgImage: image)`)
 3. Perform request (`try handler.perform([request])`)

@@ -13,6 +13,7 @@ App-level composition patterns for iOS. Covers @main entry points, authenticatio
 ## When to Use This Skill
 
 Use this skill when you're:
+
 - Structuring your @main entry point and root view
 - Managing authentication state (login → onboarding → main)
 - Switching between app-level states without flicker
@@ -36,24 +37,28 @@ Questions you can ask Claude that will draw from this skill:
 ## What's Covered
 
 ### App-Level State Machines
+
 - AppState enum pattern (loading, unauthenticated, authenticated, error)
 - Avoiding "boolean soup" (scattered isLoading, isLoggedIn, hasError)
 - State transitions with validation
 - Centralized state management
 
 ### Root View Switching
+
 - Clean transitions between app states
 - Animation coordination
 - Preventing screen flicker on launch
 - Minimum loading duration patterns
 
 ### Scene Lifecycle
+
 - scenePhase handling (active, inactive, background)
 - Session validation on foreground
 - Resource cleanup on background
 - State restoration
 
 ### Modularization
+
 - Decision tree for when to split
 - Feature module patterns
 - Dependency injection between modules

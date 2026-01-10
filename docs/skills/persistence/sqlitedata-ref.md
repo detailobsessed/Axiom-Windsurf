@@ -12,6 +12,7 @@ Advanced query patterns and schema composition for Point-Free's SQLiteData frame
 ## When to Use This Reference
 
 Use this reference when you're:
+
 - Composing reusable column groups with `@Selection`
 - Implementing single-table inheritance patterns
 - Writing recursive CTEs for hierarchical data
@@ -37,24 +38,28 @@ Questions you can ask Claude that will draw from this reference:
 ## What's Covered
 
 ### Schema Composition
+
 - `@Selection` for reusable column groups
 - Embedding column groups in `@Table` types
 - Single-table inheritance patterns
 - Flattening groups in CREATE TABLE
 
 ### Advanced Queries
+
 - Recursive CTEs for hierarchical data (trees, graphs)
 - Database views with `@Selection`
 - `TableAlias` for self-joins
 - Complex predicates and joins
 
 ### Aggregation
+
 - JSON aggregation (`jsonGroupArray`)
 - String concatenation (`groupConcat`)
 - Custom aggregate functions
 - Grouping and filtering aggregates
 
 ### Performance Patterns
+
 - Indexed queries
 - Query plan analysis
 - Batch operations

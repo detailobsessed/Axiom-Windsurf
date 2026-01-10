@@ -11,6 +11,7 @@ Systematic diagnosis for frame rate issues on variable refresh rate displays lik
 ## When to Use
 
 Use this skill when:
+
 - Your app runs at 60fps on a ProMotion (120Hz) device
 - MTKView or CADisplayLink isn't reaching expected frame rate
 - You're experiencing micro-stuttering despite good average FPS

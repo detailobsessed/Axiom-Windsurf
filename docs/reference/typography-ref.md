@@ -10,6 +10,7 @@ Complete reference for typography on Apple platforms. Covers San Francisco font 
 ## When to Use This Reference
 
 Use this reference when you need:
+
 - San Francisco font family details
 - Text style sizes and scaling behavior
 - Dynamic Type implementation patterns
@@ -33,6 +34,7 @@ Questions you can ask Claude that will draw from this reference:
 ## What's Covered
 
 ### San Francisco Font System
+
 - SF Pro and SF Pro Rounded (iOS, iPadOS, macOS, tvOS)
 - SF Compact (watchOS, narrow columns)
 - SF Mono (monospaced, code)
@@ -40,22 +42,26 @@ Questions you can ask Claude that will draw from this reference:
 - SF Arabic (right-to-left)
 
 ### Variable Font Axes
+
 - Weight (9 weights: Ultralight to Black)
 - Width (Condensed, Compressed, Regular, Expanded)
 - Optical sizes (automatic text/display switching)
 
 ### Text Styles
+
 - largeTitle through caption2
 - Default sizes at each style
 - Scaling behavior with Dynamic Type
 
 ### Dynamic Type
+
 - Preferred content size categories
 - Text style adoption in SwiftUI/UIKit
 - Custom font scaling
 - Accessibility sizes
 
 ### Typography Best Practices
+
 - Weight recommendations by context
 - Minimum sizes for legibility
 - Line height and tracking

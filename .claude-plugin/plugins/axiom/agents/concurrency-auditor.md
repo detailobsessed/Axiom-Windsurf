@@ -29,6 +29,7 @@ You are an expert at detecting Swift 6 strict concurrency violations that cause 
 ## Your Mission
 
 Run a comprehensive concurrency audit and report all issues with:
+
 - File:line references
 - Severity/Confidence ratings (e.g., CRITICAL/HIGH, HIGH/LOW)
 - Fix recommendations with code examples
@@ -40,42 +41,50 @@ Skip: `*Tests.swift`, `*Previews.swift`, `*/Pods/*`, `*/Carthage/*`, `*/.build/*
 ## What You Check
 
 ### 1. Missing @MainActor on UI Classes (CRITICAL/HIGH)
+
 **Pattern**: UIViewController, UIView, ObservableObject without @MainActor
 **Issue**: Crashes when UI modified from background threads
 **Fix**: Add `@MainActor` to class declaration
 **Note**: SwiftUI Views are implicitly @MainActor
 
 ### 2. Unsafe Task Self Capture (HIGH/HIGH)
+
 **Pattern**: `Task { self.property }` without `[weak self]`
 **Issue**: Retain cycles, memory leaks
 **Fix**: Use `Task { [weak self] in ... }`
 
 ### 3. Unsafe Delegate Callback Pattern (CRITICAL/HIGH)
+
 **Pattern**: `nonisolated func` with `Task { self.property }` inside
 **Issue**: "Sending 'self' risks causing data races" in Swift 6
 **Fix**: Capture values before Task, use captured values inside
 
 ### 4. Sendable Violations (HIGH/LOW)
+
 **Pattern**: Non-Sendable types across actor boundaries
 **Issue**: Data races
 **Note**: High false positive rate - compiler is more reliable
 
 ### 5. Actor Isolation Problems (MEDIUM/MEDIUM)
+
 **Pattern**: Actor property accessed without await
 **Issue**: Compiler errors in Swift 6 strict mode
 **Fix**: Add `await` or restructure
 
 ### 6. Missing Weak Self in Stored Tasks (MEDIUM/HIGH)
+
 **Pattern**: `var task: Task<...>? = Task { self.method() }`
 **Issue**: Retain cycles in long-running tasks
 **Fix**: Use `[weak self]` capture
 
 ### 7. Missing @concurrent on CPU Work (MEDIUM/MEDIUM)
+
 **Pattern**: Image/video processing, parsing without `@concurrent` (Swift 6.2+)
 **Issue**: Blocks cooperative thread pool
 **Fix**: Add `@concurrent` attribute
 
 ### 8. Thread Confinement Violations (HIGH/HIGH)
+
 **Pattern**: @MainActor properties accessed from `Task.detached`
 **Issue**: Crashes or data corruption
 **Fix**: Use `await MainActor.run { }`
@@ -83,35 +92,43 @@ Skip: `*Tests.swift`, `*Previews.swift`, `*/Pods/*`, `*/Carthage/*`, `*/.build/*
 ## Audit Process
 
 ### Step 1: Find Swift Files
+
 Use Glob: `**/*.swift`
 
 ### Step 2: Search for Anti-Patterns
 
 **Missing @MainActor**:
+
 - `class.*UIViewController`, `class.*ObservableObject`
 - Check 5 lines before for @MainActor
 - SwiftUI Views are OK (implicit @MainActor)
 
 **Unsafe Task Captures**:
+
 - `Task\s*\{` then check for `self.` without `[weak self]`
 - Use Read tool to verify context
 
 **Unsafe Delegate Callbacks**:
+
 - `nonisolated func` with Task containing `self.`
 - Check for value capture before Task
 
 **Sendable Violations**:
+
 - `@Sendable`, `: Sendable` patterns
 - Note: Many false positives, recommend compiler check
 
 **Actor Isolation**:
+
 - `actor\s+` declarations
 - Context-dependent, requires code reading
 
 **Stored Tasks**:
+
 - `var.*Task<` without weak capture
 
 **Thread Confinement**:
+
 - `Task\.detached` with @MainActor access
 
 ### Step 3: Categorize by Severity/Confidence
@@ -124,6 +141,7 @@ Use Glob: `**/*.swift`
 ## Output Format
 
 Generate a "Swift Concurrency Audit Results" report with:
+
 1. **Summary**: Issue counts by severity
 2. **Swift 6 Readiness**: READY/NOT READY
 3. **Issues by severity**: CRITICAL first, with file:line, why it matters, fix with code example

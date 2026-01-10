@@ -14,11 +14,13 @@ last_updated: 2025-12-02
 Network.framework is Apple's modern networking API that replaces Berkeley sockets, providing smart connection establishment, user-space networking, built-in TLS support, and seamless mobility. Introduced in iOS 12 (2018) with NWConnection and evolved in iOS 26 (2025) with NetworkConnection for structured concurrency.
 
 #### Evolution timeline
+
 - **2018 (iOS 12)** NWConnection with completion handlers, deprecates CFSocket/NSStream/SCNetworkReachability
 - **2019 (iOS 13)** User-space networking (30% CPU reduction), TLS 1.3 default
 - **2025 (iOS 26)** NetworkConnection with async/await, TLV framing built-in, Coder protocol, Wi-Fi Aware discovery
 
 #### Key capabilities
+
 - **Smart connection establishment** Happy Eyeballs (IPv4/IPv6 racing), proxy evaluation (PAC), VPN detection, WiFi Assist fallback
 - **User-space networking** ~30% lower CPU usage vs sockets, memory-mapped regions, reduced context switches
 - **Built-in security** TLS 1.3 by default, DTLS for UDP, certificate pinning support
@@ -26,10 +28,12 @@ Network.framework is Apple's modern networking API that replaces Berkeley socket
 - **Performance** ECN (Explicit Congestion Notification), service class marking, TCP Fast Open, UDP batching
 
 #### When to use vs URLSession
+
 - **URLSession** HTTP, HTTPS, WebSocket, simple TCP/TLS streams → Use URLSession (optimized for these)
 - **Network.framework** UDP, custom protocols, low-level control, peer-to-peer, gaming, streaming → Use Network.framework
 
 #### Related Skills
+
 - Use `axiom-networking` for anti-patterns, common patterns, pressure scenarios
 - Use `axiom-networking-diag` for systematic troubleshooting of connection failures
 
@@ -38,6 +42,7 @@ Network.framework is Apple's modern networking API that replaces Berkeley socket
 ## When to Use This Skill
 
 Use this skill when:
+
 - **Planning migration** from BSD sockets, CFSocket, NSStream, or SCNetworkReachability
 - **Understanding API differences** between NWConnection (iOS 12-25) and NetworkConnection (iOS 26+)
 - **Implementing all 12 WWDC 2025 examples** (TLS connection, TLV framing, Coder protocol, NetworkListener, Wi-Fi Aware)
@@ -75,6 +80,7 @@ Use this skill when:
 | **Discovery** | NWBrowser (Bonjour only) | NetworkBrowser (Bonjour + Wi-Fi Aware) |
 
 #### Recommendation
+
 - New apps targeting iOS 26+: Use NetworkConnection (cleaner, safer)
 - Apps supporting iOS 12-25: Use NWConnection (backward compatible)
 - Migration: Both APIs coexist, migrate incrementally
@@ -110,6 +116,7 @@ public func sendAndReceiveWithTLS() async throws {
 ```
 
 #### Key points
+
 - `TLS()` infers `TCP()` and `IP()` automatically
 - No explicit connection.start() needed (happens on first send/receive)
 - Async/await eliminates callback nesting
@@ -131,6 +138,7 @@ let connection = NetworkConnection(
 ```
 
 #### When to customize IP
+
 - `.fragmentationEnabled(false)` — For protocols that handle fragmentation themselves (QUIC)
 - `.ipVersion(.v6)` — Force IPv6 only (testing)
 
@@ -153,6 +161,7 @@ let connection = NetworkConnection(
 ```
 
 #### Common parameters
+
 - `.constrainedPathsProhibited(true)` — Respect low data mode
 - `.expensivePathsProhibited(true)` — Don't use cellular/hotspot
 - `.multipathServiceType(.handover)` — Enable Multipath TCP
@@ -239,6 +248,7 @@ Task {
 ```
 
 #### Key states
+
 - **.preparing** DNS lookup, TCP SYN, TLS handshake
 - **.waiting** No network available, framework retries automatically
 - **.ready** Connection established, can send/receive
@@ -279,6 +289,7 @@ while remaining > 0 {
 ```
 
 #### receive() variants
+
 - `receive(exactly: n)` — Wait for exactly n bytes
 - `receive(atLeast: min, atMost: max)` — Get between min and max bytes
 - `receive(as: UInt32.self)` — Read fixed-size type (network byte order)
@@ -290,6 +301,7 @@ while remaining > 0 {
 **TLV (Type-Length-Value)** solves message boundary problem on stream protocols (TCP/TLS).
 
 #### Format
+
 - Type: UInt32 (message identifier)
 - Length: UInt32 (message size, automatic)
 - Value: Message bytes
@@ -347,11 +359,13 @@ public func receiveWithTLV() async throws {
 ```
 
 #### Benefits
+
 - Message boundaries preserved (send 3 messages → receive exactly 3)
 - Type-safe message handling (enum-based routing)
 - Minimal overhead (8 bytes per message: type + length)
 
 #### When to use
+
 - Mixed message types (chat + presence + typing)
 - Existing protocols using TLV
 - Need message boundaries without heavy framing
@@ -402,20 +416,24 @@ public func receiveWithCoder() async throws {
 ```
 
 #### Supported formats
+
 - `.json` — JSON encoding (human-readable, widely compatible)
 - `.propertyList` — Property list (faster, smaller)
 
 #### Benefits
+
 - No JSON boilerplate (~50 lines → ~10 lines)
 - Type-safe (compiler catches message structure changes)
 - Automatic framing (handles message boundaries)
 
 #### When to use
+
 - App-to-app communication (you control both ends)
 - Prototyping (fastest time to working code)
 - Type-safe protocols
 
 #### When NOT to use
+
 - Interoperating with non-Swift servers
 - Need custom wire format
 - Performance-critical (prefer manual encoding for control)
@@ -452,6 +470,7 @@ public func listenForIncomingConnections() async throws {
 ```
 
 #### Key features
+
 - Automatic subtask per connection (no manual Task management)
 - Structured concurrency (all subtasks cancelled when listener exits)
 - `connection.messages` async sequence for receiving
@@ -499,6 +518,7 @@ public func findNearbyDevice() async throws {
 ```
 
 #### Wi-Fi Aware features
+
 - Peer-to-peer without infrastructure (no WiFi router needed)
 - Automatic discovery of paired devices
 - Low latency, axiom-high throughput
@@ -678,6 +698,7 @@ connection.receive(minimumIncompleteLength: 10, maximumLength: 10) { [weak self]
 ```
 
 #### Receive parameters
+
 - `minimumIncompleteLength`: Minimum bytes before callback (1 = return any data)
 - `maximumLength`: Maximum bytes per callback
 - For "exactly n bytes": Set both to n
@@ -686,7 +707,7 @@ connection.receive(minimumIncompleteLength: 10, maximumLength: 10) { [weak self]
 
 ### 5.4 UDP Batching (WWDC 2018 lines 343-347)
 
-#### Batch sending for 30% CPU reduction.
+#### Batch sending for 30% CPU reduction
 
 ```swift
 // UDP connection
@@ -843,6 +864,7 @@ connection.viabilityUpdateHandler = { isViable in
 ```
 
 #### When viability changes
+
 - Walk into elevator (WiFi signal lost) → not viable
 - Walk out of elevator (WiFi returns) → viable again
 - Switch WiFi → cellular → not viable briefly → viable on cellular
@@ -864,6 +886,7 @@ connection.betterPathUpdateHandler = { betterPathAvailable in
 ```
 
 #### Scenarios
+
 - Connected on cellular, walk into building with WiFi → better path available
 - Connected on WiFi, WiFi quality degrades, cellular available → better path available
 
@@ -900,11 +923,13 @@ let connection = NWConnection(host: "example.com", port: 443, using: parameters)
 ```
 
 #### Multipath TCP modes
+
 - `.handover` — Seamless handoff between networks (WiFi ↔ cellular)
 - `.interactive` — Use multiple paths simultaneously (lowest latency)
 - `.aggregate` — Use multiple paths simultaneously (highest throughput)
 
 #### Benefits
+
 - Automatic network transition (no viability handlers needed)
 - No connection interruption when switching networks
 - Fallback to single-path if MPTCP unavailable
@@ -943,16 +968,19 @@ monitor.start(queue: .main)
 ```
 
 #### Use cases
+
 - Show "No network" UI when path.status == .unsatisfied
 - Disable high-bandwidth features when path.isExpensive
 - Adjust quality based on interface type
 
 #### When to use
+
 - Global network state monitoring
 - When "waiting for connectivity" isn't enough
 - Need to know available interfaces before connecting
 
 #### When NOT to use
+
 - Checking before connecting (use waiting state instead)
 - Per-connection monitoring (use viability handlers instead)
 
@@ -1027,6 +1055,7 @@ tlsOptions.tlsCipherSuites = [
 **Automatic on iOS/tvOS.** Network.framework moves TCP/UDP stack into your app process.
 
 #### Benefits
+
 - ~30% lower CPU usage (measured with Instruments)
 - No kernel→userspace copy (memory-mapped regions)
 - Reduced context switches
@@ -1048,7 +1077,7 @@ Explicit Congestion Notification for smooth UDP transmission.
 ```swift
 // Create IP metadata with ECN
 let ipMetadata = NWProtocolIP.Metadata()
-ipMetadata.ecnFlag = .congestionEncountered // Or .ect0, .ect1
+ipMetadata.ecnFlag = .congestionEncountered // Or .etc0, .etc1
 
 // Attach to send context
 let context = NWConnection.ContentContext(
@@ -1060,7 +1089,8 @@ connection.send(content: data, contentContext: context, completion: .contentProc
 ```
 
 #### ECN flags
-- `.ect0` / `.ect1` — ECN-capable transport
+
+- `.etc0` / `.etc1` — ECN-capable transport
 - `.congestionEncountered` — Congestion notification received
 
 **Benefits** Network can signal congestion without dropping packets.
@@ -1085,6 +1115,7 @@ connection.send(content: audioData, contentContext: context, completion: .conten
 ```
 
 #### Service classes
+
 - `.background` — Low priority (large downloads, sync)
 - `.default` — Normal priority
 - `.responsiveData` — Interactive data (API calls)
@@ -1136,6 +1167,7 @@ connection.start(queue: .main)
 #### Migration example
 
 #### Before (blocking sockets)
+
 ```c
 int sock = socket(AF_INET, SOCK_STREAM, 0);
 connect(sock, &addr, addrlen); // BLOCKS
@@ -1143,6 +1175,7 @@ send(sock, data, len, 0);
 ```
 
 #### After (NWConnection)
+
 ```swift
 let connection = NWConnection(host: "example.com", port: 443, using: .tls)
 connection.stateUpdateHandler = { state in
@@ -1156,11 +1189,13 @@ connection.start(queue: .main)
 ### From URLSession StreamTask to NetworkConnection
 
 #### When to migrate
+
 - Need UDP (StreamTask only supports TCP)
 - Need custom protocols
 - Need low-level control
 
 #### When to STAY with URLSession
+
 - HTTP/HTTPS (URLSession optimized for this)
 - WebSocket support
 - Built-in caching, cookies
@@ -1168,6 +1203,7 @@ connection.start(queue: .main)
 #### Migration example
 
 #### Before (URLSession StreamTask)
+
 ```swift
 let task = URLSession.shared.streamTask(withHostName: "example.com", port: 443)
 task.resume()
@@ -1175,6 +1211,7 @@ task.write(Data("Hello".utf8), timeout: 10) { _ in }
 ```
 
 #### After (NetworkConnection iOS 26+)
+
 ```swift
 let connection = NetworkConnection(to: .hostPort(host: "example.com", port: 443)) { TLS() }
 try await connection.send(Data("Hello".utf8))
@@ -1183,6 +1220,7 @@ try await connection.send(Data("Hello".utf8))
 ### From NWConnection to NetworkConnection
 
 #### Benefits of migration
+
 - Async/await (no callback nesting)
 - No `[weak self]` needed
 - TLV framing built-in
@@ -1202,6 +1240,7 @@ try await connection.send(Data("Hello".utf8))
 #### Migration example
 
 #### Before (NWConnection)
+
 ```swift
 connection.stateUpdateHandler = { [weak self] state in
     if case .ready = state {
@@ -1217,6 +1256,7 @@ func sendData() {
 ```
 
 #### After (NetworkConnection)
+
 ```swift
 Task {
     for await state in connection.states {
@@ -1235,11 +1275,13 @@ Task {
 Before shipping networking code:
 
 ### Device Testing
+
 - [ ] Tested on real device (not just simulator)
 - [ ] Tested on multiple iOS versions (12, 15, 26)
 - [ ] Tested on iPhone and iPad (different network characteristics)
 
 ### Network Conditions
+
 - [ ] WiFi (home network)
 - [ ] Cellular (disable WiFi)
 - [ ] Airplane Mode → WiFi (test waiting state)
@@ -1249,6 +1291,7 @@ Before shipping networking code:
 - [ ] Network Link Conditioner (100ms latency, 3% packet loss)
 
 ### Network Types
+
 - [ ] IPv4-only network
 - [ ] IPv6-only network (some cellular carriers)
 - [ ] Dual-stack (IPv4 + IPv6)
@@ -1256,6 +1299,7 @@ Before shipping networking code:
 - [ ] Personal hotspot (expensive path)
 
 ### Performance
+
 - [ ] Connection establishment < 500ms (check logs)
 - [ ] Using batch for UDP (verify with Instruments)
 - [ ] Using contentProcessed for pacing (check send timing)
@@ -1264,6 +1308,7 @@ Before shipping networking code:
 - [ ] Memory stable (no leaks, check [weak self])
 
 ### Error Handling
+
 - [ ] Handling .waiting state (show "Waiting..." UI)
 - [ ] Handling .failed state (specific error messages)
 - [ ] TLS handshake errors logged
@@ -1271,6 +1316,7 @@ Before shipping networking code:
 - [ ] User-facing errors actionable ("Check network" not "POSIX 61")
 
 ### iOS 26+ Features (if using NetworkConnection)
+
 - [ ] Using TLV framing if need message boundaries
 - [ ] Using Coder protocol if sending Codable types
 - [ ] Using NetworkListener instead of NWListener

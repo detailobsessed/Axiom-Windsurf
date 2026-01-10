@@ -12,6 +12,7 @@ Systematic troubleshooting for SwiftData migration failures. Covers schema versi
 ## Symptoms This Diagnoses
 
 Use when you're experiencing:
+
 - App crashes on launch after schema change
 - "Expected only Arrays for Relationships" error
 - "The model used to open the store is incompatible"
@@ -45,6 +46,7 @@ Claude guides you through systematic diagnosis:
 ### Step 2: Check Common Issues
 
 Before changing code:
+
 1. Verify ALL models listed in VersionedSchema.models
 2. Check migration plan has all versions in order
 3. Verify relationship inverses on both sides
@@ -53,6 +55,7 @@ Before changing code:
 ### Step 3: Apply Targeted Fix
 
 Claude provides specific patterns:
+
 - **Pattern 1**: Relationship inverse fixes
 - **Pattern 2**: Schema version mismatch
 - **Pattern 3**: willMigrate/didMigrate usage

@@ -12,6 +12,7 @@ Apple's next-generation material design system introduced at WWDC 2025. Liquid G
 ## When to Use This Skill
 
 Use this skill when you're:
+
 - Implementing Liquid Glass effects in your app
 - Reviewing existing UI for Liquid Glass adoption opportunities
 - Debugging visual artifacts with Liquid Glass materials
@@ -36,15 +37,18 @@ Questions you can ask Claude that will draw from this skill:
 ## What's Covered
 
 ### Visual Properties
+
 - Lensing (primary characteristic) — light bending vs scattering
 - Motion and fluidity — flex, energize, gel-like flexibility
 - Adaptive behavior — content-aware, platform-aware, no fixed light/dark
 
 ### Variants
+
 - **Regular** (default, 95% of cases) — full adaptive behavior, automatic legibility
 - **Clear** (special cases) — requires 3 conditions: media-rich background, dimming layer acceptable, bold/bright content above
 
 ### Implementation
+
 - `glassEffect()` modifier basics
 - `glassBackgroundEffect()` for custom views (iOS 26+)
 - `scrollEdgeEffectStyle(_:for:)` for custom bars
@@ -53,17 +57,20 @@ Questions you can ask Claude that will draw from this skill:
 - Bottom-aligned search and search tab role
 
 ### Design Principles
+
 - Reserve for navigation layer (not content)
 - Never stack glass on glass
 - Avoid content intersections in steady state
 - Tinting for primary actions only
 
 ### Troubleshooting
+
 - Visual artifacts (too transparent, opaque, harsh edges)
 - Dark mode issues
 - Performance problems (scrolling, animations)
 
 ### Pressure Scenarios
+
 - Professional push-back frameworks for design reviews
 - When to accept design decisions vs defend guidelines
 - Documentation templates for overruled decisions
