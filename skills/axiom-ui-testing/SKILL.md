@@ -93,11 +93,11 @@ func testButtonAppears() {
     let dashboard = app.buttons["Dashboard"]
     XCTAssertTrue(dashboard.waitForExistence(timeout: 5))
 }
-```text
+```
 
 ### Accessibility Identifiers
 
-``````swift
+```swift
 // In app code
 Button("Submit") { }
     .accessibilityIdentifier("submitButton")
@@ -105,11 +105,11 @@ Button("Submit") { }
 // In test code — stable across localizations
 let submitButton = app.buttons["submitButton"]
 XCTAssertTrue(submitButton.waitForExistence(timeout: 5))
-```text
+```
 
 ### Decision Tree
 
-``````text
+```text
 Test failing?
 ├─ Element not found?
 │  └─ Use waitForExistence(timeout:) not sleep()
@@ -119,7 +119,7 @@ Test failing?
 │  └─ Wait for animation completion, don't disable
 └─ Network request timing?
    └─ Use XCTestExpectation or waitForExistence
-``````
+```
 
 ## Documentation Scope
 

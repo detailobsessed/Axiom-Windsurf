@@ -1,6 +1,6 @@
 # Axiom for Windsurf
 
-[![Porting Progress](https://img.shields.io/badge/skills%20ported-42%2F58-blue)](skills/)
+[![Porting Progress](https://img.shields.io/badge/skills%20ported-51%2F51-brightgreen)](skills/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Windsurf Next](https://img.shields.io/badge/Windsurf-Next-purple)](https://windsurf.com/)
 

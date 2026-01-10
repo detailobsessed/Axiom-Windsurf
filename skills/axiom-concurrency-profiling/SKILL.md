@@ -70,12 +70,12 @@ description: Instruments workflows for async/await — Swift Concurrency templat
 
 ```text
 SWIFT_CONCURRENCY_COOPERATIVE_THREAD_BOUNDS=1
-``````
+```
 
 ## Related Skills
 
-- [Swift Concurrency](./swift-concurrency) — Concurrency patterns
-- [Synchronization](./synchronization) — Mutex vs actor decisions
+- `Swift Concurrency` skill — Concurrency patterns
+- `Synchronization` skill — Mutex vs actor decisions
 - `Performance Profiling` skill — General profiling
 
 ## Resources

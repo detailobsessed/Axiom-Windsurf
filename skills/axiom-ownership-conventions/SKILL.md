@@ -43,11 +43,11 @@ description: Parameter ownership modifiers for performance optimization — borr
 func process(_ buffer: borrowing LargeBuffer) -> Int {
     buffer.data.count
 }
-```text
+```
 
 ### Consuming Factory
 
-``````swift
+```swift
 struct Builder {
     consuming func build() -> Product {
         Product(config: config)
@@ -56,11 +56,11 @@ struct Builder {
 
 let product = builder.build()
 // builder is now invalid
-```text
+```
 
 ### Noncopyable Type
 
-``````swift
+```swift
 struct FileHandle: ~Copyable {
     borrowing func read(count: Int) -> Data { /* ... */ }
     consuming func close() { /* ... */ }
@@ -70,7 +70,7 @@ struct FileHandle: ~Copyable {
 ## Related Skills
 
 - `Swift Performance` skill — Value type optimization
-- [Swift Concurrency](./swift-concurrency) — Sendable types
+- `Swift Concurrency` skill — Sendable types
 
 ## Resources
 

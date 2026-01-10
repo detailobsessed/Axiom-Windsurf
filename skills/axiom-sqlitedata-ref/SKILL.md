@@ -19,7 +19,7 @@ Use this reference when you're:
 - Using `TableAlias` for self-joins
 - Aggregating data as JSON or concatenated strings
 
-**For core patterns** (CRUD, CloudKit, @Table basics), see the `sqlitedata` skill skill instead.
+**For core patterns** (CRUD, CloudKit, @Table basics), see the `sqlitedata` skill instead.
 
 ## Example Prompts
 
@@ -81,13 +81,13 @@ struct Reminder: Identifiable {
     var title = ""
     let timestamps: Timestamps  // Reused column group
 }
-```text
+```
 
 **Note:** Flatten all groups in your CREATE TABLE—SQLite has no concept of grouped columns.
 
 ### Recursive CTE for Trees
 
-``````swift
+```swift
 // Query all descendants of a folder
 let descendants = Folder
     .withRecursive(
@@ -100,7 +100,7 @@ let descendants = Folder
 
 ## Documentation Scope
 
-This reference covers advanced SQLiteData patterns for experienced developers. For basic CRUD operations, CloudKit sync setup, and `@Table` fundamentals, use the main `sqlitedata` skill skill.
+This reference covers advanced SQLiteData patterns for experienced developers. For basic CRUD operations, CloudKit sync setup, and `@Table` fundamentals, use the main `sqlitedata` skill.
 
 ## Related
 

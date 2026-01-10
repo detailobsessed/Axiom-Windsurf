@@ -39,40 +39,40 @@ let animation = CABasicAnimation(keyPath: "position")
 // ... configure animation
 view.layer.add(animation, forKey: "move")
 CATransaction.commit()
-```text
+```
 
 ### Pattern 2: Spring Physics Device Differences
 
 Simulator runs at 60 FPS, iPhone Pro at 120 FPS (ProMotion). Spring physics need 1.5-2x higher damping/stiffness for ProMotion:
 
-``````swift
+```swift
 // Tuned for ProMotion
 spring.damping = 15    // Not 10
 spring.stiffness = 150 // Not 100
-```text
+```
 
 ### Pattern 3: Duration Mismatch
 
 Don't mix UIView.animate and CAAnimation durations:
 
-``````swift
+```swift
 CATransaction.begin()
 CATransaction.setAnimationDuration(0.3)  // Single source of truth
 // ... add animations
 CATransaction.commit()
-```text
+```
 
 ### Pattern 4: Gesture + Animation Jank
 
 Use CADisplayLink with `.common` mode for gesture-driven animation:
 
-``````swift
+```swift
 displayLink.add(to: .main, forMode: .common)  // Runs during gesture
-```text
+```
 
 ### Debugging Tools
 
-``````swift
+```swift
 view.layer.animationKeys()           // List active animations
 view.layer.presentation()?.position  // Get animated value (not final)
 view.layer.speed = 0.1               // Slow down 10x for debugging

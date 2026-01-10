@@ -34,7 +34,7 @@ static func assumeIsolated<T>(
     file: StaticString = #fileID,
     line: UInt = #line
 ) rethrows -> T where T: Sendable
-```text
+```
 
 **Behavior**: Executes synchronously. **Crashes** if not on MainActor's serial executor.
 
@@ -42,7 +42,7 @@ static func assumeIsolated<T>(
 
 From WWDC 2024-10169 — When documentation guarantees main thread delivery:
 
-``````swift
+```swift
 @MainActor
 class LocationDelegate: NSObject, CLLocationManagerDelegate {
     var location: CLLocation?
@@ -56,11 +56,11 @@ class LocationDelegate: NSObject, CLLocationManagerDelegate {
         }
     }
 }
-```swift
+```
 
 ### @preconcurrency Shorthand
 
-``````swift
+```swift
 // ✅ Using @preconcurrency (cleaner)
 extension MyClass: @preconcurrency SomeDelegate {
     func callback() {
@@ -79,7 +79,7 @@ extension MyClass: @preconcurrency SomeDelegate {
 
 ## Related Skills
 
-- [Swift Concurrency](./swift-concurrency) — Complete concurrency guide
+- `Swift Concurrency` skill — Complete concurrency guide
 - `Swift Testing` skill — Testing MainActor code
 
 ## Resources

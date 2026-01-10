@@ -1,172 +1,111 @@
 ---
 name: axiom-swiftui-debugging
-description: Use when SwiftUI views don't update, update too often, state resets unexpectedly, or previews crash — provides Self._printChanges() analysis, Instruments workflows, and systematic diagnosis for view update issues
+description: Diagnostic decision trees for SwiftUI view updates, preview crashes, and layout issues
 ---
 
 # SwiftUI Debugging
 
-Systematic diagnostics for SwiftUI view update issues. Uses Self._printChanges() and SwiftUI Instrument for evidence-based diagnosis.
+Diagnostic decision trees for SwiftUI issues. Covers view update failures, preview crashes, layout problems, and view identity—with systematic diagnosis to avoid guessing under pressure.
 
 ## When to Use This Skill
 
 Use this skill when you're:
 
-- View not updating after state changes
-- Self._printChanges() shows unexpected update patterns
-- Intermittent issues ("works sometimes")
-- Complex dependency chains causing cascading updates
-- Views updating too often (performance)
-- Preview crashes that aren't immediately obvious
-- State resets unexpectedly during navigation
+- A view isn't updating when you expect it to
+- Preview crashes or won't load
+- Layout looks wrong on specific devices or screen sizes
+- State resets unexpectedly when navigating or toggling conditions
+- Tempted to add `@ObservedObject` everywhere as a band-aid
 
-**Core principle:** SwiftUI issues are almost always about identity, state ownership, or update triggers — not "SwiftUI is broken."
+**Core principle:** Start with observable symptoms, test systematically, eliminate causes one by one. Don't guess.
 
 ## Example Prompts
 
-Questions that should trigger this skill:
+Questions you can ask Claude that will draw from this skill:
 
-- "My view isn't updating even though state changed"
-- "Self._printChanges() shows @self changed but I don't know why"
-- "View updates intermittently — works sometimes, fails others"
-- "Too many views updating when I change one value"
-- "Preview crashes without clear error message"
-- "State resets when navigating back"
-- "My list performance is terrible"
+- "My list item doesn't update when I tap the favorite button, even though the data changed."
+- "Preview crashes with 'Cannot find AppModel in scope' but it compiles fine."
+- "My counter resets to 0 every time I toggle a boolean, why?"
+- "I'm using @Observable but the view still doesn't update when I change the property."
+- "Text field loses focus when I start typing, very frustrating."
+- "Layout looks wrong on iPad but fine on iPhone."
 
-## Diagnostic Patterns
+## What's Covered
 
-### Pattern D1: Self._printChanges() Analysis
+### View Not Updating Decision Tree
+
+- **Struct Mutation** — Direct mutation doesn't trigger updates; reassign the full value
+- **Lost Binding Identity** — Passing `.constant()` or recreating bindings breaks two-way connection
+- **Accidental View Recreation** — Conditionals destroy and recreate views, resetting @State
+- **Missing Observer Pattern** — @Observable vs ObservableObject usage
+
+### Preview Crashes Decision Tree
+
+- **Missing Dependencies** — Views need @EnvironmentObject or environment values
+- **State Initialization Failures** — Array bounds, optional unwraps, invalid defaults
+- **Cache Corruption** — When code builds but preview fails
+
+### Layout Issues Quick Reference
+
+- ZStack ordering and zIndex
+- GeometryReader sizing constraints
+- SafeArea handling
+- Modifier order (bottom-to-top)
+- frame() vs fixedSize() behavior
+
+### View Identity
+
+- Structural vs explicit identity
+- When `.id()` helps vs hurts
+- State preservation with `.opacity()` instead of conditionals
+
+### Debugging Tools
+
+- `Self._printChanges()` for understanding update triggers
+- Debug View Hierarchy for layout inspection
+
+## Key Pattern
+
+### Diagnosing View Not Updating
+
+```text
+View not updating?
+├─ Can reproduce in preview?
+│  ├─ YES: Problem is in code
+│  │  ├─ Modified struct directly? → Struct Mutation
+│  │  ├─ Passed binding to child? → Lost Binding Identity
+│  │  ├─ View inside conditional? → Accidental Recreation
+│  │  └─ Object changed but view didn't? → Missing Observer
+│  └─ NO: Likely cache/Xcode state → See Preview Crashes
+```
 
 ```swift
+// Use Self._printChanges() to understand why body was called
 var body: some View {
-    let _ = Self._printChanges()  // Add temporarily
-    // Output tells you exactly what triggered update
-}
-```
-
-**Output interpretation:**
-
-- `@self changed` → View value or environment changed
-- `propertyName changed` → That specific state triggered update
-- Nothing logged → Body not being called at all
-
-### Pattern D2: SwiftUI Instrument
-
-For complex cases, use Instruments:
-
-1. Launch Instruments with SwiftUI template (Cmd-I)
-2. Record while reproducing issue
-3. Check "Long View Body Updates" lane for expensive views
-4. Use "Cause & Effect Graph" to trace data flow
-
-### Pattern D3: View Identity Investigation
-
-For state that resets unexpectedly:
-
-```swift
-// ❌ PROBLEM: View recreated on each toggle
-if showDetail {
-    DetailView()  // New identity each time!
+    let _ = Self._printChanges() // Debug only - remove before shipping
+    Text("Hello")
 }
 
-// ✅ SAFE: Stable identity
-DetailView()
-    .opacity(showDetail ? 1 : 0)
-
-// Or use explicit ID
-DetailView()
-    .id("detail")  // Stable identity
+// Output: "MyView: count changed" tells you which property triggered update
 ```
 
-**Check for:**
+## Documentation Scope
 
-- Views inside `if/else` conditionals
-- `.id()` modifiers with changing values
-- ForEach without unique, stable identifiers
+This page documents the `axiom-swiftui-debugging` skill—diagnostic decision trees Claude uses when you encounter SwiftUI view update failures, preview crashes, or layout issues.
 
-### Pattern D4: Environment Dependency Check
+**For performance profiling:** Use `swiftui-performance` skill when the view updates but performance is slow.
 
-For cascading updates:
+**For Xcode environment issues:** Use `xcode-debugging` skill when problems are cache corruption or build failures, not SwiftUI code issues.
 
-```swift
-// ❌ PROBLEM: Entire tree updates on any change
-.environment(\.appState, appState)  // AppState changes frequently
+## Related
 
-// ✅ BETTER: Pass only what's needed
-.environment(\.userSettings, appState.userSettings)
-```
-
-**Check for:**
-
-- `.environment()` modifiers with frequently-changing values
-- Consider using direct parameters instead
-
-### Pattern D5: Preview Diagnostics
-
-For preview crashes:
-
-1. Click "Diagnostics" button in preview canvas
-2. Check for missing environment objects
-3. Verify preview provider has all required data
-4. Try isolating the view in a new preview
-
-## Quick Diagnostic Table
-
-| Symptom | First Check | Pattern | Fix Time |
-|---------|-------------|---------|----------|
-| View doesn't update | Self._printChanges() | D1 | 10 min |
-| View updates too often | Instruments | D2 | 30 min |
-| State resets | .id() modifiers | D3 | 15 min |
-| Cascade updates | Environment | D4 | 20 min |
-| Preview crashes | Diagnostics button | D5 | 10 min |
-
-## Common Fixes
-
-### State Not Updating
-
-```swift
-// ❌ PROBLEM: Observing wrong thing
-@State var items: [Item]  // Won't update on item property changes
-
-// ✅ FIX: Use ObservableObject or @Observable
-@StateObject var viewModel = ItemsViewModel()
-// or with Observation framework:
-@State var viewModel = ItemsViewModel()  // if @Observable
-```
-
-### Too Many Updates
-
-```swift
-// ❌ PROBLEM: Entire view rebuilds
-var body: some View {
-    VStack {
-        ExpensiveView()
-        Text(counter)  // Changes frequently
-    }
-}
-
-// ✅ FIX: Extract changing parts
-var body: some View {
-    VStack {
-        ExpensiveView()
-        CounterView(counter: counter)  // Isolated updates
-    }
-}
-```
-
-## Time Cost Transparency
-
-- 10-15 minutes: Diagnose with Self._printChanges()
-- 30-60 minutes: Complex Instruments analysis
-- 2-3 hours: Debugging without systematic approach
-
-## Related Skills
-
-- `axiom-xcode-debugging` — When issue is environment, not SwiftUI
-- `axiom-memory-debugging` — When views leak instead of just misbehave
+- `swiftui-performance` skill — Performance profiling with SwiftUI Instrument
+- `swiftui-debugging-diag` (see upstream Axiom docs) — Systematic diagnostic workflows for complex cases
+- `xcode-debugging` skill — Environment-first diagnostics for cache and build issues
+- `swift-concurrency` skill — @MainActor and async/await patterns for data updates
 
 ## Resources
 
-**WWDC**: 2025-306 (SwiftUI Instruments), 2023-10160 (Performance), 2021-10022 (View identity)
+**WWDC**: 2021-10022 (Demystify SwiftUI), 2023-10149 (@Observable), 2023-10160 (Performance), 2025-306 (Instruments)
 
-**Docs**: /swiftui, /xcode/instruments
+**Docs**: [State and Data Flow](https://developer.apple.com/documentation/swiftui/state-and-data-flow), [Managing Model Data](https://developer.apple.com/documentation/swiftui/managing-model-data-in-your-app), [Observation](https://developer.apple.com/documentation/observation)

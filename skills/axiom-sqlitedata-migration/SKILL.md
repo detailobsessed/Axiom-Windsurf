@@ -47,11 +47,11 @@ class Task {
         self.isComplete = false
     }
 }
-```text
+```
 
 ##### SQLiteData
 
-``````swift
+```swift
 @Table
 struct Task: Identifiable, Sendable {
     @Attribute(.primaryKey)
@@ -59,39 +59,39 @@ struct Task: Identifiable, Sendable {
     var title: String
     var isComplete: Bool
 }
-```text
+```
 
 ### Queries
 
-#### SwiftData
+#### SwiftData (2)
 
-``````swift
+```swift
 @Query(filter: #Predicate { !$0.isComplete })
 var incompleteTasks: [Task]
-```text
+```
 
-##### SQLiteData
+##### SQLiteData (2)
 
-``````swift
+```swift
 @FetchAll(Task.where { !$0.isComplete })
 var incompleteTasks: [Task]
-```text
+```
 
 ### Relationships
 
-#### SwiftData
+#### SwiftData (3)
 
-``````swift
+```swift
 @Model
 class Task {
     @Relationship(deleteRule: .cascade)
     var subtasks: [Subtask]
 }
-```text
+```
 
-##### SQLiteData
+##### SQLiteData (3)
 
-``````swift
+```swift
 @Table
 struct Task: Identifiable, Sendable {
     var id: UUID
@@ -103,7 +103,7 @@ struct Subtask: Identifiable, Sendable {
     var id: UUID
     var taskId: UUID  // Foreign key
 }
-```text
+```
 
 ## Migration Strategy
 
@@ -116,7 +116,7 @@ struct Subtask: Identifiable, Sendable {
 
 ### Data Migration
 
-``````swift
+```swift
 func migrateToSQLiteData() async throws {
     // Fetch from SwiftData
     let tasks = try modelContext.fetch(FetchDescriptor<Task>())
@@ -134,7 +134,7 @@ func migrateToSQLiteData() async throws {
         }
     }
 }
-```text
+```
 
 ## CloudKit Sharing
 
@@ -142,7 +142,7 @@ func migrateToSQLiteData() async throws {
 
 **SQLiteData advantage**:
 
-``````swift
+```swift
 // Full CloudKit sharing support
 let share = CKShare(rootRecord: record)
 try await database.share(record, with: share)

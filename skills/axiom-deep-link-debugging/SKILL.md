@@ -17,7 +17,7 @@ Use this skill when you're:
 - Testing navigation flows without manual tapping
 - Need programmatic navigation without production deep links
 
-### Do NOT use for
+**Do NOT use for:**
 
 - Production deep linking (use `swiftui-nav` skill instead)
 - Universal links or App Clips
@@ -89,21 +89,21 @@ struct MyApp: App {
     }
     #endif
 }
-```text
+```
 
 ### Navigate from Simulator
 
-``````bash
+```bash
 # Navigate to settings
 xcrun simctl openurl booted "debug://settings"
 
 # Navigate to profile with parameter
 xcrun simctl openurl booted "debug://profile?id=12345"
-```text
+```
 
 ### Add URL Scheme to Info.plist
 
-``````xml
+```xml
 <!-- Only in Debug configuration -->
 <key>CFBundleURLTypes</key>
 <array>

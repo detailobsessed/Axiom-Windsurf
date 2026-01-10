@@ -94,11 +94,11 @@ WidgetCenter.shared.reloadAllTimelines()
 
 // ❌ WRONG — Widget can't see this
 UserDefaults.standard.set(value, forKey: "key")
-```text
+```
 
 ### Timeline Provider Pattern
 
-``````swift
+```swift
 struct Provider: TimelineProvider {
     func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> Void) {
         // ✅ Fetch data here (TimelineProvider has network access)
@@ -124,14 +124,14 @@ struct WidgetView: View {
 
 This page documents the `axiom-extensions-widgets` skill—widget development patterns Claude uses when you're implementing Home Screen widgets, Live Activities, or Control Center controls.
 
-**For comprehensive API reference:** See [extensions-widgets-ref](/reference/extensions-widgets-ref) for complete API coverage, troubleshooting, and expert review checklist.
+**For comprehensive API reference:** See `extensions-widgets-ref` (see upstream Axiom docs) for complete API coverage, troubleshooting, and expert review checklist.
 
-**For App Intents:** See [app-intents-ref](/reference/app-intents-ref) for interactive widget button implementation.
+**For App Intents:** See `app-intents-ref` (see upstream Axiom docs) for interactive widget button implementation.
 
 ## Related
 
-- [extensions-widgets-ref](/reference/extensions-widgets-ref) — Complete API reference, troubleshooting, expert checklist
-- [app-intents-ref](/reference/app-intents-ref) — App Intents for interactive widgets
+- `extensions-widgets-ref` (see upstream Axiom docs) — Complete API reference, troubleshooting, expert checklist
+- `app-intents-ref` (see upstream Axiom docs) — App Intents for interactive widgets
 - `swift-concurrency` skill — Async patterns for data fetching
 - `swiftdata` skill — Using SwiftData with App Groups
 

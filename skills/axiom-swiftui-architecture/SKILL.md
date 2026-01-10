@@ -105,11 +105,11 @@ struct ColorView: View {
         .task { await extractor.extract(from: selectedImage) }
     }
 }
-```text
+```
 
 ### Architecture Decision Tree
 
-``````swift
+```text
 How complex is your presentation logic?
 ├─ Simple (mostly data display)?
 │  └─ Use Apple's vanilla @Observable patterns
@@ -125,11 +125,11 @@ How complex is your presentation logic?
 │
 └─ Complex navigation between features?
    └─ Add Coordinator pattern
-``````text
+```
 
 ### Property Wrapper Decision Tree (2)
 
-``````swift
+```text
 Where does this data come from?
 ├─ View-local, temporary?
 │  └─ @State
@@ -139,7 +139,7 @@ Where does this data come from?
 │  └─ @Bindable
 └─ Read-only data from parent?
    └─ Plain property (no wrapper)
-``````
+```
 
 ## Documentation Scope
 

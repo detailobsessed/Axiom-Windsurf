@@ -76,7 +76,7 @@ Constraint error in console?
 │  └─ Use _autolayoutTrace to find missing constraints
 └─ Views positioned incorrectly but no errors?
    └─ Use Debug View Hierarchy + Show Constraints
-``````text
+```
 
 ### Symbolic Breakpoint Setup (One-Time)
 
@@ -88,16 +88,16 @@ Constraint error in console?
 
 ### Identifying Views from Memory Address
 
-``````lldb
+```lldb
 (lldb) po 0x7f8b9c4...
 <UILabel: 0x7f8b9c4; frame = ...; text = 'Hello'>
-```text
+```
 
 The memory address in the error message (0x7f8b9c4...) can be printed in the debugger to identify which view is involved.
 
 ### Priority Resolution
 
-``````swift
+```swift
 // ❌ Conflict: Both have priority 1000 (Required)
 label.widthAnchor.constraint(equalToConstant: 300).isActive = true
 superview.widthAnchor.constraint(equalToConstant: 200).isActive = true
