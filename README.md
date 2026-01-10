@@ -35,10 +35,9 @@ Skills are **automatically triggered** based on your questions. Examples:
 ## Project Structure
 
 ```text
-skills/              # Windsurf-compatible SKILL.md files
+skills/              # Windsurf-compatible SKILL.md files (use these)
+.claude-plugin/      # Upstream skills source (for porting)
 docs/                # Upstream documentation (reference)
-.claude-plugin/      # Upstream Claude Code plugin (not used)
-mcp-server/          # Upstream MCP server (not used)
 ```
 
 ## Upstream
