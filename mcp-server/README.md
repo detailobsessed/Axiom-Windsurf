@@ -170,6 +170,7 @@ axiom://skill/{skill-name}
 ```
 
 Examples:
+
 - `axiom://skill/xcode-debugging`
 - `axiom://skill/swiftui-nav`
 - `axiom://skill/memory-debugging`
@@ -262,6 +263,7 @@ pnpm start
 ```
 
 The `build:bundle` command:
+
 1. Compiles TypeScript (`tsc`)
 2. Generates `dist/bundle.json` from plugin files
 3. Bundle includes all skills, commands, and agents
@@ -327,18 +329,21 @@ claude-code plugin reload axiom
 ### Server won't start
 
 **Check Node version:**
+
 ```bash
 node --version
 # Should be 18.0.0 or higher
 ```
 
 **Check environment variables:**
+
 ```bash
 echo $AXIOM_MCP_MODE
 echo $AXIOM_DEV_PATH
 ```
 
 **Verify plugin path exists:**
+
 ```bash
 ls $AXIOM_DEV_PATH/skills
 # Should show .md files
@@ -347,11 +352,13 @@ ls $AXIOM_DEV_PATH/skills
 ### Skills not appearing
 
 **Check log output (stderr):**
+
 ```bash
 AXIOM_LOG_LEVEL=debug node dist/index.js 2>&1 | grep -i skill
 ```
 
 **Verify frontmatter parsing:**
+
 ```bash
 # Test parser directly
 node -e "
@@ -365,11 +372,13 @@ console.log(matter(content).data);
 ### MCP client can't connect
 
 **Check stdio transport:**
+
 - MCP uses stdin/stdout for communication
 - Make sure nothing else writes to stdout
 - Logs must go to stderr only
 
 **Verify command in client config:**
+
 ```bash
 # Test command manually
 node /full/path/to/dist/index.js
@@ -379,34 +388,40 @@ node /full/path/to/dist/index.js
 ## Roadmap
 
 ### Phase 1: Foundation ✅
+
 - MCP server with stdio transport
 - Resources protocol (skills)
 - Development mode loader
 - Claude Code `.mcp.json` integration
 
 ### Phase 2: MCP Annotations ✅
+
 - Add MCP metadata to test skills
 - Enhanced skill categorization
 - Cross-references between skills
 
 ### Phase 3: Full Primitives ✅
+
 - Prompts protocol (commands)
 - Tools protocol (agents)
 - Complete MCP feature coverage
 
 ### Phase 4: Production Bundle ✅ (Current)
+
 - Pre-compiled skill snapshot
 - Production mode loader
 - Bundle generator script
 - Dual-mode Loader interface
 
 ### Phase 5: Full Coverage (Next)
+
 - All 38 skills with MCP annotations
 - All 10 commands with argument schemas
 - All 10 agents with input schemas
 - Multi-client testing
 
 ### Phase 6: Distribution
+
 - npm publish (@axiom-dev/mcp)
 - MCP Registry listing
 - Documentation site integration
@@ -417,11 +432,13 @@ node /full/path/to/dist/index.js
 ### Dual Distribution Model
 
 **Bundled (Claude Code Plugin)**
+
 ```
 User installs plugin → .mcp.json → MCP server (dev mode) → Live skills
 ```
 
 **Standalone (Other Tools)**
+
 ```
 User configures MCP → Server (prod mode) → Bundled skills
 ```
