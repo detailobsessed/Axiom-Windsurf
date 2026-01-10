@@ -1,6 +1,6 @@
 # Axiom for Windsurf
 
-[![Porting Progress](https://img.shields.io/badge/skills%20ported-5%2F58-blue)](skills/)
+[![Porting Progress](https://img.shields.io/badge/skills%20ported-42%2F58-blue)](skills/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Windsurf Next](https://img.shields.io/badge/Windsurf-Next-purple)](https://windsurf.com/)
 
@@ -42,7 +42,20 @@ docs/                # Upstream documentation (reference)
 
 ## Upstream
 
-The original Axiom project has 58+ skills covering SwiftUI, concurrency, persistence, debugging, and more. Visit [CharlesWiltgen/Axiom](https://github.com/CharlesWiltgen/Axiom) for the full collection.
+The original Axiom project has 58+ skills covering SwiftUI, concurrency, persistence, debugging, and more.
+
+- **Documentation**: [charleswiltgen.github.io/Axiom](https://charleswiltgen.github.io/Axiom/)
+- **Repository**: [CharlesWiltgen/Axiom](https://github.com/CharlesWiltgen/Axiom)
+
+## Windsurf Limitations
+
+Windsurf Next doesn't yet support all Axiom features:
+
+- **Sub-agents**: Autonomous agents (e.g., `build-fixer`, `accessibility-auditor`) require sub-agent support not yet available
+- **Slash commands**: `/axiom:*` commands are Claude Code specific
+- **Some metadata fields**: Limited frontmatter support compared to Claude Code
+
+Skills work fully. Agents and commands are referenced in skill content but link to upstream docs.
 
 ## Contributing
 

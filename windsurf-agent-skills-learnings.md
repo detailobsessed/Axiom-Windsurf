@@ -123,9 +123,15 @@ Port high-value iOS development skills:
 - ✅ `axiom-build-debugging`
 - ✅ `axiom-memory-debugging`
 
-### Phase 3: Full Collection
+### Phase 3: Full Collection ✅ COMPLETE
 
-Systematically port remaining skills with automation.
+Automated porting via `scripts/port-skills.py`:
+
+- **42 skills** now in `skills/` directory
+- **9 skipped** (missing frontmatter name in upstream)
+- **16 agents** NOT ported (require sub-agent support)
+
+Run `uv run scripts/port-skills.py --dry-run` to see what would be ported.
 
 ## Differences: Claude Code vs Windsurf
 
@@ -136,6 +142,16 @@ Systematically port remaining skills with automation.
 | Progressive disclosure | ✅ Documented | ✅ Works via `references/` |
 | Auto-triggering | ✅ Based on description | ❓ Unknown (needs testing) |
 | Bundled resources | `scripts/`, `references/`, `assets/` | ✅ `references/` confirmed |
+| Sub-agents | ✅ Full support | ❌ Not yet supported |
+| Slash commands | ✅ `/axiom:*` | ❌ Not supported |
+| Metadata fields | ✅ Full spec | ⚠️ Limited (name, description only) |
+
+**Implications**:
+
+- Skills work fully ✅
+- Agents (autonomous sub-agents) cannot be ported yet
+- Commands (slash commands) are Claude Code specific
+- Focus on skill content, reference agents/commands in upstream docs
 
 ## Resources
 
