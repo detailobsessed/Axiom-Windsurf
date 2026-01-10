@@ -20,9 +20,9 @@ Use this skill when you're:
 
 **Core principle:** Measure before optimizing. Use Power Profiler to identify which subsystem dominates, then apply targeted fixes.
 
-**For symptoms:** See [energy-diag](/diagnostic/energy-diag) for decision trees with time-cost analysis.
+**For symptoms:** See `energy-diag` (see upstream Axiom docs) for decision trees with time-cost analysis.
 
-**For API reference:** See [energy-ref](/reference/energy-ref) for complete code examples from WWDC.
+**For API reference:** See `energy-ref` (see upstream Axiom docs) for complete code examples from WWDC.
 
 ## Example Prompts
 
@@ -104,11 +104,11 @@ Power Profiler shows high impact in:
 └─ Display lane?
    ├─ Light backgrounds on OLED → Consider dark mode
    └─ Always-on features → Reduce refresh
-``````text
+```
 
 ### Quick Power Profiler Workflow
 
-``````bash
+```bash
 # 1. Open Instruments
 open -a Instruments
 
@@ -123,14 +123,14 @@ open -a Instruments
 
 This page documents the `axiom-energy` skill—Power Profiler workflows Claude uses when you're diagnosing battery drain in your iOS app.
 
-**For symptom-based diagnosis:** See [energy-diag](/diagnostic/energy-diag) for decision trees starting from symptoms like "phone gets hot".
+**For symptom-based diagnosis:** See `energy-diag` (see upstream Axiom docs) for decision trees starting from symptoms like "phone gets hot".
 
-**For complete API reference:** See [energy-ref](/reference/energy-ref) for code examples and WWDC patterns.
+**For complete API reference:** See `energy-ref` (see upstream Axiom docs) for code examples and WWDC patterns.
 
 ## Related
 
-- [energy-diag](/diagnostic/energy-diag) — Symptom-based energy troubleshooting
-- [energy-ref](/reference/energy-ref) — Complete API reference with WWDC examples
+- `energy-diag` (see upstream Axiom docs) — Symptom-based energy troubleshooting
+- `energy-ref` (see upstream Axiom docs) — Complete API reference with WWDC examples
 
 ## Resources
 

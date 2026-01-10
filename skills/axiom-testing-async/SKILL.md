@@ -43,11 +43,11 @@ description: Swift Testing patterns for async code — confirmation for callback
     let user = try await api.fetchUser(id: 1)
     #expect(user.name == "Alice")
 }
-```text
+```
 
 ### Callback with confirmation
 
-``````swift
+```swift
 @Test func notificationFires() async {
     await confirmation { confirm in
         NotificationCenter.default.addObserver(
@@ -58,34 +58,34 @@ description: Swift Testing patterns for async code — confirmation for callback
         triggerUpdate()
     }
 }
-```text
+```
 
 ### Multiple Callbacks
 
-``````swift
+```swift
 @Test func delegateCalledThreeTimes() async {
     await confirmation(expectedCount: 3) { confirm in
         delegate.onProgress = { _ in confirm() }
         startDownload()
     }
 }
-```text
+```
 
 ### MainActor Tests
 
-``````swift
+```swift
 @Test @MainActor func viewModelUpdates() async {
     let vm = ViewModel()
     await vm.load()
     #expect(vm.items.count > 0)
 }
-```text
+```
 
 ## Common Mistakes
 
 ### Using sleep Instead of confirmation
 
-``````swift
+```swift
 // ❌ Flaky
 try await Task.sleep(for: .seconds(1))
 #expect(eventReceived)
@@ -99,7 +99,7 @@ await confirmation { confirm in
 
 ## Related Skills
 
-- [Swift Testing](./swift-testing) — Complete Swift Testing guide
+- `Swift Testing` skill — Complete Swift Testing guide
 - `Swift Concurrency` skill — Async/await patterns
 
 ## Resources

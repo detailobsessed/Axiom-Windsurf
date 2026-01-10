@@ -48,11 +48,11 @@ let value = mutex.withLock { $0 }
 
 // Write
 mutex.withLock { $0 += 1 }
-```text
+```
 
 ### OSAllocatedUnfairLock (iOS 16+)
 
-``````swift
+```swift
 import os
 
 let lock = OSAllocatedUnfairLock(initialState: 0)
@@ -60,11 +60,11 @@ let lock = OSAllocatedUnfairLock(initialState: 0)
 lock.withLock { state in
     state += 1
 }
-```text
+```
 
 ## Critical Warning: Never Hold Locks Across Await
 
-``````swift
+```swift
 // ❌ DEADLOCK RISK
 mutex.withLock {
     await someAsyncWork()  // Task suspends while holding lock!
@@ -78,10 +78,10 @@ mutex.withLock { $0 = result }
 
 ## Related Skills
 
-- [Swift Concurrency](./swift-concurrency) — Actor-based concurrency
-- [Concurrency Profiling](./concurrency-profiling) — Diagnose contention issues
+- `Swift Concurrency` skill — Actor-based concurrency
+- `Concurrency Profiling` skill — Diagnose contention issues
 
 ## Resources
 
 - **Swift Evolution**: [SE-0433: Mutex](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0433-mutex.md)
-- **Docs**: [Synchronization Framework](https://developer.apple.com/documentation/axiom-synchronization)
+- **Docs**: [Synchronization Framework](https://developer.apple.com/documentation/synchronization)

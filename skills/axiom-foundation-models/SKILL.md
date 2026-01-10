@@ -1,6 +1,6 @@
 ---
 name: axiom-foundation-models
-description: On-device AI with Apple's Foundation Models framework (iOS 26+) — prevents context overflow, blocking UI, wrong model use cases
+description: "On-device AI with Apple's Foundation Models framework (iOS 26+) — prevents context overflow, blocking UI, wrong model use cases"
 ---
 
 # Foundation Models
@@ -40,11 +40,11 @@ let result: MyType = try await session.respond(
     to: prompt,
     generating: MyType.self
 )
-```text
+```
 
 ### Blocking Main Thread
 
-``````swift
+```swift
 // ❌ WRONG: Blocking UI
 let response = try await session.respond(to: longPrompt)
 label.text = response.content  // UI frozen during generation
@@ -53,11 +53,11 @@ label.text = response.content  // UI frozen during generation
 for try await partial in session.respond(to: prompt, stream: true) {
     await MainActor.run { label.text = partial.content }
 }
-```text
+```
 
 ### One Giant Prompt
 
-``````swift
+```swift
 // ❌ WRONG: Stuffing everything in one prompt
 let response = try await session.respond(
     to: entireDocumentPlusAllInstructions  // Context exceeded!
@@ -69,20 +69,20 @@ for chunk in chunks {
     let summary = try await session.respond(to: "Summarize: \(chunk)")
     // Combine summaries
 }
-```text
+```
 
 ## Key Patterns
 
 ### Basic Generation
 
-``````swift
+```swift
 let session = LanguageModelSession()
 let response = try await session.respond(to: "Your prompt")
-```text
+```
 
 ### Structured Output
 
-``````swift
+```swift
 @Generable
 struct Analysis {
     @Guide(description: "Sentiment: positive, negative, or neutral")
@@ -95,19 +95,19 @@ let analysis: Analysis = try await session.respond(
     to: "Analyze this review...",
     generating: Analysis.self
 )
-```text
+```
 
 ### Streaming
 
-``````swift
+```swift
 for try await partial in session.respond(to: prompt, stream: true) {
     updateUI(with: partial.content)
 }
-```text
+```
 
 ### Tool Calling
 
-``````swift
+```swift
 @Tool
 struct SearchTool: Tool {
     static let description = "Search for information"
@@ -147,6 +147,6 @@ struct SearchTool: Tool {
 
 ## Related Resources
 
-- [foundation-models-ref](/reference/foundation-models-ref) — Complete API reference
-- [foundation-models-diag](/diagnostic/foundation-models-diag) — Troubleshooting
+- `foundation-models-ref` (see upstream Axiom docs) — Complete API reference
+- `foundation-models-diag` (see upstream Axiom docs) — Troubleshooting
 - [WWDC 2025/286](https://developer.apple.com/videos/play/wwdc2025/286/) — Introduction

@@ -80,11 +80,11 @@ Problem 1: Long View Body Updates
 Problem 2: Unnecessary View Updates
 ├─ Many fast updates add up → misses deadline
 └─ Solution: Granular dependencies, per-item view models
-``````text
+```
 
 ### Fixing Long View Bodies
 
-``````swift
+```swift
 // ❌ WRONG — Creating formatters in view body
 var distance: String {
     let formatter = MeasurementFormatter() // Expensive!
@@ -101,11 +101,11 @@ class LocationFinder {
         distanceCache[id] ?? "Unknown"  // Fast lookup
     }
 }
-```text
+```
 
 ### Fixing Unnecessary Updates
 
-``````swift
+```swift
 // ❌ WRONG — All views depend on whole array
 func isFavorite(_ landmark: Landmark) -> Bool {
     favoritesCollection.landmarks.contains(landmark) // Array dependency
@@ -131,7 +131,7 @@ This page documents the `axiom-swiftui-performance` skill—SwiftUI performance 
 
 - `swiftui-debugging` skill — View update failures, preview crashes, layout issues
 - `performance-profiling` skill — Time Profiler, Allocations, general profiling workflows
-- [swiftui-26-ref](/reference/swiftui-26-ref) — All iOS 26 SwiftUI features including performance improvements
+- `swiftui-26-ref` (see upstream Axiom docs) — All iOS 26 SwiftUI features including performance improvements
 
 ## Resources
 

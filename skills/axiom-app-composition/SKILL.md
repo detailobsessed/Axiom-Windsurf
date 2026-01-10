@@ -92,11 +92,11 @@ class AppStateController {
         state = newState
     }
 }
-```text
+```
 
 ### Root View Switching (2)
 
-``````swift
+```swift
 @main
 struct MyApp: App {
     @State private var controller = AppStateController()
@@ -121,11 +121,11 @@ struct MyApp: App {
         }
     }
 }
-```text
+```
 
 ### Scene Lifecycle (2)
 
-``````swift
+```swift
 struct ContentView: View {
     @Environment(\.scenePhase) private var scenePhase
 

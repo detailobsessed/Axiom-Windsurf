@@ -44,6 +44,16 @@ repos:
         priority: 1
         files: ^(skills/|windsurf-|AGENTS\.md)
 
+  - repo: local
+    hooks:
+      - id: markdown-link-check
+        name: Markdown Link Check
+        entry: npx markdown-link-check --quiet --config .markdown-link-check.json
+        language: system
+        types: [markdown]
+        files: ^skills/
+        priority: 1
+
   - repo: https://github.com/koalaman/shellcheck-precommit
     rev: v0.11.0
     hooks:

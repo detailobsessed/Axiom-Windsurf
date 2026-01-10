@@ -1,6 +1,6 @@
 ---
 name: axiom-swiftdata
-description: Use when working with SwiftData — @Model definitions, @Query in SwiftUI, @Relationship macros, ModelContext patterns, CloudKit integration, iOS 26+ features, and Swift 6 concurrency with @MainActor — Apple's native persistence framework
+description: "Use when working with SwiftData — @Model definitions, @Query in SwiftUI, @Relationship macros, ModelContext patterns, CloudKit integration, iOS 26+ features, and Swift 6 concurrency with @MainActor — Apple's native persistence framework"
 ---
 
 # SwiftData

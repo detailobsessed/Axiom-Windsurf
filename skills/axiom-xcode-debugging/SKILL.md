@@ -1,6 +1,6 @@
 ---
 name: axiom-xcode-debugging
-description: Use when encountering BUILD FAILED, test crashes, simulator hangs, stale builds, zombie xcodebuild processes, "Unable to boot simulator", "No such module" after SPM changes, or mysterious test failures despite no code changes — systematic environment-first diagnostics for iOS/macOS projects
+description: "Use when encountering BUILD FAILED, test crashes, simulator hangs, stale builds, zombie xcodebuild processes, \"Unable to boot simulator\", \"No such module\" after SPM changes, or mysterious test failures despite no code changes — systematic environment-first diagnostics for iOS/macOS projects"
 ---
 
 # Xcode Debugging
@@ -22,7 +22,7 @@ Use this skill when you're:
 
 ## Example Prompts
 
-Questions that should trigger this skill:
+Questions you can ask Claude that will draw from this skill:
 
 - "My build fails with 'BUILD FAILED' but no error details. I haven't changed anything."
 - "Tests passed yesterday, failing today with no code changes. What's going on?"
@@ -32,7 +32,9 @@ Questions that should trigger this skill:
 - "Build sometimes succeeds, sometimes fails. Why?"
 - "I have 20 xcodebuild processes running. Is that normal?"
 
-## Red Flags (Check Environment First)
+## What's Covered
+
+### Red Flags (Check Environment First)
 
 - "It works on my machine but not CI"
 - "Tests passed yesterday, failing today"
@@ -41,7 +43,29 @@ Questions that should trigger this skill:
 - Simulator stuck or unresponsive
 - Multiple zombie xcodebuild processes
 
-## The Environment-First Checklist
+### Environment Diagnostics
+
+- Derived Data state and cleanup
+- Simulator health checks with simctl
+- Zombie process detection and cleanup
+- SPM cache verification
+
+### Recovery Commands
+
+- Safe Derived Data deletion
+- Simulator reset and recovery
+- Process cleanup without reboot
+- SPM cache refresh
+
+### Time Cost Transparency
+
+- 2-5 minutes: Derived Data cleanup
+- 5-10 minutes: Full environment reset
+- 30+ minutes: Debugging code when problem is environment
+
+## Key Pattern
+
+### The Environment-First Checklist
 
 ```bash
 # 1. Check for zombie processes (10+ or older than 30 min = problem)
@@ -62,7 +86,7 @@ xcrun simctl erase all  # Nuclear option - erases all simulator data
 rm -rf ~/Library/Caches/org.swift.swiftpm
 ```
 
-## When to Use Each Step
+### When to Use Each Step
 
 | Symptom | Fix | Time |
 |---------|-----|------|
@@ -72,18 +96,22 @@ rm -rf ~/Library/Caches/org.swift.swiftpm
 | Zombie processes | killall | 1 min |
 | All of the above | Full reset + reboot | 10 min |
 
-## Time Cost Transparency
+## Documentation Scope
 
-- 2-5 minutes: Derived Data cleanup
-- 5-10 minutes: Full environment reset
-- 30+ minutes: Debugging code when problem is environment
+This page documents the `axiom-xcode-debugging` skill—environment-first diagnostics Claude uses before investigating code issues. The skill contains complete command sequences, decision trees, and time-cost analysis.
 
-## Related Skills
+**For build failures specifically:** Use `/axiom:fix-build` command (Claude Code only) for automated diagnosis and fixes.
 
-- `axiom-build-debugging` — Dependency resolution for CocoaPods/SPM
-- `axiom-performance-profiling` — When issue is performance, not environment
+## Related
+
+- `/axiom:fix-build` command (Claude Code only) — Automated build failure diagnosis
+- `build-fixer` agent (see upstream Axiom docs) — Autonomous agent that diagnoses and fixes build issues
+- `build-debugging` skill — Dependency resolution for CocoaPods/SPM
+- `testflight-triage` skill — Use when issue is TestFlight crash, not build environment
+- `performance-profiling` skill — When issue is performance, not environment
 
 ## Resources
 
 **WWDC**: 2021-10209, 2023-10164
-**Apple Docs**: /xcode/debugging-and-testing
+
+**Docs**: [Debugging and Testing](https://developer.apple.com/documentation/xcode/debugging-and-testing)

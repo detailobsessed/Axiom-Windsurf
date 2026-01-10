@@ -17,7 +17,7 @@ Use this skill when you're:
 - Want to extract code examples from WWDC presentations
 - Building comprehensive skills based on Apple technologies
 
-### Do NOT use for
+**Do NOT use for:**
 
 - Third-party framework documentation
 - General web research
@@ -62,13 +62,13 @@ Apple Developer video pages contain complete transcripts that Chrome auto-captur
 
    ```text
    https://developer.apple.com/videos/play/wwdc2025/278/
-   ```   ```text
+   ```
 
 2. **Chrome saves** to session directory:
 
-   ```   ```text
+   ```text
    ~/Library/Caches/superpowers/browser/YYYY-MM-DD/session-XXXXX/001-navigate.md
-   ```   ```text
+   ```
 
 3. **Transcript includes:**
    - Full spoken content with timestamps (e.g., [0:07], [1:23])
@@ -78,7 +78,7 @@ Apple Developer video pages contain complete transcripts that Chrome auto-captur
 
 ### Apple Documentation via sosumi.ai (2)
 
-``````bash
+```bash
 # Instead of
 https://developer.apple.com/documentation/widgetkit
 
@@ -86,7 +86,7 @@ https://developer.apple.com/documentation/widgetkit
 https://sosumi.ai/documentation/widgetkit
 ```
 
-## Benefits
+**Benefits:**
 
 - Cleaner markdown output
 - Easier to parse and reference
@@ -101,7 +101,7 @@ This page documents the `axiom-apple-docs-research` skill—research techniques 
 ## Related
 
 - `extensions-widgets` skill — Widget development patterns
-- [swiftui-26-ref](/reference/swiftui-26-ref) — iOS 26 SwiftUI features from WWDC 2025
+- `swiftui-26-ref` (see upstream Axiom docs) — iOS 26 SwiftUI features from WWDC 2025
 
 ## Resources
 
