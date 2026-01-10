@@ -90,6 +90,21 @@ description: A brief description, shown to the model to help it understand when 
   - All markdown formatting preserved (headers, code blocks, tables)
   - Skill is fully functional for iOS development guidance
 
+### Test 6: Batch Skill Porting
+
+- **Date**: 2026-01-10
+- **Test**: Ported 4 additional high-priority skills to global skills directory
+- **Result**: ✅ All skills discovered immediately
+- **Skills ported**:
+  - `axiom-swift-concurrency` — Swift 6 concurrency issues
+  - `axiom-swiftui-debugging` — SwiftUI view update issues
+  - `axiom-build-debugging` — Dependency and build failures
+  - `axiom-memory-debugging` — Memory leaks and retain cycles
+- **Notes**:
+  - Total of 6 Axiom skills now available globally
+  - Skills appear in Windsurf UI without restart
+  - Each skill has comprehensive trigger descriptions for auto-invocation
+
 ## Porting Strategy
 
 ### Phase 1: Proof of Concept
@@ -98,14 +113,15 @@ description: A brief description, shown to the model to help it understand when 
 2. Test if references/ subdirectory works
 3. Document findings
 
-### Phase 2: Core Skills
+### Phase 2: Core Skills ✅ COMPLETE
 
 Port high-value iOS development skills:
 
-- `xcode-debugging`
-- `swift-concurrency`
-- `swiftui-debugging`
-- `build-debugging`
+- ✅ `axiom-xcode-debugging`
+- ✅ `axiom-swift-concurrency`
+- ✅ `axiom-swiftui-debugging`
+- ✅ `axiom-build-debugging`
+- ✅ `axiom-memory-debugging`
 
 ### Phase 3: Full Collection
 
@@ -117,9 +133,9 @@ Systematically port remaining skills with automation.
 |---------|-------------|---------------|
 | File name | `SKILL.md` | `SKILL.md` (global) / `skill.md` (workspace) |
 | Location | `plugins/*/skills/` | `~/.codeium/windsurf-next/skills/` (global) |
-| Progressive disclosure | ✅ Documented | ❓ Unknown |
-| Auto-triggering | ✅ Based on description | ❓ Unknown |
-| Bundled resources | `scripts/`, `references/`, `assets/` | ❓ Unknown |
+| Progressive disclosure | ✅ Documented | ✅ Works via `references/` |
+| Auto-triggering | ✅ Based on description | ❓ Unknown (needs testing) |
+| Bundled resources | `scripts/`, `references/`, `assets/` | ✅ `references/` confirmed |
 
 ## Resources
 
