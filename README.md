@@ -12,17 +12,21 @@ See [`skills/`](skills/) for currently available skills, ready to use with Winds
 
 ## Installation
 
-Run the install script:
+### macOS / Linux
 
 ```bash
-./scripts/install-skills.sh
+curl -LsSf https://raw.githubusercontent.com/detailobsessed/Axiom-Windsurf/main/install.sh | sh
 ```
 
-Or manually copy:
+### Windows
 
-```bash
-cp -r skills/* ~/.codeium/windsurf-next/skills/
+```powershell
+powershell -ExecutionPolicy ByPass -c "irm https://raw.githubusercontent.com/detailobsessed/Axiom-Windsurf/main/install.ps1 | iex"
 ```
+
+### Update
+
+Re-run the install command — it's idempotent and will update existing skills.
 
 ### Verify Installation
 
@@ -38,11 +42,22 @@ Skills are **automatically triggered** based on your questions. Examples:
 - "No such module after SPM update" → `axiom-build-debugging`
 - "My app has memory leaks" → `axiom-memory-debugging`
 
+## Workflows
+
+Axiom includes workflows for common tasks. If you run the installer from your project directory (where `.git` or `.windsurf` exists), workflows are copied automatically. Otherwise, copy `.windsurf/workflows/` manually:
+
+| Workflow | Description |
+|----------|-------------|
+| `/axiom-status` | Project health dashboard |
+| `/axiom-screenshot` | Capture simulator screenshot |
+| `/axiom-fix-build` | Environment-first build diagnostics |
+
 ## Project Structure
 
 ```text
 skills/              # Windsurf-compatible SKILL.md files
 scripts/             # Install and porting scripts
+.windsurf/workflows/ # Reusable workflows
 ```
 
 ## Upstream

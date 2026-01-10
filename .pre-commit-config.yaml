@@ -36,10 +36,10 @@ repos:
         priority: 1
         exclude: ^(\.claude-plugin/|docs/|mcp-server/|scripts/)
 
-  - repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: v0.47.0
+  - repo: https://github.com/DavidAnson/markdownlint-cli2
+    rev: v0.20.0
     hooks:
-      - id: markdownlint
+      - id: markdownlint-cli2
         args: ["--fix"]
         priority: 1
         files: ^(skills/|windsurf-|AGENTS\.md)
