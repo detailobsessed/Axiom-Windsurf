@@ -80,7 +80,7 @@ Has your type...
 ## Anti-Patterns to Avoid
 
 | Anti-Pattern | Why It's Bad |
-|--------------|--------------|
+| ------------ | ------------ |
 | Manual JSON string building | Injection vulnerabilities, no type safety |
 | `try?` swallowing DecodingError | Silent failures, impossible to debug |
 | Optional properties to avoid errors | Masks structural problems, runtime crashes |

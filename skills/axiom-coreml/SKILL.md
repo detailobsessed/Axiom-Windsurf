@@ -125,7 +125,7 @@ let output = try await model.prediction(from: input)
 ## Platform Support
 
 | Feature | Minimum Version |
-|---------|-----------------|
+| ------- | --------------- |
 | Basic CoreML | iOS 11+ |
 | MLProgram models | iOS 15+ |
 | Async prediction | iOS 17+ |

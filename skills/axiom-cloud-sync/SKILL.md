@@ -59,7 +59,7 @@ func fetch() async throws -> [Item] {
 ## Common Anti-Patterns
 
 | Anti-Pattern | Problem | Fix |
-|-------------|---------|-----|
+| ------------ | ------- | --- |
 | Cloud-first saves | Blocks on network, fails offline | Local-first architecture |
 | No sync state | Users don't know if data saved | Show sync indicators |
 | Ignoring conflicts | Silent data loss | Implement conflict resolution |

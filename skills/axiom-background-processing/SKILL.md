@@ -31,7 +31,7 @@ Background execution is a privilege, not a right. iOS actively limits background
 ## Task Types
 
 | Type | Runtime | Use Case |
-|------|---------|----------|
+| ---- | ------- | -------- |
 | BGAppRefreshTask | ~30s | Keep content fresh |
 | BGProcessingTask | Minutes | Maintenance (overnight, charging) |
 | BGContinuedProcessingTask | Extended | User-initiated work (iOS 26+) |

@@ -36,7 +36,7 @@ Comprehensive build performance optimization with Build Timeline analysis, type-
 ### 10 Optimization Patterns
 
 | Pattern | What It Does | Impact |
-|---------|--------------|--------|
+| ------- | ------------ | ------ |
 | 1. Type Checking | Identify slow functions with `-warn-long-function-bodies` | 10-30% |
 | 2. Build Phase Scripts | Conditional execution, sandboxing, parallel scripts | 5-10s saved |
 | 3. Compilation Mode | Incremental (Debug) vs Whole Module (Release) | 40-60% |

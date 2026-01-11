@@ -25,7 +25,7 @@ Covers tool selection (ViewThatFits vs AnyLayout vs onGeometryChange), size clas
 ### Tool Selection
 
 | I need to... | Use this |
-|-------------|----------|
+| ----------- | -------- |
 | Pick between 2-3 layout variants | `ViewThatFits` |
 | Switch H↔V with animation | `AnyLayout` |
 | Read container size | `onGeometryChange` |

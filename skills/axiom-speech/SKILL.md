@@ -135,7 +135,7 @@ for try await result in transcriber.results {
 ## Platform Support
 
 | Feature | Availability |
-|---------|--------------|
+| ------- | ------------ |
 | SpeechTranscriber | iOS 26+, macOS Tahoe+ |
 | DictationTranscriber | iOS 26+, macOS Tahoe+, watchOS 26+ |
 | SFSpeechRecognizer | iOS 10+ (legacy) |

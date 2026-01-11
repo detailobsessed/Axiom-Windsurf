@@ -27,7 +27,7 @@ description: Thread-safe primitives for performance-critical code — Mutex (iOS
 ## When to Use Mutex vs Actor
 
 | Need | Use | Reason |
-|------|-----|--------|
+| ---- | --- | ------ |
 | Microsecond operations | Mutex | No async hop overhead |
 | Protect single property | Mutex | Simpler, faster |
 | Complex async workflows | Actor | Proper suspension handling |
