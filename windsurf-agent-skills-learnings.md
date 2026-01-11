@@ -183,9 +183,21 @@ Port Axiom hooks to Windsurf's `hooks.json` format.
 
 ### Curl-installable Script
 
-**Status:** TODO - Will be published when the installer is finalized.
+**Status:** ✅ COMPLETE
 
-Goal: Create one-liner install like uv/bun for easy skill installation.
+Install scripts (`install.sh`, `install.ps1`) are finalized and documented in README.
+
+**Important:** Workflows are stored in `workflows/` at repo root (NOT `.windsurf/workflows/`). The `.windsurf/workflows/` path is for workspace-level workflows, not distribution.
+
+### Upstream Tracking
+
+**Status:** No automated sync needed.
+
+Fork has diverged significantly from upstream. To track upstream changes:
+
+- Watch upstream releases on GitHub
+- Periodically check for new skills worth porting
+- Most upstream changes are agent-related (not portable to Windsurf)
 
 ## Resources
 
