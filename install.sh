@@ -151,7 +151,7 @@ if [ ! -d "$EXTRACTED_DIR" ]; then
     EXTRACTED_DIR=$(find "$TEMP_DIR" -mindepth 1 -maxdepth 1 -type d -name 'Axiom-Windsurf-*' | head -n 1)
 fi
 SOURCE_SKILLS="$EXTRACTED_DIR/skills"
-SOURCE_WORKFLOWS="$EXTRACTED_DIR/.windsurf/workflows"
+SOURCE_WORKFLOWS="$EXTRACTED_DIR/workflows"
 
 if [ ! -d "$SOURCE_SKILLS" ]; then
     error "Error: Skills directory not found in archive."

@@ -12,6 +12,11 @@ See [`skills/`](skills/) for currently available skills, ready to use with Winds
 
 ## Installation
 
+The install script downloads all Axiom skills and workflows to your Windsurf Next configuration directory:
+
+- **Skills** → `~/.codeium/windsurf-next/skills/` (51 skills)
+- **Workflows** → `~/.codeium/windsurf-next/global_workflows/` (3 workflows)
+
 ### macOS / Linux
 
 ```bash
@@ -24,9 +29,14 @@ curl -LsSf https://raw.githubusercontent.com/detailobsessed/Axiom-Windsurf/main/
 powershell -ExecutionPolicy ByPass -c "irm https://raw.githubusercontent.com/detailobsessed/Axiom-Windsurf/main/install.ps1 | iex"
 ```
 
-### Update
+### What the Script Does
 
-Re-run the install command — it's idempotent and will update existing skills.
+1. Downloads the latest release from GitHub
+2. Extracts skills to `~/.codeium/windsurf-next/skills/`
+3. Extracts workflows to `~/.codeium/windsurf-next/global_workflows/`
+4. Reports how many skills/workflows were installed or updated
+
+The script is idempotent — re-run it anytime to update to the latest skills.
 
 ### Verify Installation
 
@@ -55,9 +65,9 @@ Axiom includes workflows for common tasks, installed globally alongside skills:
 ## Project Structure
 
 ```text
-skills/              # Windsurf-compatible SKILL.md files
-scripts/             # Install and porting scripts
-.windsurf/workflows/ # Reusable workflows
+skills/     # Windsurf-compatible SKILL.md files (51 skills)
+workflows/  # Global workflows installed alongside skills
+scripts/    # Install and porting scripts
 ```
 
 ## Upstream
