@@ -125,13 +125,12 @@ Port high-value iOS development skills:
 
 ### Phase 3: Full Collection ✅ COMPLETE
 
-Automated porting via `scripts/port-skills.py`:
+Initial porting used `scripts/port-skills.py` (now removed):
 
-- **42 skills** now in `skills/` directory
-- **9 skipped** (missing frontmatter name in upstream)
+- **51 skills** now in `skills/` directory
 - **16 agents** NOT ported (require sub-agent support)
 
-Run `uv run scripts/port-skills.py --dry-run` to see what would be ported.
+The porting script was retired after initial migration. New upstream skills are now adopted manually to preserve formatting fixes.
 
 ## Differences: Claude Code vs Windsurf
 
