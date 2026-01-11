@@ -77,7 +77,7 @@ try {
             ForEach-Object FullName
     }
     $SourceSkills = Join-Path $ExtractedDir "skills"
-    $SourceWorkflows = Join-Path $ExtractedDir ".windsurf\workflows"
+    $SourceWorkflows = Join-Path $ExtractedDir "workflows"
 
     if (-not (Test-Path $SourceSkills)) {
         Write-ColorOutput Red "Error: Skills directory not found in archive."
