@@ -151,7 +151,7 @@ try await database.share(record, with: share)
 ## Performance Comparison
 
 | Operation | SwiftData | SQLiteData |
-|-----------|-----------|------------|
+| --------- | --------- | ---------- |
 | Insert 50k | ~60s | ~30s |
 | Fetch 10k | ~2s | ~0.5s |
 | Complex query | Core Data layer | Direct SQL |

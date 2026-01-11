@@ -28,7 +28,7 @@ description: Swift Testing patterns for async code — confirmation for callback
 ## Key Differences from XCTest
 
 | XCTest | Swift Testing |
-|--------|---------------|
+| ------ | ------------- |
 | `XCTestExpectation` | `confirmation { }` |
 | `wait(for:timeout:)` | `await confirmation` |
 | `@MainActor` implicit | `@MainActor` explicit |

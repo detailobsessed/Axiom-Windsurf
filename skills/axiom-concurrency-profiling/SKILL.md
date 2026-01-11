@@ -30,7 +30,7 @@ description: Instruments workflows for async/await — Swift Concurrency templat
 ### What It Shows
 
 | Track | Information |
-|-------|-------------|
+| ----- | ----------- |
 | **Swift Tasks** | Task lifetimes, parent-child relationships |
 | **Swift Actors** | Actor access, contention visualization |
 | **Thread States** | Blocked vs running vs suspended |

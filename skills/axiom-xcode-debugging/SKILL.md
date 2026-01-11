@@ -89,7 +89,7 @@ rm -rf ~/Library/Caches/org.swift.swiftpm
 ### When to Use Each Step
 
 | Symptom | Fix | Time |
-|---------|-----|------|
+| ------- | --- | ---- |
 | Stale builds, old code runs | Delete Derived Data | 2 min |
 | "No such module" | Delete Derived Data + SPM cache | 3 min |
 | Simulator stuck | simctl shutdown + reboot | 2 min |

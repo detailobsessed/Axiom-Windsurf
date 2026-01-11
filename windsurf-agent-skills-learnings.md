@@ -13,7 +13,7 @@ Tracking discoveries about Windsurf Next's skills implementation as we port Axio
 ### Skill Locations
 
 | Type | Path | Discovered |
-|------|------|------------|
+| ---- | ---- | ---------- |
 | Global | `~/.codeium/windsurf-next/skills/<skill-name>/SKILL.md` | 2026-01-10 |
 | Workspace | `.windsurf/skills/<skill-name>/skill.md` | 2026-01-10 |
 
@@ -136,7 +136,7 @@ Run `uv run scripts/port-skills.py --dry-run` to see what would be ported.
 ## Differences: Claude Code vs Windsurf
 
 | Feature | Claude Code | Windsurf Next |
-|---------|-------------|---------------|
+| ------- | ----------- | ------------- |
 | File name | `SKILL.md` | `SKILL.md` (global) / `skill.md` (workspace) |
 | Location | `plugins/*/skills/` | `~/.codeium/windsurf-next/skills/` (global) |
 | Progressive disclosure | ✅ Documented | ✅ Works via `references/` |
@@ -160,7 +160,7 @@ Run `uv run scripts/port-skills.py --dry-run` to see what would be ported.
 Windsurf workflows support both global and workspace locations:
 
 | Type | Path |
-|------|------|
+| ---- | ---- |
 | Global | `~/.codeium/windsurf-next/global_workflows/*.md` |
 | Workspace | `.windsurf/workflows/*.md` |
 

@@ -28,7 +28,7 @@ description: Parameter ownership modifiers for performance optimization — borr
 ## Quick Reference
 
 | Modifier | Ownership | Copies | Use Case |
-|----------|-----------|--------|----------|
+| -------- | --------- | ------ | -------- |
 | (default) | Compiler chooses | Implicit | Most cases |
 | `borrowing` | Caller keeps | Explicit `copy` only | Read-only, large types |
 | `consuming` | Caller transfers | None needed | Final use, factories |

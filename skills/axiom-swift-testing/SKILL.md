@@ -41,7 +41,7 @@ import Testing
 ### The Speed Hierarchy
 
 | Configuration | Time | Use Case |
-|---------------|------|----------|
+| ------------- | ---- | -------- |
 | `swift test` (Package) | ~0.1s | Pure logic, models |
 | Host Application: None | ~3s | Framework code |
 | Full app launch | 20-60s | UI tests |
@@ -64,7 +64,7 @@ import Testing
 ### XCTest Migration
 
 | XCTest | Swift Testing |
-|--------|---------------|
+| ------ | ------------- |
 | `func testFoo()` | `@Test func foo()` |
 | `XCTAssertEqual(a, b)` | `#expect(a == b)` |
 | `XCTUnwrap(x)` | `try #require(x)` |

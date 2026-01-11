@@ -64,7 +64,7 @@ Task.detached {
 ## Common Anti-Patterns
 
 | Anti-Pattern | Problem | Fix |
-|-------------|---------|-----|
+| ----------- | ------- | --- |
 | Singleton context | Concurrency crashes | Context per operation |
 | Passing objects across threads | Thread-confinement violation | Pass objectID |
 | Fetching in view body | Repeated fetches | Use @FetchRequest |

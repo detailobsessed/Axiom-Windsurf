@@ -72,7 +72,7 @@ extension MyClass: @preconcurrency SomeDelegate {
 ## Task vs assumeIsolated
 
 | Aspect | `Task { @MainActor in }` | `MainActor.assumeIsolated` |
-|--------|--------------------------|---------------------------|
+| ------ | ------------------------ | -------------------------- |
 | Timing | Deferred (next run loop) | Synchronous (inline) |
 | Async support | Yes (can await) | No (sync only) |
 | Failure mode | Runs anyway | **Crashes** if wrong isolation |

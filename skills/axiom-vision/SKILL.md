@@ -170,7 +170,7 @@ present(scanner, animated: true) {
 ## Platform Support
 
 | API | Minimum Version |
-|-----|-----------------|
+| --- | --------------- |
 | Subject segmentation (instance masks) | iOS 17+ |
 | VisionKit subject lifting | iOS 16+ |
 | Hand pose | iOS 14+ |

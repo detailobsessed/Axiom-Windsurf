@@ -83,7 +83,7 @@ Before diving into code, ask yourself:
 When a crash is reported, ask these questions before touching code:
 
 | Question | Where to Look | Why It Matters |
-|----------|---------------|----------------|
+| -------- | ------------- | -------------- |
 | How long has this been an issue? | Inspector graph area | Identifies when crash was introduced |
 | Is it TestFlight only or production too? | Release filter | Determines urgency and scope |
 | What was the user doing? | Feedback Inspector | Provides reproduction context |
